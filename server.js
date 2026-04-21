@@ -21,35 +21,44 @@ app.post('/api/gemini', async (req, res) => {
   const { message, history } = req.body;
   if (!message) return res.status(400).json({ error: 'No message provided' });
 
+  // Формуємо масив contents
   const contents = [];
 
-  // Add conversation history
+  // 1. Додаємо роль тренера як перше повідомлення в контексті
+  contents.push({
+    role: 'user',
+    parts: [{ text: `Ти — персональний тренер з велоспорту. Запитай у атлета вік, вагу, FTP, спеціалізацію та очікування.  
+Відповідай конкретно, без зайвих слів. Якщо питання про тренування — давай цифри (ватти, пульс, хвилини). 
+Мова відповіді: та ж, що у питанні (українська або польська).` }]
+  });
+
+  // 2. Імітуємо підтвердження від моделі
+  contents.push({
+    role: 'model',
+    parts: [{ text: "Так, я зрозумів. Я твій тренер. Готовий аналізувати твої показники та давати плани на ультрадистанції. Яке питання на сьогодні?" }]
+  });
+
+  // 3. Додаємо реальну історію розмови з фронтенду
   if (history && Array.isArray(history)) {
     history.forEach(h => {
-      contents.push({ role: h.role, parts: [{ text: h.text }] });
+      // Важливо: Google очікує ролі 'user' та 'model'
+      const role = (h.role === 'bot' || h.role === 'model') ? 'model' : 'user';
+      contents.push({ role: role, parts: [{ text: h.text }] });
     });
   }
 
-  // Add current user message
+  // 4. Додаємо поточне повідомлення користувача
   contents.push({ role: 'user', parts: [{ text: message }] });
 
   try {
-    // Використовуємо v1beta для підтримки systemInstruction через fetch
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    // Використовуємо СТАБІЛЬНУ версію v1 та модель gemini-1.5-flash
+    const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents,
-        systemInstruction: {
-          role: "system", // Деякі версії вимагають вказання ролі тут
-          parts: [{
-            text: `Ти — персональний тренер з велоспорту. Запитай у атлета вік, вагу, FTP, спеціалізацію та очікування.  
-Відповідай конкретно, без зайвих слів. Якщо питання про тренування — давай цифри (ватти, пульс, хвилини). 
-Мова відповіді: та ж, що у питанні (українська або польська).`
-          }]
-        },
         generationConfig: {
           temperature: 0.7,
           maxOutputTokens: 1024
@@ -58,17 +67,18 @@ app.post('/api/gemini', async (req, res) => {
     });
 
     if (!response.ok) {
-      const err = await response.text();
-      return res.status(response.status).json({ error: err });
+      const errText = await response.text();
+      console.error('API Error:', errText);
+      return res.status(response.status).json({ error: 'Gemini API Error' });
     }
 
     const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
-    res.json({ reply: text });
+    const replyText = data.candidates?.?.content?.parts?.?.text || '';
+    res.json({ reply: replyText });
 
   } catch (err) {
-    console.error('Gemini error:', err);
-    res.status(500).json({ error: 'Proxy error: ' + err.message });
+    console.error('Proxy error:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
