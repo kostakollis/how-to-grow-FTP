@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FTP Тренувальний план</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f8f6;color:#1a1a18;padding:1.5rem;max-width:900px;margin:0 auto}
+h1{font-size:18px;font-weight:500;margin-bottom:1.5rem}
+.sec{margin-bottom:1.75rem}
+.st{font-size:11px;font-weight:500;color:#888780;letter-spacing:.08em;text-transform:uppercase;margin:0 0 .75rem}
+.g5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.kpi{background:#f1efe8;border-radius:8px;padding:.65rem .85rem}
+.kpi .l{font-size:10px;color:#888780;margin:0 0 2px}
+.kpi .v{font-size:17px;font-weight:500;color:#1a1a18;margin:0}
+.kpi .s{font-size:10px;color:#888780;margin:1px 0 0}
+.tab-row{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap}
+.tab{padding:6px 14px;border-radius:8px;border:.5px solid #b4b2a9;font-size:12px;color:#5f5e5a;cursor:pointer;background:transparent}
+.tab.active{background:#f1efe8;color:#1a1a18;font-weight:500;border-color:#888780}
+.wcard{border:.5px solid #d3d1c7;border-radius:12px;padding:1rem 1.1rem;background:#fff}
+.wheader{display:flex;align-items:center;justify-content:space-between;margin-bottom:4px}
+.wtitle{font-size:14px;font-weight:500;color:#1a1a18}
+.badge{font-size:11px;font-weight:500;padding:3px 10px;border-radius:4px}
+.badge.ss{background:#FAEEDA;color:#633806}
+.badge.th{background:#FAECE7;color:#4A1B0C}
+.badge.vo{background:#FCEBEB;color:#791F1F}
+.wmeta{font-size:11px;color:#888780;margin:0 0 10px}
+.seg-bar{display:flex;gap:2px;height:22px;border-radius:5px;overflow:hidden;margin-bottom:10px}
+.seg{display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:500}
+.step-list{list-style:none;margin:0 0 10px;padding:0}
+.step-list li{display:flex;gap:8px;font-size:11px;color:#5f5e5a;padding:5px 0;border-bottom:.5px solid #d3d1c7;align-items:flex-start}
+.step-list li:last-child{border-bottom:none}
+.step-list .t{font-size:11px;font-weight:500;color:#1a1a18;min-width:68px;flex-shrink:0}
+.zdot{width:8px;height:8px;border-radius:50%;margin-top:3px;flex-shrink:0}
+.note{font-size:11px;color:#5f5e5a;line-height:1.6;padding:8px 10px;background:#f1efe8;border-radius:8px;margin-bottom:10px}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:.85rem}
+.slider-row label{font-size:12px;color:#888780;min-width:90px}
+.slider-row input[type=range]{flex:1}
+.slider-row .val{font-size:13px;font-weight:500;color:#1a1a18;min-width:52px;text-align:right}
+.hr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:.85rem}
+.hr-card{background:#fff;border:.5px solid #d3d1c7;border-radius:8px;padding:.65rem .85rem}
+.hr-card .l{font-size:10px;color:#888780;margin:0 0 5px}
+.hr-card .inp-row{display:flex;align-items:center;gap:8px}
+.hr-card input[type=number]{width:72px;padding:4px 8px;border:.5px solid #b4b2a9;border-radius:6px;font-size:15px;font-weight:500;background:#f8f8f6;color:#1a1a18}
+.hr-card .unit{font-size:11px;color:#888780}
+.zone-row{display:flex;border-radius:8px;overflow:hidden;height:32px;margin-bottom:8px}
+.zone-seg{display:flex;align-items:center;justify-content:center;flex:1;font-size:10px;font-weight:500}
+.dl-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.dl-btn{padding:7px 14px;border-radius:8px;border:.5px solid #b4b2a9;font-size:12px;font-weight:500;cursor:pointer;background:#fff;color:#1a1a18;display:flex;align-items:center;gap:6px;line-height:1}
+.dl-btn:hover{background:#f1efe8}
+.dl-btn svg{width:14px;height:14px;flex-shrink:0}
+.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:7px}
+.prog-label{font-size:11px;color:#888780;min-width:40px}
+.prog-bar-wrap{flex:1;display:flex;gap:2px;height:16px;border-radius:3px;overflow:hidden}
+.prog-note{font-size:10px;color:#888780;min-width:120px}
+</style>
+</head>
+<body>
+<h1>FTP тренувальний план</h1>
+
+<div class="sec">
+  <p class="st">Параметри</p>
+  <div class="slider-row">
+    <label>FTP (W)</label>
+    <input type="range" min="100" max="400" value="279" step="1" id="ftp-sl">
+    <span class="val" id="ftp-out">279 W</span>
+  </div>
+  <div class="hr-grid">
+    <div class="hr-card">
+      <p class="l">HR відпочинку (resting HR)</p>
+      <div class="inp-row">
+        <input type="number" id="hr-rest" value="45" min="30" max="80">
+        <span class="unit">bpm</span>
+      </div>
+    </div>
+    <div class="hr-card">
+      <p class="l">HR максимальний (max HR)</p>
+      <div class="inp-row">
+        <input type="number" id="hr-max" value="185" min="140" max="220">
+        <span class="unit">bpm</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <p class="st">Зони потужності та ЧСС (Karvonen)</p>
+  <div class="zone-row" id="zone-bar"></div>
+  <div class="g5" id="zone-cards"></div>
+</div>
+
+<div class="sec" id="sec-workout">
+  <p class="st">Тренування — тип</p>
+  <div class="tab-row" id="wtab-row">
+    <button class="tab active" onclick="showW(0,this)">Sweetspot</button>
+    <button class="tab" onclick="showW(1,this)">Threshold</button>
+    <button class="tab" onclick="showW(2,this)">VO2max</button>
+  </div>
+  <div id="workout-area"></div>
+</div>
+
+<div class="sec" id="sec-prog">
+  <p class="st">Прогресія — вибери тривалість</p>
+  <div class="tab-row" id="ptab-row">
+    <button class="tab active" onclick="showProg(0,this)">2 тижні</button>
+    <button class="tab" onclick="showProg(1,this)">4 тижні</button>
+    <button class="tab" onclick="showProg(2,this)">8 тижнів</button>
+    <button class="tab" onclick="showProg(3,this)">12 тижнів</button>
+  </div>
+  <div id="prog-area"></div>
+</div>
+
+<script>
+var ftp=279, hrRest=45, hrMax=185, curW=0;
+
+var zones=[
+  {name:'Z1',label:'Відновлення',    pwr:[0,0.55],    hpct:[0,0.60],   col:'#B5D4F4',tc:'#0C447C'},
+  {name:'Z2',label:'Аеробна база',   pwr:[0.56,0.75], hpct:[0.60,0.70],col:'#9FE1CB',tc:'#085041'},
+  {name:'Z3',label:'Sweetspot',      pwr:[0.76,0.90], hpct:[0.70,0.80],col:'#FAC775',tc:'#633806'},
+  {name:'Z4',label:'Threshold',      pwr:[0.91,1.05], hpct:[0.80,0.90],col:'#F0997B',tc:'#4A1B0C'},
+  {name:'Z5',label:'VO2max',         pwr:[1.06,1.20], hpct:[0.90,1.00],col:'#F09595',tc:'#791F1F'},
+];
+
+function hrKarv(pct){ return Math.round(hrRest + pct*(hrMax-hrRest)); }
+function hrStr(lo,hi){
+  if(lo===0) return '<'+hrKarv(hi)+' bpm';
+  if(hi>=1)  return '>'+hrKarv(lo)+' bpm';
+  return hrKarv(lo)+'–'+hrKarv(hi)+' bpm';
+}
+function pw(lo,hi){ return Math.round(lo*ftp)+'–'+Math.round(hi*ftp)+' W'; }
+function wt(p){ return Math.round(p*ftp); }
+function hrRange(lo,hi){ return hrKarv(lo)+'–'+hrKarv(hi); }
+
+function renderZones(){
+  document.getElementById('zone-bar').innerHTML=zones.map(function(z){
+    return '<div class="zone-seg" style="background:'+z.col+';color:'+z.tc+';">'+z.name+'</div>';
+  }).join('');
+  document.getElementById('zone-cards').innerHTML=zones.map(function(z){
+    return '<div class="kpi" style="border-left:3px solid '+z.col+';">'+
+      '<p class="l">'+z.name+' — '+z.label+'</p>'+
+      '<p class="v">'+pw(z.pwr[0],z.pwr[1])+'</p>'+
+      '<p class="s">'+hrStr(z.hpct[0],z.hpct[1])+'</p></div>';
+  }).join('');
+}
+
+function getW(idx){
+  if(idx===0){
+    var lo=wt(0.88),hi=wt(0.95),hr=hrRange(0.70,0.80);
+    return {title:'Sweetspot 2×20',type:'ss',typeName:'Sweetspot',
+      dist:'~39 km · ~1h 10m',goal:'2×20 хв @ '+lo+'–'+hi+' W · HR '+hr+' bpm',
+      segs:[
+        {l:"розгрів 10'",c:'#B5D4F4',tc:'#0C447C',f:10},
+        {l:'SS 20\' @ '+lo+'W',c:'#FAC775',tc:'#633806',f:20},
+        {l:"відп. 5'",c:'#9FE1CB',tc:'#085041',f:5},
+        {l:'SS 20\' @ '+lo+'W',c:'#FAC775',tc:'#633806',f:20},
+        {l:"заминка 10'",c:'#B5D4F4',tc:'#0C447C',f:10}
+      ],
+      steps:[
+        {t:'0–10 хв',z:'#B5D4F4',d:'Розгрів Z2, каденс одразу 88–90 rpm.'},
+        {t:'10–30 хв',z:'#FAC775',d:'SS блок 1 — '+lo+'–'+hi+' W · HR '+hr+' bpm · каденс 88–92.'},
+        {t:'30–35 хв',z:'#9FE1CB',d:'Відновлення Z2, HR опускаємо до '+hrKarv(0.58)+' bpm.'},
+        {t:'35–55 хв',z:'#FAC775',d:'SS блок 2 — '+lo+'–'+hi+' W. Якщо каденс <85 — скинь 10 W.'},
+        {t:'55–65 хв',z:'#B5D4F4',d:'Заминка Z1.'}
+      ],
+      note:'Sweetspot '+lo+'–'+hi+' W (88–95% FTP). Відновлення 24–36h.',
+      zwo:[
+        {n:'Розгрів',d:600,p:0.60},{n:'SS-1',d:1200,p:0.92},{n:'Відпочинок',d:300,p:0.58},
+        {n:'SS-2',d:1200,p:0.92},{n:'Заминка',d:600,p:0.48}
+      ]};
+  }
+  if(idx===1){
+    var lo=wt(0.96),hi=wt(1.03),hr=hrRange(0.80,0.90);
+    return {title:'Threshold 4×8 хв',type:'th',typeName:'Threshold',
+      dist:'~40 km · ~1h 15m',goal:'4×8 хв @ '+lo+'–'+hi+' W · HR '+hr+' bpm',
+      segs:[
+        {l:"розгрів 10'",c:'#B5D4F4',tc:'#0C447C',f:10},
+        {l:'4×8\' @ '+lo+'W',c:'#F0997B',tc:'#4A1B0C',f:32},
+        {l:"відп. 3×3'",c:'#9FE1CB',tc:'#085041',f:9},
+        {l:"заминка 12'",c:'#B5D4F4',tc:'#0C447C',f:12}
+      ],
+      steps:[
+        {t:'0–10 хв',z:'#B5D4F4',d:'Розгрів Z2, останні 2 хв до ~Z3.'},
+        {t:'10–18 хв',z:'#F0997B',d:'Інтервал 1 — '+lo+'–'+hi+' W · HR '+hr+' bpm.'},
+        {t:'18–21 хв',z:'#9FE1CB',d:'3 хв відновлення в русі.'},
+        {t:'21–29 хв',z:'#F0997B',d:'Інтервал 2 — '+lo+'–'+hi+' W.'},
+        {t:'29–32 хв',z:'#9FE1CB',d:'3 хв відновлення.'},
+        {t:'32–48 хв',z:'#F0997B',d:'Інтервали 3 і 4 — каденс 87–92 rpm.'},
+        {t:'48–63 хв',z:'#B5D4F4',d:'Заминка 12 хв.'}
+      ],
+      note:'Threshold '+lo+'–'+hi+' W. Якщо не завершуєш 4 повтори — наступного разу 3×10 хв.',
+      zwo:[
+        {n:'Розгрів',d:600,p:0.60},
+        {n:'TH-1',d:480,p:1.00},{n:'Відп',d:180,p:0.55},
+        {n:'TH-2',d:480,p:1.00},{n:'Відп',d:180,p:0.55},
+        {n:'TH-3',d:480,p:1.00},{n:'Відп',d:180,p:0.55},
+        {n:'TH-4',d:480,p:1.00},
+        {n:'Заминка',d:720,p:0.48}
+      ]};
+  }
+  var lo=wt(1.10),hi=wt(1.20),hrLo=hrKarv(0.90);
+  return {title:'VO2max 5×4 хв',type:'vo',typeName:'VO2max',
+    dist:'~39 km · ~1h 05m',goal:'5×4 хв @ '+lo+'–'+hi+' W · HR >'+hrLo+' bpm',
+    segs:[
+      {l:"розгрів 12'",c:'#B5D4F4',tc:'#0C447C',f:12},
+      {l:'5×4\' @ '+lo+'W',c:'#F09595',tc:'#791F1F',f:20},
+      {l:"відп. 4×4'",c:'#9FE1CB',tc:'#085041',f:16},
+      {l:"заминка 12'",c:'#B5D4F4',tc:'#0C447C',f:12}
+    ],
+    steps:[
+      {t:'0–12 хв',z:'#B5D4F4',d:'Розгрів Z2 + 2×30 сек прискорення.'},
+      {t:'12–16 хв',z:'#F09595',d:'Інтервал 1 — '+lo+'–'+hi+' W · каденс 90–95 rpm.'},
+      {t:'16–20 хв',z:'#9FE1CB',d:'4 хв відновлення Z1, HR до ~'+hrKarv(0.60)+' bpm.'},
+      {t:'20–40 хв',z:'#F09595',d:'Інтервали 2–4 — той самий протокол.'},
+      {t:'40–44 хв',z:'#9FE1CB',d:'4 хв відновлення перед фіналом.'},
+      {t:'44–48 хв',z:'#F09595',d:'Інтервал 5 — все що є, до '+wt(1.25)+' W.'},
+      {t:'48–62 хв',z:'#B5D4F4',d:'Заминка 12 хв.'}
+    ],
+    note:'VO2max '+lo+'–'+hi+' W. Раз на 10–14 днів. Відновлення 48–72h.',
+    zwo:[
+      {n:'Розгрів',d:720,p:0.60},
+      {n:'VO2-1',d:240,p:1.15},{n:'Відп',d:240,p:0.50},
+      {n:'VO2-2',d:240,p:1.15},{n:'Відп',d:240,p:0.50},
+      {n:'VO2-3',d:240,p:1.15},{n:'Відп',d:240,p:0.50},
+      {n:'VO2-4',d:240,p:1.15},{n:'Відп',d:240,p:0.50},
+      {n:'VO2-5',d:240,p:1.15},
+      {n:'Заминка',d:720,p:0.45}
+    ]};
+}
+
+function renderWorkout(idx){
+  var w=getW(idx);
+  var totalF=w.segs.reduce(function(s,x){return s+x.f;},0);
+  var segsH=w.segs.map(function(s){
+    var pct=Math.round(s.f/totalF*100);
+    return '<div class="seg" style="flex:'+s.f+';background:'+s.c+';color:'+s.tc+';">'+(pct>12?s.l:'')+'</div>';
+  }).join('');
+  var stepsH=w.steps.map(function(s){
+    return '<li><div class="zdot" style="background:'+s.z+';"></div><span class="t">'+s.t+'</span><span>'+s.d+'</span></li>';
+  }).join('');
+  var dlRow='<div class="dl-row">'+
+    '<button class="dl-btn" onclick="dlZWO('+idx+')">'+dlIcon()+' Завантажити .ZWO (Zwift)</button>'+
+    '<button class="dl-btn" onclick="dlFIT('+idx+')">'+dlIcon()+' Завантажити .FIT (навігатор)</button>'+
+    '</div>';
+  document.getElementById('workout-area').innerHTML=
+    '<div class="wcard">'+
+    '<div class="wheader"><p class="wtitle">'+w.title+'</p><span class="badge '+w.type+'">'+w.typeName+'</span></div>'+
+    '<p class="wmeta">'+w.dist+' &nbsp;·&nbsp; '+w.goal+'</p>'+
+    '<div class="seg-bar">'+segsH+'</div>'+
+    '<ul class="step-list">'+stepsH+'</ul>'+
+    '<div class="note">'+w.note+'</div>'+
+    dlRow+'</div>';
+}
+
+function dlIcon(){
+  return '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="2" x2="8" y2="10"/><polyline points="5,7 8,10 11,7"/><line x1="3" y1="13" x2="13" y2="13"/></svg>';
+}
+
+function showW(idx,btn){
+  document.getElementById('wtab-row').querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  curW=idx;
+  renderWorkout(idx);
+}
+
+// ZWO export
+function dlZWO(idx){
+  var w=getW(idx);
+  var nm=w.title.replace(/[^a-zA-Z0-9]/g,'_');
+  var x='<?xml version="1.0" encoding="UTF-8"?>\n<workout_file>\n  <author>FTP Plan</author>\n  <name>'+w.title+'</name>\n  <description>FTP '+ftp+' W | HRmax '+hrMax+' | HRrest '+hrRest+'</description>\n  <sportType>bike</sportType>\n  <workout>\n';
+  w.zwo.forEach(function(p){
+    if(p.n==='Розгрів')      x+='    <Warmup Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(2)+'"/>\n';
+    else if(p.n==='Заминка') x+='    <Cooldown Duration="'+p.d+'" PowerLow="'+p.p.toFixed(2)+'" PowerHigh="0.40"/>\n';
+    else                     x+='    <SteadyState Duration="'+p.d+'" Power="'+p.p.toFixed(2)+'"/>\n';
+  });
+  x+='  </workout>\n</workout_file>';
+  save(new Blob([x],{type:'application/xml'}), nm+'_FTP'+ftp+'.zwo');
+}
+
+// FIT export
+function dlFIT(idx){
+  var w=getW(idx);
+  var nm=w.title.replace(/[^a-zA-Z0-9]/g,'_');
+  var steps=w.zwo.map(function(p){return {dur:p.d, pow:Math.round(p.p*ftp), name:p.n};});
+  save(new Blob([buildFIT(steps,w.title)],{type:'application/octet-stream'}), nm+'_FTP'+ftp+'.fit');
+}
+
+function save(blob,filename){
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+function u16(v){return [v&0xFF,(v>>8)&0xFF];}
+function u32(v){return [v&0xFF,(v>>8)&0xFF,(v>>16)&0xFF,(v>>24)&0xFF];}
+function fitCRC(bytes){
+  var tbl=[0x0000,0xCC01,0xD801,0x1400,0xF001,0x3C00,0x2800,0xE401,0xA001,0x6C00,0x7800,0xB401,0x5000,0x9C01,0x8801,0x4400];
+  var crc=0;
+  for(var i=0;i<bytes.length;i++){
+    var b=bytes[i];
+    var tmp=tbl[crc&0xF]; crc=(crc>>4)&0x0FFF; crc=crc^tmp^tbl[b&0xF];
+    tmp=tbl[crc&0xF]; crc=(crc>>4)&0x0FFF; crc=crc^tmp^tbl[(b>>4)&0xF];
+  }
+  return crc;
+}
+
+function strBytes(s,len){
+  var b=[];
+  for(var i=0;i<len;i++) b.push(i<s.length?s.charCodeAt(i):0x00);
+  return b;
+}
+
+function buildFIT(steps,title){
+  var records=[];
+  // def mesg 0 = workout (26)
+  records=records.concat([0x40,0x00,0x00,0x1A,0x03,
+    0x08,0x10,0x07, // wkt_name string 16
+    0x04,0x01,0x00, // sport enum
+    0x09,0x02,0x84  // num_valid_steps uint16
+  ]);
+  // data mesg 0
+  records=records.concat([0x00].concat(strBytes(title.substring(0,15),16),[0x02]).concat(u16(steps.length)));
+  // def mesg 1 = workout_step (27)
+  records=records.concat([0x41,0x00,0x00,0x1B,0x06,
+    0xFE,0x02,0x84, // message_index uint16
+    0x00,0x10,0x07, // wkt_step_name string 16
+    0x01,0x01,0x00, // duration_type enum (0=time)
+    0x02,0x04,0x86, // duration_value uint32
+    0x03,0x01,0x00, // target_type enum (2=power)
+    0x04,0x04,0x86  // target_value uint32
+  ]);
+  // data mesg 1 per step
+  for(var i=0;i<steps.length;i++){
+    var s=steps[i];
+    var durMs=s.dur*1000;
+    var powVal=s.pow+1000; // FIT power offset
+    records=records.concat([0x01].concat(u16(i)).concat(strBytes(s.name.substring(0,15),16),[0x00]).concat(u32(durMs),[0x02]).concat(u32(powVal)));
+  }
+  // header
+  var dataSize=records.length;
+  var hdr=[0x0E,0x10,0x67,0x08].concat(u32(dataSize)).concat([0x2E,0x46,0x49,0x54,0x00,0x00]);
+  var hCRC=fitCRC(hdr.slice(0,12));
+  hdr[12]=hCRC&0xFF; hdr[13]=(hCRC>>8)&0xFF;
+  var all=hdr.concat(records);
+  var fCRC=fitCRC(all);
+  all.push(fCRC&0xFF,(fCRC>>8)&0xFF);
+  return new Uint8Array(all);
+}
+
+// --- PROGRESSION ---
+var progs=[
+  {label:'2 тижні',note:'Мета: відчути sweetspot-зону, встановити базовий ритм. Без ramp-тесту.',
+   weeks:[
+    {l:'Тж 1',ss:80,th:0,vo:0,note:'2×20 хв SS'},
+    {l:'Тж 2',ss:80,th:0,vo:0,note:'2×20 хв SS'}
+  ]},
+  {label:'4 тижні',note:'Очікуваний приріст: +5–10 W. Ramp-тест після тижня 4.',
+   weeks:[
+    {l:'Тж 1',ss:80,th:0,vo:0,note:'2×20 хв SS'},
+    {l:'Тж 2',ss:80,th:0,vo:0,note:'2×20 хв SS'},
+    {l:'Тж 3',ss:40,th:60,vo:0,note:'SS + 4×8 хв TH'},
+    {l:'Тж 4',ss:60,th:0,vo:0,note:'Розвантаження SS'}
+  ]},
+  {label:'8 тижнів',note:'Очікуваний приріст: +12–22 W. Ramp-тест після тижня 8.',
+   weeks:[
+    {l:'Тж 1',ss:80,th:0,vo:0,note:'2×20 хв SS'},
+    {l:'Тж 2',ss:80,th:0,vo:0,note:'2×20 хв SS'},
+    {l:'Тж 3',ss:40,th:60,vo:0,note:'SS + 4×8 хв TH'},
+    {l:'Тж 4',ss:40,th:60,vo:0,note:'SS + 4×8 хв TH'},
+    {l:'Тж 5',ss:0,th:80,vo:0,note:'3×12 хв TH'},
+    {l:'Тж 6',ss:40,th:40,vo:20,note:'SS + VO2max'},
+    {l:'Тж 7',ss:0,th:80,vo:0,note:'3×15 хв TH'},
+    {l:'Тж 8',ss:60,th:0,vo:0,note:'Розвантаження SS'}
+  ]},
+  {label:'12 тижнів',note:'Очікуваний приріст: +20–35 W. Ramp-тест після тижня 12.',
+   weeks:[
+    {l:'Тж 1',ss:80,th:0,vo:0,note:'2×20 хв SS'},
+    {l:'Тж 2',ss:80,th:0,vo:0,note:'2×20 хв SS'},
+    {l:'Тж 3',ss:40,th:60,vo:0,note:'SS + 4×8 хв TH'},
+    {l:'Тж 4',ss:40,th:60,vo:0,note:'SS + 4×8 хв TH'},
+    {l:'Тж 5',ss:0,th:80,vo:0,note:'3×12 хв TH'},
+    {l:'Тж 6',ss:40,th:40,vo:20,note:'SS + VO2max'},
+    {l:'Тж 7',ss:0,th:80,vo:0,note:'3×15 хв TH'},
+    {l:'Тж 8',ss:60,th:0,vo:0,note:'Розвантаження'},
+    {l:'Тж 9',ss:40,th:60,vo:0,note:'SS + 4×8 хв TH'},
+    {l:'Тж 10',ss:0,th:60,vo:40,note:'TH + VO2max'},
+    {l:'Тж 11',ss:0,th:100,vo:0,note:'3×18 хв TH — пік'},
+    {l:'Тж 12',ss:60,th:0,vo:0,note:'Тейпер + ramp-тест'}
+  ]}
+];
+
+function showProg(idx,btn){
+  document.getElementById('ptab-row').querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
+  btn.classList.add('active');
+  renderProg(idx);
+}
+
+function renderProg(idx){
+  var plan=progs[idx];
+  var legend='<div style="display:flex;gap:14px;margin-bottom:10px;font-size:11px;color:#888780;">'+
+    '<span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#FAC775;border-radius:2px;"></span>Sweetspot</span>'+
+    '<span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#F0997B;border-radius:2px;"></span>Threshold</span>'+
+    '<span style="display:flex;align-items:center;gap:5px;"><span style="width:10px;height:10px;background:#F09595;border-radius:2px;"></span>VO2max</span></div>';
+  var rows=plan.weeks.map(function(w){
+    return '<div class="prog-row">'+
+      '<span class="prog-label">'+w.l+'</span>'+
+      '<div class="prog-bar-wrap">'+
+      (w.ss?'<div style="flex:'+w.ss+';background:#FAC775;border-radius:2px;"></div>':'')+
+      (w.th?'<div style="flex:'+w.th+';background:#F0997B;border-radius:2px;"></div>':'')+
+      (w.vo?'<div style="flex:'+w.vo+';background:#F09595;border-radius:2px;"></div>':'')+
+      '<div style="flex:'+(100-w.ss-w.th-w.vo)+';background:#ebe9e2;border-radius:2px;"></div>'+
+      '</div>'+
+      '<span class="prog-note">'+w.note+'</span></div>';
+  }).join('');
+  var note='<div style="margin-top:10px;padding:9px 10px;background:#f1efe8;border-radius:8px;font-size:11px;color:#5f5e5a;line-height:1.7;">'+plan.note+'</div>';
+  document.getElementById('prog-area').innerHTML=legend+rows+note;
+}
+
+// Event listeners
+document.getElementById('ftp-sl').addEventListener('input',function(e){
+  ftp=parseInt(e.target.value);
+  document.getElementById('ftp-out').textContent=ftp+' W';
+  renderZones(); renderWorkout(curW);
+});
+document.getElementById('hr-rest').addEventListener('change',function(e){
+  var v=parseInt(e.target.value)||45;
+  hrRest=Math.max(30,Math.min(80,v));
+  e.target.value=hrRest;
+  renderZones(); renderWorkout(curW);
+});
+document.getElementById('hr-max').addEventListener('change',function(e){
+  var v=parseInt(e.target.value)||185;
+  hrMax=Math.max(140,Math.min(220,v));
+  e.target.value=hrMax;
+  renderZones(); renderWorkout(curW);
+});
+
+// Init
+renderZones();
+renderWorkout(0);
+renderProg(0);
+</script>
+
+<!-- GEMINI CHAT -->
+<style>
+#chat-wrap{margin-top:2.5rem;border-top:.5px solid #d3d1c7;padding-top:1.5rem}
+#chat-wrap .st{font-size:11px;font-weight:500;color:#888780;letter-spacing:.08em;text-transform:uppercase;margin:0 0 .75rem}
+#chat-messages{min-height:120px;max-height:380px;overflow-y:auto;display:flex;flex-direction:column;gap:10px;margin-bottom:12px;padding:4px 0}
+.msg{max-width:82%;padding:9px 13px;border-radius:12px;font-size:13px;line-height:1.55}
+.msg.user{align-self:flex-end;background:#1a1a18;color:#f8f8f6;border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:#fff;border:.5px solid #d3d1c7;color:#1a1a18;border-bottom-left-radius:4px}
+.msg.ai.loading{color:#888780;font-style:italic}
+.msg.err{align-self:flex-start;background:#FCEBEB;color:#791F1F;border:.5px solid #F09595;border-bottom-left-radius:4px}
+#chat-input-row{display:flex;gap:8px;align-items:flex-end}
+#chat-input{flex:1;padding:9px 12px;border:.5px solid #b4b2a9;border-radius:10px;font-size:13px;font-family:inherit;resize:none;background:#fff;color:#1a1a18;min-height:40px;max-height:120px;line-height:1.5}
+#chat-input:focus{outline:none;border-color:#888780}
+#chat-send{padding:9px 18px;border-radius:10px;border:.5px solid #b4b2a9;background:#1a1a18;color:#f8f8f6;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap;line-height:1}
+#chat-send:hover{background:#333}
+#chat-send:disabled{background:#b4b2a9;cursor:not-allowed}
+#chat-clear{padding:9px 12px;border-radius:10px;border:.5px solid #b4b2a9;background:transparent;color:#888780;font-size:12px;cursor:pointer}
+#chat-clear:hover{background:#f1efe8}
+.chat-hint{font-size:11px;color:#b4b2a9;margin-bottom:10px}
+</style>
+
+<div id="chat-wrap">
+  <p class="st">Запитай тренера — Gemini AI</p>
+  <p class="chat-hint">Контекст: FTP, зони, плани тренувань — вже передані в систему.</p>
+  <div id="chat-messages">
+    <div class="msg ai">Привіт! Я твій AI-тренер. Запитуй про тренування, зони, відновлення або будь-що пов'язане з велоспортом.</div>
+  </div>
+  <div id="chat-input-row">
+    <textarea id="chat-input" placeholder="Наприклад: скільки відпочивати після VO2max тренування?" rows="1"></textarea>
+    <button id="chat-send" onclick="sendMsg()">Надіслати</button>
+    <button id="chat-clear" onclick="clearChat()" title="Очистити чат">&#x2715;</button>
+  </div>
+</div>
+
+<script>
+var chatHistory = [];
+
+function getContext() {
+  return 'Поточні параметри атлета: FTP ' + ftp + ' W, HR відпочинку ' + hrRest + ' bpm, HR макс ' + hrMax + ' bpm. ' +
+    'Зони потужності: Z1 0–' + wt(0.55) + 'W, Z2 ' + pw(0.56,0.75) + ', Z3 (Sweetspot) ' + pw(0.76,0.90) + ', Z4 (Threshold) ' + pw(0.91,1.05) + ', Z5 (VO2max) ' + pw(1.06,1.20) + '. ' +
+    'Зони ЧСС (Karvonen): Z1 <' + hrKarv(0.60) + ', Z2 ' + hrRange(0.60,0.70) + ', Z3 ' + hrRange(0.70,0.80) + ', Z4 ' + hrRange(0.80,0.90) + ', Z5 >' + hrKarv(0.90) + '.';
+}
+
+async function sendMsg() {
+  var input = document.getElementById('chat-input');
+  var sendBtn = document.getElementById('chat-send');
+  var text = input.value.trim();
+  if (!text) return;
+
+  appendMsg(text, 'user');
+  input.value = '';
+  input.style.height = 'auto';
+  sendBtn.disabled = true;
+
+  var loadingEl = appendMsg('Думаю...', 'ai loading');
+
+  try {
+    var fullMessage = getContext() + '\n\n' + text;
+
+    var res = await fetch('/api/gemini', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: fullMessage,
+        history: chatHistory.slice(-8)
+      })
+    });
+
+    var data = await res.json();
+
+    loadingEl.remove();
+
+    if (!res.ok || data.error) {
+      appendMsg('Помилка: ' + (data.error || 'щось пішло не так'), 'err');
+    } else {
+      appendMsg(data.reply, 'ai');
+      chatHistory.push({ role: 'user', text: text });
+      chatHistory.push({ role: 'model', text: data.reply });
+      if (chatHistory.length > 20) chatHistory = chatHistory.slice(-20);
+    }
+  } catch(e) {
+    loadingEl.remove();
+    appendMsg('Не вдалось з\'єднатись з сервером. Перевір чи запущено.', 'err');
+  }
+
+  sendBtn.disabled = false;
+  input.focus();
+}
+
+function appendMsg(text, cls) {
+  var box = document.getElementById('chat-messages');
+  var el = document.createElement('div');
+  el.className = 'msg ' + cls;
+  el.textContent = text;
+  box.appendChild(el);
+  box.scrollTop = box.scrollHeight;
+  return el;
+}
+
+function clearChat() {
+  chatHistory = [];
+  var box = document.getElementById('chat-messages');
+  box.innerHTML = '<div class="msg ai">Чат очищено. Можеш починати знову.</div>';
+}
+
+// Send on Enter (Shift+Enter = новий рядок)
+document.getElementById('chat-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMsg();
+  }
+});
+
+// Auto-resize textarea
+document.getElementById('chat-input').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+</script>
+</body>
+</html>
