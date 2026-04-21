@@ -22,18 +22,21 @@ app.post('/api/gemini', async (req, res) => {
 
   const contents = [];
 
-  // Add conversation history
+  // Конвертуємо історію, перевіряючи ролі (user/model)
   if (history && Array.isArray(history)) {
     history.forEach(h => {
-      contents.push({ role: h.role, parts: [{ text: h.text }] });
+      // Важливо: роль бота для Google API — "model"
+      const role = h.role === 'bot' || h.role === 'model' ? 'model' : 'user';
+      contents.push({ role: role, parts: [{ text: h.text }] });
     });
   }
 
-  // Add current user message
   contents.push({ role: 'user', parts: [{ text: message }] });
 
   try {
+    // Використовуємо стабільну модель 1.5 Flash
     const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -54,20 +57,17 @@ app.post('/api/gemini', async (req, res) => {
     });
 
     if (!response.ok) {
-      const err = await response.text();
-      return res.status(response.status).json({ error: err });
+      const errData = await response.json();
+      console.error('Gemini API Error:', errData);
+      return res.status(response.status).json({ error: errData.error?.message || 'API Error' });
     }
 
     const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+    const text = data.candidates?.?.content?.parts?.?.text || '';
     res.json({ reply: text });
 
   } catch (err) {
-    console.error('Gemini error:', err);
-    res.status(500).json({ error: 'Proxy error: ' + err.message });
+    console.error('Server error:', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
-});
-
-app.listen(PORT, () => {
-  console.log(`FTP Coach server running on port ${PORT}`);
 });
