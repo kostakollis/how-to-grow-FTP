@@ -5,123 +5,136 @@ const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const GROK_API_KEY = process.env.GROK_API_KEY;
 
 app.use(express.json());
 
-// Static files — працює і з public/ і без
+// Static files — works with /public or root
 const publicPath = path.join(__dirname, 'public');
-if (fs.existsSync(publicPath)) {
+if (fs.existsSync(publicPath) && fs.existsSync(path.join(publicPath, 'index.html'))) {
   app.use(express.static(publicPath));
 } else {
   app.use(express.static(__dirname));
 }
 
-// Моделі в порядку пріоритету — якщо перша недоступна, пробує наступну
+// Grok models in priority order
 const MODELS = [
-  'gemini-1.5-flash-latest',
-  'gemini-1.5-flash',
-  'gemini-1.5-pro-latest',
-  'gemini-pro',
+  'grok-3-mini',   // найшвидший і найдешевший
+  'grok-3',        // потужніший
+  'grok-2',        // fallback
 ];
 
-async function callGemini(apiKey, model, contents) {
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-  const res = await fetch(url, {
+const SYSTEM_PROMPT = `Ти — персональний тренер з велоспорту. Запитай у атлета вік, вагу, FTP, спеціалізацію та очікування.  
+Відповідай конкретно, без зайвих слів. Якщо питання про тренування — давай цифри (ватти, пульс, хвилини). 
+Мова відповіді: та ж, що у питанні (українська або польська).`;
+
+async function callGrok(apiKey, model, messages) {
+  const res = await fetch('https://api.x.ai/v1/chat/completions', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
     body: JSON.stringify({
-      contents,
-      generationConfig: {
-        temperature: 0.7,
-        maxOutputTokens: 1024,
-      },
+      model,
+      messages,
+      temperature: 0.7,
+      max_tokens: 1024,
+      stream: false,
     }),
   });
   const data = await res.json();
   return { ok: res.ok, status: res.status, data };
 }
 
-// Gemini proxy endpoint
-app.post('/api/gemini', async (req, res) => {
-  if (!GEMINI_API_KEY) {
-    return res.status(500).json({ error: 'GEMINI_API_KEY не налаштований на сервері' });
-  }
+function buildMessages(message, history) {
+  const messages = [
+    { role: 'system', content: SYSTEM_PROMPT },
+  ];
 
-  const { message, history } = req.body;
-  if (!message) return res.status(400).json({ error: 'Повідомлення порожнє' });
-
-  // Будуємо contents: системна інструкція + історія + поточне повідомлення
-  const contents = [];
-
-  // Системна інструкція через перший user/model обмін
-  contents.push({
-    role: 'user',
-    parts: [{ text: 'Ти — персональний тренер з велоспорту. Твій атлет: Kosta, FTP ~279 W, 3.32 W/kg, вага 84 кг, спеціалізація — ultracycling 400–1000 km. Відповідай конкретно, без зайвих слів. Якщо питання про тренування — давай цифри (ватти, пульс, хвилини). Мова відповіді: та ж, що у питанні (українська або польська).' }],
-  });
-  contents.push({
-    role: 'model',
-    parts: [{ text: 'Зрозумів. Готовий. Яке питання?' }],
-  });
-
-  // Історія попередніх повідомлень
   if (Array.isArray(history)) {
-    history.forEach(h => {
-      const role = (h.role === 'bot' || h.role === 'model') ? 'model' : 'user';
+    history.slice(-10).forEach(h => {
+      const role = (h.role === 'bot' || h.role === 'model' || h.role === 'assistant')
+        ? 'assistant'
+        : 'user';
       if (h.text && h.text.trim()) {
-        contents.push({ role, parts: [{ text: h.text }] });
+        messages.push({ role, content: h.text });
       }
     });
   }
 
-  // Поточне повідомлення
-  contents.push({ role: 'user', parts: [{ text: message }] });
+  messages.push({ role: 'user', content: message });
+  return messages;
+}
 
-  // Пробуємо моделі по черзі
-  let lastError = null;
+// Grok proxy endpoint
+app.post('/api/gemini', async (req, res) => {
+  if (!GROK_API_KEY) {
+    return res.status(500).json({
+      error: 'GROK_API_KEY не налаштований. Додай змінну на Railway → Variables.',
+    });
+  }
+
+  const { message, history } = req.body;
+  if (!message || !message.trim()) {
+    return res.status(400).json({ error: 'Повідомлення порожнє' });
+  }
+
+  const messages = buildMessages(message.trim(), history);
+  let lastError = '';
+
   for (const model of MODELS) {
     try {
-      const { ok, status, data } = await callGemini(GEMINI_API_KEY, model, contents);
+      console.log(`Trying: ${model}`);
+      const { ok, status, data } = await callGrok(GROK_API_KEY, model, messages);
 
       if (ok) {
-        const text = (data.candidates &&
-                      data.candidates[0] &&
-                      data.candidates[0].content &&
-                      data.candidates[0].content.parts &&
-                      data.candidates[0].content.parts[0] &&
-                      data.candidates[0].content.parts[0].text)
-          ? data.candidates[0].content.parts[0].text
-          : 'Вибач, не вдалося отримати відповідь.';
-        console.log(`OK: model=${model}`);
+        const text =
+          data.choices &&
+          data.choices[0] &&
+          data.choices[0].message &&
+          data.choices[0].message.content
+            ? data.choices[0].message.content
+            : 'Не вдалось отримати відповідь.';
+        console.log(`OK: ${model} | tokens: ${data.usage ? data.usage.total_tokens : '?'}`);
         return res.json({ reply: text, model });
       }
 
-      // 429 = quota, 404 = модель не знайдена — пробуємо наступну
-      if (status === 429 || status === 404) {
-        console.warn(`Skip model=${model} status=${status}`);
-        lastError = data.error && data.error.message ? data.error.message : JSON.stringify(data);
-        continue;
-      }
+      const errMsg = (data.error && data.error.message)
+        ? data.error.message
+        : JSON.stringify(data);
+      console.warn(`${model} -> ${status}: ${errMsg.substring(0, 120)}`);
+      lastError = errMsg;
 
-      // Інша помилка — повертаємо одразу
-      console.error(`Error model=${model} status=${status}`, data);
-      return res.status(status).json({
-        error: data.error && data.error.message ? data.error.message : 'Gemini API error',
-      });
+      // 429 rate limit — спробуємо наступну модель
+      if (status === 429) { continue; }
+      // 404 модель не знайдена — наступна
+      if (status === 404) { continue; }
+      // 401/403 — неправильний ключ, немає сенсу далі
+      return res.status(status).json({ error: errMsg.substring(0, 400) });
 
     } catch (err) {
-      console.error(`Exception model=${model}:`, err.message);
+      console.error(`${model} exception:`, err.message);
       lastError = err.message;
     }
   }
 
-  // Всі моделі вичерпані
   return res.status(429).json({
-    error: 'Всі доступні моделі недоступні або перевищена квота. Спробуй за кілька хвилин.',
-    detail: lastError,
+    error: 'Всі моделі недоступні. Перевір ключ або спробуй пізніше.',
+    detail: lastError.substring(0, 200),
+  });
+});
+
+// Health check
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    provider: 'xAI Grok',
+    keySet: !!GROK_API_KEY,
+    models: MODELS,
   });
 });
 
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`FTP Coach server running on port ${PORT}`);
+  console.log(`FTP Coach (Grok) on port ${PORT} | key: ${GROK_API_KEY ? 'SET' : 'MISSING'}`);
 });
