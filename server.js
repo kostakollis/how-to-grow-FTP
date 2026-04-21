@@ -34,15 +34,18 @@ app.post('/api/gemini', async (req, res) => {
   contents.push({ role: 'user', parts: [{ text: message }] });
 
   try {
- const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    // Використовуємо v1beta для підтримки systemInstruction через fetch
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+    
     const response = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         contents,
         systemInstruction: {
+          role: "system", // Деякі версії вимагають вказання ролі тут
           parts: [{
-            text: `Ти — персональний тренер з велоспорту. Твій атлет: Kosta, FTP ~279 W, 3.32 W/kg, вага 84 кг, спеціалізація — ultracycling 400–1000 km. 
+            text: `Ти — персональний тренер з велоспорту. Запитай у атлета вік, вагу, FTP, спеціалізацію та очікування.  
 Відповідай конкретно, без зайвих слів. Якщо питання про тренування — давай цифри (ватти, пульс, хвилини). 
 Мова відповіді: та ж, що у питанні (українська або польська).`
           }]
