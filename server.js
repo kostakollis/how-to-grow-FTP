@@ -7,7 +7,9 @@ const PORT = process.env.PORT || 3000;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+const fs = require('fs');
+const staticDir = fs.existsSync(path.join(__dirname, 'public', 'index.html')) ? path.join(__dirname, 'public') : __dirname;
+app.use(express.static(staticDir));
 
 // Gemini proxy endpoint
 app.post('/api/gemini', async (req, res) => {
