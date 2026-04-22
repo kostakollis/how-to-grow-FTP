@@ -82,6 +82,12 @@ h1{font-size:20px;font-weight:500}
 #chat-send:disabled{background:#b4b2a9;cursor:not-allowed}
 #chat-clear{padding:9px 12px;border-radius:10px;border:.5px solid #b4b2a9;background:transparent;color:#888780;font-size:12px;cursor:pointer}
 .chat-hint{font-size:11px;color:#b4b2a9;margin-bottom:10px}
+.cal-bar{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.cal-btn{padding:7px 14px;border-radius:8px;border:.5px solid #b4b2a9;font-size:12px;font-weight:500;cursor:pointer;background:#fff;color:#1a1a18;display:flex;align-items:center;gap:6px;line-height:1}
+.cal-btn:hover{background:#f1efe8}
+.cal-btn svg{width:14px;height:14px;flex-shrink:0}
+.cal-btn.full{background:#1a1a18;color:#f8f8f6;border-color:#1a1a18}
+.cal-btn.full:hover{background:#333}
 @media(max-width:580px){.g5{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr}}
 </style>
 </head>
@@ -119,6 +125,7 @@ h1{font-size:20px;font-weight:500}
 <div class="sec">
   <p class="st" id="lbl-sched">Weekly schedule</p>
   <div id="week-sched"></div>
+  <div class="cal-bar" id="cal-bar"></div>
 </div>
 
 <div class="sec">
@@ -155,9 +162,9 @@ h1{font-size:20px;font-weight:500}
 var ftp=200,hrRest=50,hrMax=185,sessW=3,kmS=40,curW=0,curProg=0,curLang='en',chatHist=[];
 
 var T={
-en:{title:'Cycling Training Plan',params:'Athlete parameters',ftpL:'FTP (W)',hrrest:'Resting HR',hrmax:'Max HR',sessions:'Sessions per week',pw:'/ week',km:'km per session',zones:'Power & HR zones',sched:'Weekly schedule',wout:'Workout detail',prog:'Progression',chat:'Ask the AI coach',hint:'Your FTP, zones and plan are sent automatically.',welcome:'Hello! I am your AI cycling coach. Ask me anything about training, recovery, nutrition or race strategy.',send:'Send',weeks:'weeks',rest:'Rest',long:'Long ride',days:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],wt:['Sweetspot','Threshold','VO2max','Zone 2 Base'],nb_ss:'Sweetspot (88–95% FTP): best FTP stimulus with 24–36h recovery. Drop 10 W if cadence falls below 85 rpm.',nb_th:'Threshold: if you cannot complete all intervals, do fewer reps. Consistency beats heroics.',nb_vo:'VO2max: max once every 10–14 days. 48–72h recovery required.',nb_z2:'Zone 2: the engine builder. Conversational pace. Resist the urge to go harder.',pnote:['Goal: feel the zones, build rhythm.','Expected gain: +5–10 W. Ramp test after week 4.','Expected gain: +12–22 W. Ramp test after week 8.','Expected gain: +20–35 W. Ramp test after week 12.'],dl_zwo:'Download .ZWO (Zwift)',dl_fit:'Download .FIT (device)',loading:'Thinking...',errC:'Could not connect to server.',ctx:'Athlete FTP: {ftp} W | Resting HR: {hr1} bpm | Max HR: {hr2} bpm | Sessions/week: {sw} | km/session: {km}\nPower zones: Z1 <{z1}W | Z2 {z2} | Z3 Sweetspot {z3} | Z4 Threshold {z4} | Z5 VO2max {z5}\nHR zones (Karvonen): Z2 {h2} | Z3 {h3} | Z4 {h4} bpm\nAnswer in the same language as the question. Be specific, give numbers.'},
-uk:{title:'План велотренувань',params:'Параметри атлета',ftpL:'FTP (Вт)',hrrest:'ЧСС відпочинку',hrmax:'ЧСС максимальний',sessions:'Тренувань на тиждень',pw:'/ тиж',km:'км на тренування',zones:'Зони потужності та ЧСС',sched:'Тижневий розклад',wout:'Деталі тренування',prog:'Прогресія',chat:'Запитай AI-тренера',hint:'FTP, зони та план передаються автоматично.',welcome:'Привіт! Я твій AI-тренер. Запитуй про тренування, відновлення, харчування або тактику.',send:'Надіслати',weeks:'тижнів',rest:'Відпочинок',long:'Довга поїздка',days:['Пн','Вт','Ср','Чт','Пт','Сб','Нд'],wt:['Sweetspot','Threshold','VO2max','Zone 2 База'],nb_ss:'Sweetspot (88–95% FTP): найкращий стимул для FTP з відновленням 24–36h. Якщо каденс <85 об/хв — скинь 10 Вт.',nb_th:'Threshold: якщо не завершуєш всі інтервали — наступного разу роби менше. Консистентність понад усе.',nb_vo:'VO2max: раз на 10–14 днів максимум. Потрібно 48–72h відновлення.',nb_z2:'Zone 2: будує аеробний двигун. Розмовний темп. Не піддавайся спокусі їхати швидше.',pnote:['Мета: відчути зони, знайти ритм.','Приріст: +5–10 Вт. Ramp-тест після тижня 4.','Приріст: +12–22 Вт. Ramp-тест після тижня 8.','Приріст: +20–35 Вт. Ramp-тест після тижня 12.'],dl_zwo:'Завантажити .ZWO (Zwift)',dl_fit:'Завантажити .FIT (навігатор)',loading:'Думаю...',errC:'Не вдалось з\'єднатись із сервером.',ctx:'FTP: {ftp} Вт | ЧСС спокою: {hr1} | ЧСС макс: {hr2} | Тренувань/тиж: {sw} | км/трен: {km}\nЗони потужності: Z1 <{z1}Вт | Z2 {z2} | Z3 Sweetspot {z3} | Z4 Threshold {z4} | Z5 VO2max {z5}\nЗони ЧСС: Z2 {h2} | Z3 {h3} | Z4 {h4} уд/хв\nВідповідай тією ж мовою що питання. Давай конкретні цифри.'},
-pl:{title:'Plan treningowy kolarstwa',params:'Parametry zawodnika',ftpL:'FTP (W)',hrrest:'HR spoczynkowe',hrmax:'HR maksymalne',sessions:'Treningów w tygodniu',pw:'/ tydz',km:'km na trening',zones:'Strefy mocy i tętna',sched:'Plan tygodniowy',wout:'Szczegóły treningu',prog:'Progresja',chat:'Zapytaj trenera AI',hint:'FTP, strefy i plan są wysyłane automatycznie.',welcome:'Cześć! Jestem Twoim trenerem AI. Pytaj o trening, regenerację, żywienie lub taktykę.',send:'Wyślij',weeks:'tygodnie',rest:'Odpoczynek',long:'Długa jazda',days:['Pon','Wt','Śr','Czw','Pt','Sob','Nd'],wt:['Sweetspot','Próg','VO2max','Zone 2 Baza'],nb_ss:'Sweetspot (88–95% FTP): najlepszy bodziec dla FTP, regeneracja 24–36h. Jeśli kadencja <85 rpm — zmniejsz moc o 10 W.',nb_th:'Próg: jeśli nie kończysz interwałów — rób mniej powtórzeń. Konsekwencja ważniejsza niż heroizm.',nb_vo:'VO2max: max raz na 10–14 dni. Potrzeba 48–72h regeneracji.',nb_z2:'Zone 2: buduje silnik aerobowy. Tempo konwersacyjne. Nie jedź szybciej.',pnote:['Cel: poczuć strefy, znaleźć rytm.','Przyrost: +5–10 W. Test rampowy po tygodniu 4.','Przyrost: +12–22 W. Test rampowy po tygodniu 8.','Przyrost: +20–35 W. Test rampowy po tygodniu 12.'],dl_zwo:'Pobierz .ZWO (Zwift)',dl_fit:'Pobierz .FIT (nawigator)',loading:'Myślę...',errC:'Nie można połączyć się z serwerem.',ctx:'FTP: {ftp} W | HR spoczynkowe: {hr1} | HR max: {hr2} | Treningów/tydz: {sw} | km/trening: {km}\nStrefy mocy: Z1 <{z1}W | Z2 {z2} | Z3 Sweetspot {z3} | Z4 Próg {z4} | Z5 VO2max {z5}\nStrefy HR: Z2 {h2} | Z3 {h3} | Z4 {h4} bpm\nOdpowiadaj w tym samym języku. Podawaj konkretne liczby.'}
+en:{title:'Cycling Training Plan',params:'Athlete parameters',ftpL:'FTP (W)',hrrest:'Resting HR',hrmax:'Max HR',sessions:'Sessions per week',pw:'/ week',km:'km per session',zones:'Power & HR zones',sched:'Weekly schedule',wout:'Workout detail',prog:'Progression',chat:'Ask the AI coach',hint:'Your FTP, zones and plan are sent automatically.',welcome:'Hello! I am your AI cycling coach. Ask me anything about training, recovery, nutrition or race strategy.',send:'Send',weeks:'weeks',rest:'Rest',long:'Long ride',days:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],wt:['Sweetspot','Threshold','VO2max','Zone 2 Base'],nb_ss:'Sweetspot (88–95% FTP): best FTP stimulus with 24–36h recovery. Drop 10 W if cadence falls below 85 rpm.',nb_th:'Threshold: if you cannot complete all intervals, do fewer reps. Consistency beats heroics.',nb_vo:'VO2max: max once every 10–14 days. 48–72h recovery required.',nb_z2:'Zone 2: the engine builder. Conversational pace. Resist the urge to go harder.',pnote:['Goal: feel the zones, build rhythm.','Expected gain: +5–10 W. Ramp test after week 4.','Expected gain: +12–22 W. Ramp test after week 8.','Expected gain: +20–35 W. Ramp test after week 12.'],dl_zwo:'Download .ZWO (Zwift)',dl_fit:'Download .FIT (device)',loading:'Thinking...',errC:'Could not connect to server.',ctx:'Athlete FTP: {ftp} W | Resting HR: {hr1} bpm | Max HR: {hr2} bpm | Sessions/week: {sw} | km/session: {km}\nPower zones: Z1 <{z1}W | Z2 {z2} | Z3 Sweetspot {z3} | Z4 Threshold {z4} | Z5 VO2max {z5}\nHR zones (Karvonen): Z2 {h2} | Z3 {h3} | Z4 {h4} bpm\nAnswer in the same language as the question. Be specific, give numbers.',cal_week:'Export this week (.ics)',cal_4:'Export 4-week plan',cal_8:'Export 8-week plan',cal_12:'Export 12-week plan',cal_hint:'Opens in Apple Calendar, Google Calendar, Outlook',cal_desc_ss:'Sweetspot training: {goal}\nFTP: {ftp} W',cal_desc_th:'Threshold training: {goal}\nFTP: {ftp} W',cal_desc_vo:'VO2max training: {goal}\nFTP: {ftp} W',cal_desc_z2:'Zone 2 base ride: {goal}',cal_desc_long:'Long endurance ride: ~{km} km at Z2 pace',cal_desc_rest:'Rest day — active recovery or complete rest'},
+uk:{title:'План велотренувань',params:'Параметри атлета',ftpL:'FTP (Вт)',hrrest:'ЧСС відпочинку',hrmax:'ЧСС максимальний',sessions:'Тренувань на тиждень',pw:'/ тиж',km:'км на тренування',zones:'Зони потужності та ЧСС',sched:'Тижневий розклад',wout:'Деталі тренування',prog:'Прогресія',chat:'Запитай AI-тренера',hint:'FTP, зони та план передаються автоматично.',welcome:'Привіт! Я твій AI-тренер. Запитуй про тренування, відновлення, харчування або тактику.',send:'Надіслати',weeks:'тижнів',rest:'Відпочинок',long:'Довга поїздка',days:['Пн','Вт','Ср','Чт','Пт','Сб','Нд'],wt:['Sweetspot','Threshold','VO2max','Zone 2 База'],nb_ss:'Sweetspot (88–95% FTP): найкращий стимул для FTP з відновленням 24–36h. Якщо каденс <85 об/хв — скинь 10 Вт.',nb_th:'Threshold: якщо не завершуєш всі інтервали — наступного разу роби менше. Консистентність понад усе.',nb_vo:'VO2max: раз на 10–14 днів максимум. Потрібно 48–72h відновлення.',nb_z2:'Zone 2: будує аеробний двигун. Розмовний темп. Не піддавайся спокусі їхати швидше.',pnote:['Мета: відчути зони, знайти ритм.','Приріст: +5–10 Вт. Ramp-тест після тижня 4.','Приріст: +12–22 Вт. Ramp-тест після тижня 8.','Приріст: +20–35 Вт. Ramp-тест після тижня 12.'],dl_zwo:'Завантажити .ZWO (Zwift)',dl_fit:'Завантажити .FIT (навігатор)',loading:'Думаю...',errC:'Не вдалось з\'єднатись із сервером.',ctx:'FTP: {ftp} Вт | ЧСС спокою: {hr1} | ЧСС макс: {hr2} | Тренувань/тиж: {sw} | км/трен: {km}\nЗони потужності: Z1 <{z1}Вт | Z2 {z2} | Z3 Sweetspot {z3} | Z4 Threshold {z4} | Z5 VO2max {z5}\nЗони ЧСС: Z2 {h2} | Z3 {h3} | Z4 {h4} уд/хв\nВідповідай тією ж мовою що питання. Давай конкретні цифри.',cal_week:'Експорт тижня (.ics)',cal_4:'Експорт плану 4 тижні',cal_8:'Експорт плану 8 тижнів',cal_12:'Експорт плану 12 тижнів',cal_hint:'Відкривається в Apple Calendar, Google Calendar, Outlook',cal_desc_ss:'Тренування Sweetspot: {goal}\nFTP: {ftp} Вт',cal_desc_th:'Threshold тренування: {goal}\nFTP: {ftp} Вт',cal_desc_vo:'VO2max тренування: {goal}\nFTP: {ftp} Вт',cal_desc_z2:'Zone 2 базова поїздка: {goal}',cal_desc_long:'Довга поїздка: ~{km} км у темпі Z2',cal_desc_rest:'День відпочинку — легка активність або повний відпочинок'},
+pl:{title:'Plan treningowy kolarstwa',params:'Parametry zawodnika',ftpL:'FTP (W)',hrrest:'HR spoczynkowe',hrmax:'HR maksymalne',sessions:'Treningów w tygodniu',pw:'/ tydz',km:'km na trening',zones:'Strefy mocy i tętna',sched:'Plan tygodniowy',wout:'Szczegóły treningu',prog:'Progresja',chat:'Zapytaj trenera AI',hint:'FTP, strefy i plan są wysyłane automatycznie.',welcome:'Cześć! Jestem Twoim trenerem AI. Pytaj o trening, regenerację, żywienie lub taktykę.',send:'Wyślij',weeks:'tygodnie',rest:'Odpoczynek',long:'Długa jazda',days:['Pon','Wt','Śr','Czw','Pt','Sob','Nd'],wt:['Sweetspot','Próg','VO2max','Zone 2 Baza'],nb_ss:'Sweetspot (88–95% FTP): najlepszy bodziec dla FTP, regeneracja 24–36h. Jeśli kadencja <85 rpm — zmniejsz moc o 10 W.',nb_th:'Próg: jeśli nie kończysz interwałów — rób mniej powtórzeń. Konsekwencja ważniejsza niż heroizm.',nb_vo:'VO2max: max raz na 10–14 dni. Potrzeba 48–72h regeneracji.',nb_z2:'Zone 2: buduje silnik aerobowy. Tempo konwersacyjne. Nie jedź szybciej.',pnote:['Cel: poczuć strefy, znaleźć rytm.','Przyrost: +5–10 W. Test rampowy po tygodniu 4.','Przyrost: +12–22 W. Test rampowy po tygodniu 8.','Przyrost: +20–35 W. Test rampowy po tygodniu 12.'],dl_zwo:'Pobierz .ZWO (Zwift)',dl_fit:'Pobierz .FIT (nawigator)',loading:'Myślę...',errC:'Nie można połączyć się z serwerem.',ctx:'FTP: {ftp} W | HR spoczynkowe: {hr1} | HR max: {hr2} | Treningów/tydz: {sw} | km/trening: {km}\nStrefy mocy: Z1 <{z1}W | Z2 {z2} | Z3 Sweetspot {z3} | Z4 Próg {z4} | Z5 VO2max {z5}\nStrefy HR: Z2 {h2} | Z3 {h3} | Z4 {h4} bpm\nOdpowiadaj w tym samym języku. Podawaj konkretne liczby.',cal_week:'Eksport tygodnia (.ics)',cal_4:'Eksport planu 4 tygodnie',cal_8:'Eksport planu 8 tygodni',cal_12:'Eksport planu 12 tygodni',cal_hint:'Otwiera się w Apple Calendar, Google Calendar, Outlook',cal_desc_ss:'Trening Sweetspot: {goal}\nFTP: {ftp} W',cal_desc_th:'Trening progowy: {goal}\nFTP: {ftp} W',cal_desc_vo:'Trening VO2max: {goal}\nFTP: {ftp} W',cal_desc_z2:'Jazda bazowa Zone 2: {goal}',cal_desc_long:'Długa jazda wytrzymałościowa: ~{km} km w tempie Z2',cal_desc_rest:'Dzień odpoczynku — lekka aktywność lub całkowity odpoczynek'}
 };
 function tr(k){return(T[curLang]&&T[curLang][k]!==undefined)?T[curLang][k]:(T.en[k]||k);}
 
@@ -417,7 +424,48 @@ function clearChat(){chatHist=[];document.getElementById('chat-messages').innerH
 document.getElementById('chat-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
 document.getElementById('chat-input').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,120)+'px';});
 
-function renderAll(){renderZones();renderSched();renderWTabs();renderProg(curProg);}
+function icsDate(d){var y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return y+m+dd;}
+function icsEsc(s){return s.replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');}
+function uid(){return Date.now()+'-'+Math.random().toString(36).substr(2,9)+'@cyc';}
+function evTitle(tp){var wts=tr('wt'),m={ss:wts[0],th:wts[1],vo:wts[2],z2:wts[3],long:tr('long'),rest:tr('rest')};return m[tp]||tp;}
+function evDesc(tp,goal,km){return tr('cal_desc_'+tp).replace('{goal}',goal).replace('{ftp}',ftp).replace('{km}',km||kmS);}
+function evGoal(tp){if(tp==='ss')return getW(0).goal;if(tp==='th')return getW(1).goal;if(tp==='vo')return getW(2).goal;if(tp==='z2'||tp==='long')return getW(3).goal;return'';}
+function buildICS(wks){
+  var today=new Date(),dow=today.getDay(),skip=dow===0?1:(8-dow);
+  var start=new Date(today);start.setDate(today.getDate()+skip);start.setHours(0,0,0,0);
+  var sched=buildSched(sessW);
+  var tm={ss:'ss',th:'th',vo:'vo',z2b:'z2',long:'long',rest:'rest'};
+  var evts=[];
+  for(var w=0;w<wks;w++){
+    sched.forEach(function(di,di2){
+      var tp=tm[di.badge]||'rest';
+      var d=new Date(start);d.setDate(start.getDate()+w*7+di2);
+      var goal=tp!=='rest'?evGoal(tp):'';
+      var dmin=tp==='rest'?0:tp==='long'?Math.round(kmS*1.5/30*60):dur();
+      evts.push({d:d,title:'[Cycling] '+evTitle(tp),desc:evDesc(tp,goal,di.km),dur:dmin,tp:tp});
+    });
+  }
+  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Cycling Training Plan//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Cycling Training Plan'];
+  evts.forEach(function(ev){
+    var ds=icsDate(ev.d),ed=new Date(ev.d);ed.setDate(ed.getDate()+1);
+    L.push('BEGIN:VEVENT','UID:'+uid(),'DTSTART;VALUE=DATE:'+ds,'DTEND;VALUE=DATE:'+icsDate(ed),
+      'SUMMARY:'+icsEsc(ev.title),'DESCRIPTION:'+icsEsc(ev.desc),
+      'CATEGORIES:'+(ev.tp==='rest'?'REST':'CYCLING'),'STATUS:CONFIRMED','END:VEVENT');
+  });
+  L.push('END:VCALENDAR');
+  return L.join('\r\n');
+}
+function downloadICS(wks){save(new Blob([buildICS(wks)],{type:'text/calendar;charset=utf-8'}),'cycling-plan-'+wks+'w.ics');}
+function calIco(){return'<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="12" height="11" rx="2"/><line x1="2" y1="7" x2="14" y2="7"/><line x1="5" y1="1" x2="5" y2="4"/><line x1="11" y1="1" x2="11" y2="4"/></svg>';}
+function renderCalBar(){
+  document.getElementById('cal-bar').innerHTML=
+    '<button class="cal-btn full" onclick="downloadICS(1)">'+calIco()+' '+tr('cal_week')+'</button>'+
+    '<button class="cal-btn" onclick="downloadICS(4)">'+calIco()+' '+tr('cal_4')+'</button>'+
+    '<button class="cal-btn" onclick="downloadICS(8)">'+calIco()+' '+tr('cal_8')+'</button>'+
+    '<button class="cal-btn" onclick="downloadICS(12)">'+calIco()+' '+tr('cal_12')+'</button>';
+}
+
+function renderAll(){renderZones();renderSched();renderWTabs();renderProg(curProg);renderCalBar();}
 document.getElementById('ftp-sl').addEventListener('input',function(e){ftp=parseInt(e.target.value);document.getElementById('ftp-out').textContent=ftp+' W';renderAll();});
 document.getElementById('hr-rest').addEventListener('change',function(e){hrRest=Math.max(30,Math.min(80,parseInt(e.target.value)||50));e.target.value=hrRest;renderAll();});
 document.getElementById('hr-max').addEventListener('change',function(e){hrMax=Math.max(140,Math.min(220,parseInt(e.target.value)||185));e.target.value=hrMax;renderAll();});
