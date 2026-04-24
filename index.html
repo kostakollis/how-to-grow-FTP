@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cycling Training Plan v3.0</title>
+<title>Cycling Training Plan v3.1</title>
 <style>
 :root{
   --bg:#f5f5f2;--bg2:#ffffff;--bg3:#efefeb;--bg4:#e6e5df;
@@ -27,11 +27,11 @@
     --accent:#f0efe8;--accent-fg:#0f0f0e;
     --shadow:0 1px 3px rgba(0,0,0,0.4);
     --shadow-md:0 4px 12px rgba(0,0,0,0.5);
-    --z1c:#5BA3E8;--z1bg:rgba(91,163,232,0.12);
-    --z2c:#34C58A;--z2bg:rgba(52,197,138,0.12);
-    --z3c:#F0A420;--z3bg:rgba(240,164,32,0.12);
-    --z4c:#E8703A;--z4bg:rgba(232,112,58,0.12);
-    --z5c:#E05050;--z5bg:rgba(224,80,80,0.12);
+    --z1c:#5BA3E8;--z1bg:rgba(91,163,232,0.14);
+    --z2c:#34C58A;--z2bg:rgba(52,197,138,0.14);
+    --z3c:#F0A420;--z3bg:rgba(240,164,32,0.14);
+    --z4c:#E8703A;--z4bg:rgba(232,112,58,0.14);
+    --z5c:#E05050;--z5bg:rgba(224,80,80,0.14);
   }
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -47,31 +47,23 @@ header{background:var(--bg2);border-bottom:1px solid var(--border2);position:sti
 .logo-text{font-size:15px;font-weight:700;letter-spacing:-.02em}
 .logo-ver{font-size:10px;font-weight:600;background:var(--z3bg);color:var(--z3c);padding:2px 7px;border-radius:20px;margin-left:6px;vertical-align:middle}
 .logo-sub{font-size:11px;color:var(--text3);margin-top:1px}
-.hdr-right{display:flex;align-items:center;gap:.6rem}
 .lang-row{display:flex;gap:3px}
-.lang-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--border2);font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;background:transparent;transition:all .14s;letter-spacing:.01em}
+.lang-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--border2);font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;background:transparent}
 .lang-btn.active{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
 
-/* LAYOUT */
 .page{max-width:1240px;margin:0 auto;padding:1.75rem 1.5rem;flex:1;width:100%}
 .main-grid{display:grid;grid-template-columns:1fr 390px;gap:2rem;align-items:start}
 .left{min-width:0}
 
-/* SECTION */
 .sec{margin-bottom:1.75rem}
 .sec-hdr{display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem}
-.sec-hdr-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.sec-hdr-icon svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-fg);font-size:11px;font-weight:700}
 .sec-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
-.sec-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--accent-fg);font-size:10px;font-weight:700;flex-shrink:0}
-
-/* CARD */
 .card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:1.25rem 1.35rem;box-shadow:var(--shadow)}
-.card-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:1rem;padding-bottom:.65rem;border-bottom:1px solid var(--border)}
 
-/* FORM */
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+/* PROFILE FORM */
+.profile-row-sm{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
+.profile-row-md{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
 .field{display:flex;flex-direction:column;gap:4px}
 .field-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.07em;text-transform:uppercase}
 .field-input{padding:.55rem .8rem;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-weight:500;background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;width:100%}
@@ -80,59 +72,59 @@ header{background:var(--bg2);border-bottom:1px solid var(--border2);position:sti
 .field-wrap{position:relative}
 .field-unit{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:var(--text3);pointer-events:none}
 select.field-input{cursor:pointer}
-.ftp-slider-row{display:flex;align-items:center;gap:10px;margin-top:4px}
-.ftp-slider-row input[type=range]{flex:1;accent-color:var(--accent)}
-.ftp-slider-val{font-size:14px;font-weight:700;min-width:54px;text-align:right}
+.field-input.compact{padding:.45rem .7rem;font-size:13px}
 
-/* MODE TOGGLE */
-.mode-toggle{display:flex;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:3px;gap:3px;margin-top:10px}
-.mode-btn{flex:1;padding:8px 10px;border-radius:6px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text2);transition:all .16s;text-align:center;line-height:1.3}
-.mode-btn.active{background:var(--bg2);color:var(--text);box-shadow:var(--shadow)}
-.mode-btn .mb-icon{font-size:16px;display:block;margin-bottom:2px}
-.mode-btn .mb-label{display:block;font-size:11px;font-weight:700;letter-spacing:.01em}
-.mode-btn .mb-sub{display:block;font-size:10px;color:var(--text3);font-weight:400}
-.mode-btn.active .mb-sub{color:var(--text2)}
+/* FTP SLIDER */
+.ftp-block{margin-top:4px}
+.ftp-label-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.ftp-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.07em;text-transform:uppercase}
+.ftp-val{font-size:16px;font-weight:800;color:var(--text)}
+.ftp-val .ftp-unit{font-size:11px;color:var(--text3);font-weight:500;margin-left:3px}
+.ftp-slider{width:100%;accent-color:var(--accent)}
+.ftp-hint{font-size:10px;color:var(--text3);margin-top:4px}
 
 /* PLAN PARAMS */
-.plan-params{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
-
-/* GENERATE BTN */
-.gen-btn{width:100%;padding:.9rem;border-radius:var(--radius-sm);border:none;background:var(--accent);color:var(--accent-fg);font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.02em;transition:opacity .15s;margin-top:14px}
+.plan-params{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.gen-btn{width:100%;padding:.85rem;border-radius:var(--radius-sm);border:none;background:var(--accent);color:var(--accent-fg);font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.02em;margin-top:14px;transition:opacity .15s}
 .gen-btn:hover{opacity:.88}
-.gen-btn:active{opacity:.75}
 
 /* ZONES */
-.zones-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:.5rem}
+.zones-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .zone-card{border-radius:var(--radius-sm);padding:.6rem .7rem;border:1.5px solid transparent}
-.zone-card .zn{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;opacity:.7}
+.zone-card .zn{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
 .zone-card .zv{font-size:13px;font-weight:700;margin-bottom:1px}
-.zone-card .zh{font-size:10px;opacity:.65}
+.zone-card .zh{font-size:10px;opacity:.72}
 .zone-bar{display:flex;border-radius:9px;overflow:hidden;height:30px;margin-bottom:10px}
 .zone-seg{display:flex;align-items:center;justify-content:center;flex:1;font-size:10px;font-weight:700}
+.ftp-display{display:flex;gap:18px;margin-top:10px;font-size:11px;color:var(--text3);flex-wrap:wrap}
+.ftp-display b{color:var(--text);font-weight:700}
 
 /* SCHEDULE */
-.sched-wrap{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px}
-.sched-wrap::-webkit-scrollbar{height:3px}
-.sched-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.day-card{flex:1;min-width:88px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.65rem .5rem;text-align:center;transition:all .15s}
+.week-desc{font-size:12px;color:var(--text2);margin-bottom:12px;font-weight:500;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.week-phase-badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.03em;text-transform:uppercase}
+.week-nav{display:flex;gap:4px;align-items:center}
+.week-nav-btn{padding:4px 10px;border-radius:6px;border:1.5px solid var(--border2);background:var(--bg2);color:var(--text);font-size:11px;font-weight:600;cursor:pointer}
+.week-nav-btn:disabled{opacity:.4;cursor:not-allowed}
+.sched-wrap{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}
+.day-card{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.65rem .5rem;text-align:center}
 .day-card.dc-structured{border-color:var(--border2);background:var(--bg2);box-shadow:var(--shadow)}
 .dc-name{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
 .dc-type{font-size:11px;font-weight:700;margin-bottom:3px;line-height:1.2}
 .dc-target{font-size:9px;color:var(--text3);line-height:1.3;margin-bottom:3px}
 .dc-km{font-size:10px;font-weight:600;color:var(--text3)}
-.dc-dot{width:6px;height:6px;border-radius:50%;margin:4px auto 0}
+.dc-dur{font-size:9px;color:var(--text3)}
+.dc-tss{font-size:9px;font-weight:700;margin-top:3px;opacity:.75}
 .cal-row{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
-.cal-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:7px;border:1.5px solid var(--border2);font-size:11px;font-weight:600;cursor:pointer;background:var(--bg2);color:var(--text);transition:all .14s}
+.cal-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:7px;border:1.5px solid var(--border2);font-size:11px;font-weight:600;cursor:pointer;background:var(--bg2);color:var(--text)}
 .cal-btn:hover{background:var(--bg3)}
 .cal-btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-.cal-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 
 /* TABS */
 .tab-bar{display:flex;gap:4px;background:var(--bg3);border:1.5px solid var(--border2);padding:3px;border-radius:var(--radius-sm);margin-bottom:1rem;flex-wrap:wrap}
-.tab{padding:6px 14px;border-radius:6px;border:none;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;background:transparent;transition:all .14s;letter-spacing:.01em}
+.tab{padding:6px 14px;border-radius:6px;border:none;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;background:transparent}
 .tab.active{background:var(--bg2);color:var(--text);box-shadow:var(--shadow)}
 
-/* WORKOUT CARD */
+/* WORKOUT */
 .wcard{background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius-lg);padding:1.25rem 1.35rem;box-shadow:var(--shadow-md)}
 .wcard-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem}
 .wcard-title{font-size:15px;font-weight:700}
@@ -140,105 +132,110 @@ select.field-input{cursor:pointer}
 .wmeta{font-size:11px;color:var(--text3);margin-bottom:10px}
 .seg-bar{display:flex;gap:2px;height:20px;border-radius:6px;overflow:hidden;margin-bottom:12px}
 .seg{display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700}
-/* STEPS */
 .steps{list-style:none;margin-bottom:12px}
 .steps li{display:flex;gap:8px;font-size:12px;color:var(--text2);padding:6px 0;border-bottom:1px solid var(--border);align-items:flex-start;line-height:1.5}
 .steps li:last-child{border:none}
 .st-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
-.st-time{font-size:11px;font-weight:700;color:var(--text);min-width:75px;flex-shrink:0}
-.st-target{font-weight:600;color:var(--text)}
-/* CADENCE BLOCK */
+.st-time{font-size:11px;font-weight:700;color:var(--text);min-width:90px;flex-shrink:0}
+.st-main{font-weight:600;color:var(--text)}
+.st-sub{font-size:10px;color:var(--text3);display:block}
+
 .cad-block{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-bottom:12px}
 .cad-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
 .cad-segs{display:flex;gap:6px}
 .cad-seg{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:7px;padding:6px 5px;text-align:center}
-.cad-seg .cs-ph{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
-.cad-seg .cs-val{font-size:14px;font-weight:800;line-height:1}
-.cad-seg .cs-unit{font-size:9px;color:var(--text3);margin-top:1px}
+.cs-ph{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.cs-val{font-size:14px;font-weight:800;line-height:1}
+.cs-unit{font-size:9px;color:var(--text3);margin-top:1px}
 .cad-note{font-size:10px;color:var(--text3);margin-top:6px;line-height:1.5}
-/* WARNING */
-.km-warn{font-size:11px;padding:7px 10px;border-radius:7px;margin-bottom:10px;border-left:3px solid;line-height:1.5;font-weight:500}
-/* NOTE */
+
 .wnote{font-size:11px;color:var(--text2);line-height:1.65;padding:10px 12px;background:var(--bg3);border-radius:var(--radius-sm);margin-bottom:12px;border-left:3px solid var(--border2)}
-/* METRIC TOGGLE */
-.metric-toggle{display:flex;gap:4px;background:var(--bg3);border:1.5px solid var(--border2);padding:3px;border-radius:var(--radius-sm);margin-bottom:12px}
-.metric-btn{flex:1;padding:6px;border-radius:5px;border:none;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:var(--text2);transition:all .14s}
-.metric-btn.active{background:var(--bg2);color:var(--text);box-shadow:var(--shadow)}
-/* DL BUTTONS */
+.km-warn{font-size:11px;padding:7px 10px;border-radius:7px;margin-bottom:10px;border-left:3px solid;line-height:1.5;font-weight:500}
+
+/* MODE TOGGLE in workout */
+.mode-toggle-block{margin-bottom:12px}
+.mode-toggle-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+.mode-toggle{display:flex;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:3px;gap:3px}
+.mode-btn{flex:1;padding:7px 10px;border-radius:6px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text2);transition:all .16s;text-align:center}
+.mode-btn.active{background:var(--bg2);color:var(--text);box-shadow:var(--shadow)}
+.mode-btn .mb-icon{font-size:14px;margin-right:4px}
+
+/* DOWNLOAD */
 .dl-section{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.85rem 1rem;background:var(--bg3)}
 .dl-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:8px}
 .dl-btns{display:flex;gap:6px;flex-wrap:wrap}
-.dl-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:7px;border:1.5px solid var(--border2);font-size:11px;font-weight:700;cursor:pointer;background:var(--bg2);color:var(--text);transition:all .14s;letter-spacing:.02em}
+.dl-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:7px;border:1.5px solid var(--border2);font-size:11px;font-weight:700;cursor:pointer;background:var(--bg2);color:var(--text)}
 .dl-btn:hover{background:var(--bg4)}
-.dl-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .dl-compat{font-size:10px;color:var(--text3);margin-top:6px;line-height:1.5}
+
 /* PROGRESSION */
 .prog-legend{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
 .prog-legend span{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);font-weight:500}
-.prog-legend i{width:10px;height:10px;border-radius:3px;display:inline-block;flex-shrink:0}
+.prog-legend i{width:10px;height:10px;border-radius:3px;display:inline-block}
 .prog-rows{display:flex;flex-direction:column;gap:5px}
 .prog-row{display:flex;align-items:center;gap:10px}
 .prog-lbl{font-size:10px;font-weight:700;color:var(--text3);min-width:34px}
 .prog-bar-wrap{flex:1;display:flex;gap:2px;height:14px;border-radius:4px;overflow:hidden}
+.prog-tss{font-size:10px;font-weight:700;min-width:50px;text-align:right}
 .prog-note-txt{font-size:10px;color:var(--text3);min-width:110px;font-weight:500}
 .prog-footer{margin-top:10px;padding:9px 12px;background:var(--bg3);border-radius:var(--radius-sm);font-size:11px;color:var(--text2);line-height:1.6;border-left:3px solid var(--border2)}
+
 /* CHAT */
 .chat-col{position:sticky;top:65px;display:flex;flex-direction:column;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-md);height:calc(100vh - 90px);max-height:820px}
-.chat-hdr{padding:.9rem 1.1rem;border-bottom:1.5px solid var(--border2);flex-shrink:0}
+.chat-hdr{padding:.9rem 1.1rem;border-bottom:1.5px solid var(--border2)}
 .chat-hdr-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:.4rem}
 .chat-hdr-sub{font-size:10px;color:var(--text3);margin-top:2px}
 .chat-msgs{flex:1;overflow-y:auto;padding:.9rem;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
-.chat-msgs::-webkit-scrollbar{width:3px}
-.chat-msgs::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 .msg{max-width:88%;padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.6;white-space:pre-wrap}
 .msg.user{align-self:flex-end;background:var(--accent);color:var(--accent-fg);border-bottom-right-radius:4px}
 .msg.ai{align-self:flex-start;background:var(--bg2);border:1.5px solid var(--border);color:var(--text);border-bottom-left-radius:4px}
 .msg.ai.loading{color:var(--text3);font-style:italic}
-.msg.err{align-self:flex-start;background:var(--z5bg);color:var(--z5c);border:1px solid var(--z5c)40}
-.quick-btns{padding:.7rem .9rem;border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0}
+.msg.err{align-self:flex-start;background:var(--z5bg);color:var(--z5c)}
+.quick-btns{padding:.7rem .9rem;border-top:1.5px solid var(--border);background:var(--bg2)}
 .quick-lbl{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
-.qbtn{display:block;width:100%;padding:5px 9px;border-radius:6px;border:1px solid var(--border);font-size:11px;color:var(--text2);cursor:pointer;background:var(--bg3);text-align:left;margin-bottom:4px;transition:all .13s;line-height:1.35;font-weight:500}
-.qbtn:last-child{margin-bottom:0}
+.qbtn{display:block;width:100%;padding:5px 9px;border-radius:6px;border:1px solid var(--border);font-size:11px;color:var(--text2);cursor:pointer;background:var(--bg3);text-align:left;margin-bottom:4px;line-height:1.35;font-weight:500}
 .qbtn:hover{background:var(--bg4);color:var(--text)}
-.chat-input-area{padding:.75rem .9rem;border-top:1.5px solid var(--border2);background:var(--bg2);flex-shrink:0}
+.chat-input-area{padding:.75rem .9rem;border-top:1.5px solid var(--border2);background:var(--bg2)}
 .chat-input-row{display:flex;gap:6px;align-items:flex-end}
-#chat-input{flex:1;padding:8px 11px;border:1.5px solid var(--border2);border-radius:9px;font-size:12px;font-family:inherit;resize:none;background:var(--bg3);color:var(--text);min-height:38px;max-height:100px;line-height:1.45;outline:none;transition:border-color .15s}
-#chat-input:focus{border-color:var(--accent)}
-#chat-send{padding:8px 14px;border-radius:9px;border:none;background:var(--accent);color:var(--accent-fg);font-size:12px;font-weight:700;cursor:pointer;line-height:1;flex-shrink:0}
-#chat-send:disabled{opacity:.4;cursor:not-allowed}
-#chat-clear{padding:8px 10px;border-radius:9px;border:1.5px solid var(--border);background:transparent;color:var(--text3);font-size:12px;cursor:pointer;flex-shrink:0}
-/* FOOTER */
-footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:auto}
-.ftr{max-width:1240px;margin:0 auto;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
-.ftr-left{font-size:11px;color:var(--text3);line-height:1.6}
-.ftr-right{font-size:11px;color:var(--text3)}
-/* DIVIDER */
-.divider{height:1px;background:var(--border2);margin:1rem 0}
-/* EMPTY STATE */
+#chat-input{flex:1;padding:8px 11px;border:1.5px solid var(--border2);border-radius:9px;font-size:12px;font-family:inherit;resize:none;background:var(--bg3);color:var(--text);min-height:38px;max-height:100px;line-height:1.45;outline:none}
+#chat-send{padding:8px 14px;border-radius:9px;border:none;background:var(--accent);color:var(--accent-fg);font-size:12px;font-weight:700;cursor:pointer}
+#chat-send:disabled{opacity:.4}
+#chat-clear{padding:8px 10px;border-radius:9px;border:1.5px solid var(--border);background:transparent;color:var(--text3);font-size:12px;cursor:pointer}
+
+/* EMPTY */
 .empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text3)}
 .empty-icon{font-size:36px;margin-bottom:.75rem}
 .empty-text{font-size:13px;font-weight:500}
 .empty-sub{font-size:11px;margin-top:.35rem}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:auto}
+.ftr{max-width:1240px;margin:0 auto;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
+.ftr-left{font-size:11px;color:var(--text3);line-height:1.7}
+.ftr-credit{font-size:12px;color:var(--text2);font-weight:600;display:block;margin-bottom:2px}
+.ftr-credit b{color:var(--text);font-weight:700}
+.ftr-right{font-size:11px;color:var(--text3)}
+.ftr-right a{color:var(--text3);text-decoration:none}
+
 @media(max-width:880px){.main-grid{grid-template-columns:1fr}.chat-col{position:static;height:580px;max-height:580px}.zones-grid{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:500px){.form-grid{grid-template-columns:1fr}.form-grid-3{grid-template-columns:1fr 1fr}.plan-params{grid-template-columns:1fr 1fr}.hdr{padding:.6rem 1rem}.page{padding:1.25rem 1rem}}
+@media(max-width:500px){.profile-row-sm,.plan-params{grid-template-columns:1fr 1fr}.sched-wrap{grid-template-columns:repeat(4,1fr)}.hdr{padding:.6rem 1rem}.page{padding:1.25rem 1rem}}
 </style>
 </head>
 <body>
+
 <header>
   <div class="hdr">
     <div class="logo">
       <div class="logo-icon"><svg viewBox="0 0 20 20"><circle cx="5" cy="14" r="3"/><circle cx="15" cy="14" r="3"/><path d="M5 14l4-8 3 5 2-3"/><circle cx="12" cy="6" r="1.2" fill="currentColor" stroke="none"/></svg></div>
       <div>
-        <div class="logo-text" id="hdr-title">Cycling Training Plan <span class="logo-ver">v3.0</span></div>
-        <div class="logo-sub" id="hdr-sub">FTP-based structured training</div>
+        <div class="logo-text" id="hdr-title">Cycling Training Plan <span class="logo-ver">v3.1</span></div>
+        <div class="logo-sub" id="hdr-sub">Science-based FTP training</div>
       </div>
     </div>
-    <div class="hdr-right">
-      <div class="lang-row">
-        <button class="lang-btn active" onclick="setLang('en')">EN</button>
-        <button class="lang-btn" onclick="setLang('uk')">УК</button>
-        <button class="lang-btn" onclick="setLang('pl')">PL</button>
-      </div>
+    <div class="lang-row">
+      <button class="lang-btn active" onclick="setLang('en')">EN</button>
+      <button class="lang-btn" onclick="setLang('uk')">УК</button>
+      <button class="lang-btn" onclick="setLang('pl')">PL</button>
     </div>
   </div>
 </header>
@@ -247,81 +244,66 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
 <div class="main-grid">
 <div class="left">
 
-<!-- STEP 1: ATHLETE PROFILE -->
+<!-- 1. ATHLETE PROFILE -->
 <div class="sec">
-  <div class="sec-hdr">
-    <span class="sec-num">1</span>
-    <span class="sec-title" id="lbl-s1">Athlete Profile</span>
-  </div>
+  <div class="sec-hdr"><span class="sec-num">1</span><span class="sec-title" id="lbl-s1">Athlete Profile</span></div>
   <div class="card">
-    <div class="form-grid">
-      <div class="field">
-        <label class="field-label" id="lbl-age">AGE</label>
-        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-age" value="30" min="15" max="80"><span class="field-unit">yr</span></div>
+    <!-- Row 1: age, weight, gender (small, 3 in row) -->
+    <div class="profile-row-sm">
+      <div class="field"><label class="field-label" id="lbl-age">AGE</label>
+        <div class="field-wrap"><input class="field-input compact has-unit" type="number" id="f-age" value="30" min="15" max="80"><span class="field-unit">yr</span></div>
       </div>
-      <div class="field">
-        <label class="field-label" id="lbl-gender">GENDER</label>
-        <select class="field-input" id="f-gender">
+      <div class="field"><label class="field-label" id="lbl-weight">WEIGHT</label>
+        <div class="field-wrap"><input class="field-input compact has-unit" type="number" id="f-weight" value="75" min="40" max="150"><span class="field-unit">kg</span></div>
+      </div>
+      <div class="field"><label class="field-label" id="lbl-gender">GENDER</label>
+        <select class="field-input compact" id="f-gender">
           <option value="m" id="opt-m">Male</option>
           <option value="f" id="opt-f">Female</option>
         </select>
       </div>
-      <div class="field">
-        <label class="field-label" id="lbl-weight">WEIGHT</label>
-        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-weight" value="75" min="40" max="150"><span class="field-unit">kg</span></div>
-      </div>
-      <div class="field">
-        <label class="field-label" id="lbl-hrmax2">MAX HR</label>
-        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-hrmax" value="185" min="140" max="220"><span class="field-unit">bpm</span></div>
-        <small id="hrmax-hint" style="font-size:10px;color:var(--text3);margin-top:2px"></small>
-      </div>
-      <div class="field">
-        <label class="field-label" id="lbl-hrrest2">RESTING HR</label>
+    </div>
+    <!-- Row 2: HR rest + HR max -->
+    <div class="profile-row-md">
+      <div class="field"><label class="field-label" id="lbl-hrrest">RESTING HR</label>
         <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-hrrest" value="55" min="30" max="90"><span class="field-unit">bpm</span></div>
       </div>
-      <div class="field">
-        <label class="field-label" id="lbl-ftp2">FTP (optional)</label>
-        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-ftp" value="200" min="80" max="500"><span class="field-unit">W</span></div>
-        <small id="ftp-hint" style="font-size:10px;color:var(--text3);margin-top:2px"></small>
+      <div class="field"><label class="field-label" id="lbl-hrmax">MAX HR</label>
+        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-hrmax" value="190" min="140" max="220"><span class="field-unit">bpm</span></div>
       </div>
     </div>
-    <!-- MEASUREMENT MODE -->
-    <div style="margin-top:14px">
-      <div class="field-label" id="lbl-mode" style="margin-bottom:6px">TRAINING MEASUREMENT MODE</div>
-      <div class="mode-toggle">
-        <button class="mode-btn active" id="btn-pw" onclick="setMode('power')">
-          <span class="mb-icon">⚡</span>
-          <span class="mb-label" id="lbl-mode-pw">Power Meter</span>
-          <span class="mb-sub" id="lbl-mode-pw-sub">Target in Watts</span>
-        </button>
-        <button class="mode-btn" id="btn-hr" onclick="setMode('hr')">
-          <span class="mb-icon">❤️</span>
-          <span class="mb-label" id="lbl-mode-hr">Heart Rate</span>
-          <span class="mb-sub" id="lbl-mode-hr-sub">No power meter</span>
-        </button>
+    <!-- Row 3: FTP slider -->
+    <div class="ftp-block">
+      <div class="ftp-label-row">
+        <span class="ftp-label" id="lbl-ftp">FTP (Functional Threshold Power)</span>
+        <span class="ftp-val"><span id="ftp-out">200</span><span class="ftp-unit">W</span></span>
       </div>
+      <input type="range" class="ftp-slider" min="100" max="400" value="200" step="1" id="f-ftp">
+      <div class="ftp-hint" id="ftp-hint">Drag to set your FTP. Retest every 6–8 weeks with a ramp test.</div>
     </div>
   </div>
 </div>
 
-<!-- STEP 2: PLAN PARAMETERS -->
+<!-- 2. TRAINING ZONES (live, no button) -->
 <div class="sec">
-  <div class="sec-hdr">
-    <span class="sec-num">2</span>
-    <span class="sec-title" id="lbl-s2">Plan Parameters</span>
+  <div class="sec-hdr"><span class="sec-num">2</span><span class="sec-title" id="lbl-zones">Training Zones</span></div>
+  <div class="card">
+    <div id="zones-content"></div>
   </div>
+</div>
+
+<!-- 3. PLAN PARAMETERS -->
+<div class="sec">
+  <div class="sec-hdr"><span class="sec-num">3</span><span class="sec-title" id="lbl-s3">Plan Parameters</span></div>
   <div class="card">
     <div class="plan-params">
-      <div class="field">
-        <label class="field-label" id="lbl-sessions2">SESSIONS/WEEK</label>
-        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-sess" value="4" min="1" max="7"><span class="field-unit" id="lbl-pw-unit">/ wk</span></div>
+      <div class="field"><label class="field-label" id="lbl-sessions">SESSIONS/WEEK</label>
+        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-sess" value="4" min="3" max="7"><span class="field-unit">/wk</span></div>
       </div>
-      <div class="field">
-        <label class="field-label" id="lbl-km2">KM / SESSION</label>
-        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-km" value="40" min="10" max="250"><span class="field-unit">km</span></div>
+      <div class="field"><label class="field-label" id="lbl-km">AVG KM / SESSION</label>
+        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-km" value="40" min="15" max="200"><span class="field-unit">km</span></div>
       </div>
-      <div class="field">
-        <label class="field-label" id="lbl-dur">PLAN LENGTH</label>
+      <div class="field"><label class="field-label" id="lbl-dur">PLAN LENGTH</label>
         <select class="field-input" id="f-weeks">
           <option value="1" id="opt-w1">1 week</option>
           <option value="4" id="opt-w4" selected>4 weeks</option>
@@ -331,72 +313,57 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
         </select>
       </div>
     </div>
-    <button class="gen-btn" id="gen-btn" onclick="generatePlan()">
-      <span id="lbl-gen">Generate My Training Plan →</span>
-    </button>
+    <button class="gen-btn" id="gen-btn" onclick="generatePlan()"><span id="lbl-gen">Generate Training Plan →</span></button>
   </div>
 </div>
 
-<!-- ZONES (shown after generate) -->
-<div class="sec" id="sec-zones" style="display:none">
-  <div class="sec-hdr">
-    <span class="sec-num">3</span>
-    <span class="sec-title" id="lbl-zones">Training Zones</span>
-  </div>
-  <div class="card">
-    <div id="zones-content"></div>
-  </div>
-</div>
-
-<!-- SCHEDULE (shown after generate) -->
+<!-- 4. WEEKLY SCHEDULE -->
 <div class="sec" id="sec-sched" style="display:none">
-  <div class="sec-hdr">
-    <span class="sec-num">4</span>
-    <span class="sec-title" id="lbl-sched">Weekly Schedule</span>
-  </div>
+  <div class="sec-hdr"><span class="sec-num">4</span><span class="sec-title" id="lbl-sched">Weekly Schedule</span></div>
   <div class="card">
-    <div id="week-desc" style="font-size:12px;color:var(--text2);margin-bottom:12px;font-weight:500"></div>
+    <div class="week-desc">
+      <div><span id="week-txt">Week 1</span> · <span class="week-phase-badge" id="week-phase-badge"></span></div>
+      <div class="week-nav">
+        <button class="week-nav-btn" onclick="navWeek(-1)">←</button>
+        <button class="week-nav-btn" onclick="navWeek(1)">→</button>
+      </div>
+    </div>
     <div class="sched-wrap" id="week-sched"></div>
+    <div style="font-size:11px;color:var(--text3);margin-top:10px"><span id="week-tss"></span></div>
     <div class="cal-row" id="cal-row"></div>
   </div>
 </div>
 
-<!-- WORKOUT DETAIL (shown after generate) -->
+<!-- 5. WORKOUT DETAIL -->
 <div class="sec" id="sec-wout" style="display:none">
-  <div class="sec-hdr">
-    <span class="sec-num">5</span>
-    <span class="sec-title" id="lbl-wout">Workout Detail</span>
-  </div>
+  <div class="sec-hdr"><span class="sec-num">5</span><span class="sec-title" id="lbl-wout">Workout Detail</span></div>
   <div class="tab-bar" id="wtabs"></div>
   <div id="wout-area"></div>
 </div>
 
-<!-- PROGRESSION (shown after generate) -->
+<!-- 6. TRAINING PROGRESSION -->
 <div class="sec" id="sec-prog" style="display:none">
-  <div class="sec-hdr">
-    <span class="sec-num">6</span>
-    <span class="sec-title" id="lbl-prog">Training Progression</span>
-  </div>
+  <div class="sec-hdr"><span class="sec-num">6</span><span class="sec-title" id="lbl-prog">Training Progression</span></div>
   <div class="card" id="prog-area"></div>
 </div>
 
-<!-- EMPTY STATE (before generate) -->
+<!-- EMPTY -->
 <div id="empty-state" class="card empty-state">
   <div class="empty-icon">🚴</div>
-  <div class="empty-text" id="empty-text">Fill in your profile and generate your plan</div>
-  <div class="empty-sub" id="empty-sub">Your personalised FTP training plan will appear here</div>
+  <div class="empty-text" id="empty-text">Set plan parameters and generate your plan</div>
+  <div class="empty-sub" id="empty-sub">Zones update live as you adjust profile above</div>
 </div>
 
-</div><!-- /left -->
+</div>
 
-<!-- RIGHT: AI CHAT -->
+<!-- CHAT -->
 <div class="chat-col">
   <div class="chat-hdr">
     <div class="chat-hdr-title">🤖 <span id="lbl-chat">AI Coach</span></div>
     <div class="chat-hdr-sub" id="chat-hint">Your profile and zones sent automatically</div>
   </div>
   <div class="chat-msgs" id="chat-msgs">
-    <div class="msg ai" id="chat-welcome">Hello! I am your AI cycling coach. Fill in your profile and generate a plan, then ask me anything about your training.</div>
+    <div class="msg ai" id="chat-welcome">Hello! I am your AI cycling coach. Generate a plan, then ask me anything about training.</div>
   </div>
   <div class="quick-btns">
     <div class="quick-lbl" id="lbl-quick">Quick questions</div>
@@ -411,438 +378,442 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
   </div>
 </div>
 
-</div><!-- /main-grid -->
-</div><!-- /page -->
+</div>
+</div>
 
 <footer>
   <div class="ftr">
-    <div class="ftr-left" id="ft-copy">© 2026 Cycling Training Plan v3.0 · Built on sports science, powered by AI</div>
-    <div class="ftr-right"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false" id="ft-top" style="color:var(--text3);text-decoration:none">↑ Top</a></div>
+    <div class="ftr-left">
+      <span class="ftr-credit">Created by <b>Wandercraft Studios</b> / Kostiantyn Metelytskia-Kolisnyk</span>
+      <span id="ft-copy">© 2026 · Cycling Training Plan v3.1 · Built on sports science, powered by AI</span>
+    </div>
+    <div class="ftr-right"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false" id="ft-top">↑ Top</a></div>
   </div>
 </footer>
 
 <script>
-// ─── STATE ────────────────────────────────────────────────────────────────
-var plan=null, curW=0, curLang='en', trMode='power', chatHist=[];
+var plan=null, curW=0, curWeekIdx=0, curLang='en', trMode='power', chatHist=[];
 
 // ─── TRANSLATIONS ─────────────────────────────────────────────────────────
 var T={
 en:{
-  hdrTitle:'Cycling Training Plan',hdrSub:'FTP-based structured training',
-  s1:'Athlete Profile',s2:'Plan Parameters',
-  age:'AGE',gender:'GENDER',weight:'WEIGHT',hrmax:'MAX HR',hrrest:'RESTING HR',ftp:'FTP (optional)',
+  hdrTitle:'Cycling Training Plan',hdrSub:'Science-based FTP training',
+  s1:'Athlete Profile',s3:'Plan Parameters',
+  age:'AGE',gender:'GENDER',weight:'WEIGHT',hrmax:'MAX HR',hrrest:'RESTING HR',ftp:'FTP (Functional Threshold Power)',
   optM:'Male',optF:'Female',
-  mode:'TRAINING MEASUREMENT MODE',modePw:'Power Meter',modePwSub:'Target in Watts',modeHr:'Heart Rate',modeHrSub:'No power meter',
-  sessions:'SESSIONS/WEEK',km:'KM / SESSION',dur:'PLAN LENGTH',
+  ftpHint:'Drag to set your FTP. Retest every 6–8 weeks with a ramp test.',
+  sessions:'SESSIONS/WEEK',km:'AVG KM / SESSION',dur:'PLAN LENGTH',
   w1:'1 week',w4:'4 weeks',w8:'8 weeks',w16:'16 weeks',w20:'20 weeks',
-  gen:'Generate My Training Plan →',
+  gen:'Generate Training Plan →',
   zones:'Training Zones',sched:'Weekly Schedule',wout:'Workout Detail',prog:'Training Progression',
   chat:'AI Coach',hint:'Your profile and zones sent automatically',
-  welcome:'Hello! I am your AI cycling coach. Fill in your profile and generate a plan, then ask me anything.',
+  welcome:'Hello! I am your AI cycling coach. Generate a plan, then ask me anything.',
   send:'Send',quick:'Quick questions',
-  emptyText:'Fill in your profile and generate your plan',emptySub:'Your personalised FTP training plan will appear here',
-  rest:'Rest',long:'Long Z2',
-  znames:['Z1 Recovery','Z2 Aerobic','Z3 Sweetspot','Z4 Threshold','Z5 VO2max'],
+  emptyText:'Set plan parameters and generate your plan',emptySub:'Zones update live as you adjust profile above',
+  rest:'Rest',longr:'Long Z2',endurance:'Endurance',recovery:'Recovery',
+  znames:['Recovery','Endurance','Tempo/Sweetspot','Threshold','VO2max'],
   wt:['Sweetspot','Threshold','VO2max','Zone 2'],
-  hrmaxHint:'Formula: 220 − age = {v}. Override if you know your actual max.',
-  ftpHint:'Leave as-is to use HR-based estimate. Update after ramp test.',
+  dayNames:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+  phaseNames:{base:'Base Week',build:'Build Week',peak:'Peak Week',recovery:'Recovery Week',taper:'Taper Week'},
+  modeTitle:'MEASUREMENT MODE',modePw:'Power (Watts)',modeHr:'Heart Rate',
+  cadTitle:'Target cadence (rpm)',
+  cadPhases:['Warm-up','Base','Work','Recovery'],
+  cadNote:'Cadence <80 rpm → muscle stress. >100 rpm → cardiovascular stress. Find your sweet spot.',
+  nb:{ss:'Sweetspot (88–95% FTP): best FTP stimulus with 24–36h recovery. If cadence drops below 85 rpm, reduce power by 10 W.',
+      th:'Threshold: complete all reps at target power. If you cannot — fewer reps next time. Consistency beats heroics.',
+      vo:'VO2max: max once per 10–14 days. 48–72h recovery required. Do not schedule before long rides.',
+      z2:'Zone 2: builds your aerobic engine. Conversational pace. Resist going harder.'},
+  dlTitle:'Download workout file',
+  dlCompat:'ZWO: Zwift/MyWhoosh · FIT: Garmin/Wahoo · MRC: TrainerRoad · ERG: Wahoo SYSTM/Tacx · TCX: Garmin/Amazfit',
+  weekTxt:'Week {w} of {total}',tssWeek:'Weekly TSS: {tss} · Weekly km: {km}',
   kmWarnShort:'⚠ Too short for this workout. Recommended min: {v} km.',
   kmWarnLong:'⚠ Very long — consider splitting. Recommended max: {v} km.',
-  cadTitle:'Target cadence (rpm)',
-  cadPhases:['Warm-up','Base','Work interval','Recovery'],
-  cadNote:'Cadence <80 rpm → muscular stress. >100 rpm → cardiovascular stress. Find the sweet spot.',
-  nb:{ss:'Sweetspot (88–95% FTP): the best FTP builder with only 24–36h recovery. If cadence drops below 85 rpm, reduce power by 10 W.',
-      th:'Threshold: complete all reps at target power. If you can\'t — fewer reps next time. Consistency beats heroics.',
-      vo:'VO2max: max once per 10–14 days. 48–72h recovery required. Do not schedule before a long ride.',
-      z2:'Zone 2 base: builds your aerobic engine. Conversational pace. Resist going harder — this is meant to feel easy.'},
-  pnote:{'1':'Goal: establish rhythm and zone feel.','4':'Expected gain: +5–10 W FTP. Ramp test after week 4.',
-         '8':'Expected gain: +12–22 W FTP. Ramp test after week 8.','16':'Expected gain: +25–40 W FTP. Ramp test after week 16.',
-         '20':'Expected gain: +30–50 W FTP. Ramp test after week 20.'},
-  dlTitle:'Download workout file',dlCompat:'ZWO: Zwift/MyWhoosh · FIT: Garmin/Wahoo/Hammerhead · MRC: TrainerRoad/Wahoo · ERG: Wahoo SYSTM/Tacx · TCX: Garmin/Amazfit',
-  weekDesc:'Week {w} of {total} — {type}',
-  phaseNames:{base:'Base block',build:'Build block',peak:'Peak block',unload:'Unload week',taper:'Taper'},
-  ctx:'Age: {age} | Gender: {gender} | Weight: {wt}kg | Max HR: {hrmax}bpm | Rest HR: {hrrest}bpm | FTP: {ftp}W ({wpkg} W/kg) | Mode: {mode}\nZones (Power): Z1<{z1}W | Z2 {z2} | Z3 SS {z3} | Z4 TH {z4} | Z5 VO2 {z5}\nZones (HR Karvonen): Z2 {h2} | Z3 {h3} | Z4 {h4}bpm\nAnswer in same language. Be specific with numbers.',
+  calWeek:'This week',calFull:'Full plan',
+  pnotes:{'1':'Single week — focus on establishing zone feel.',
+          '4':'4-week cycle: 3 loading + 1 recovery (Friel 3+1). Expected: +5–10 W FTP.',
+          '8':'Two 4-week cycles with progressive intensity. Expected: +12–22 W FTP.',
+          '16':'Four 4-week cycles, polarized 80/20. Expected: +25–40 W FTP.',
+          '20':'Full periodization cycle: Base → Build → Peak → Taper. Expected: +30–50 W FTP.'},
+  ctx:'Age:{age} Gender:{gender} Weight:{wt}kg FTP:{ftp}W ({wpkg}W/kg) HRmax:{hrmax} HRrest:{hrrest} Mode:{mode}\nPower zones: Z1<{z1}W Z2:{z2} Z3:{z3} Z4:{z4} Z5:{z5}\nHR Karvonen: Z2:{h2} Z3:{h3} Z4:{h4}bpm\nSessions/week:{sess} km/session:{km} Plan:{weeks}w\nAnswer in same language. Give specific numbers.',
   loading:'Thinking...',errC:'Could not connect.',
-  qs:['How much rest after VO2max?','Best food before a threshold ride?','How to improve cadence?','Signs of overtraining?','How to pace a 100km ride?','When should I retest my FTP?']
+  qs:['How much rest after VO2max?','How to improve cadence?','Signs of overtraining?','Best pre-ride nutrition?','When to retest FTP?','How to pace a long ride?']
 },
 uk:{
-  hdrTitle:'План велотренувань',hdrSub:'Структуровані тренування на основі FTP',
-  s1:'Профіль атлета',s2:'Параметри плану',
-  age:'ВІК',gender:'СТАТЬ',weight:'ВАГА',hrmax:'ЧСС МАКС',hrrest:'ЧСС СПОКОЮ',ftp:'FTP (необов\'язково)',
+  hdrTitle:'План велотренувань',hdrSub:'Науково обґрунтовані тренування',
+  s1:'Профіль атлета',s3:'Параметри плану',
+  age:'ВІК',gender:'СТАТЬ',weight:'ВАГА',hrmax:'ЧСС МАКС',hrrest:'ЧСС СПОКОЮ',ftp:'FTP (функціональна порогова потужність)',
   optM:'Чоловік',optF:'Жінка',
-  mode:'РЕЖИМ ВИМІРЮВАННЯ ТРЕНУВАННЯ',modePw:'Потужномір',modePwSub:'Ціль у ватах',modeHr:'Пульсометр',modeHrSub:'Без потужноміра',
+  ftpHint:'Потягни повзунок щоб задати FTP. Тестуй кожні 6–8 тижнів ramp-тестом.',
   sessions:'ТРЕНУВАНЬ/ТИЖ',km:'КМ / ТРЕНУВАННЯ',dur:'ТРИВАЛІСТЬ ПЛАНУ',
   w1:'1 тиждень',w4:'4 тижні',w8:'8 тижнів',w16:'16 тижнів',w20:'20 тижнів',
-  gen:'Згенерувати план тренувань →',
+  gen:'Згенерувати план →',
   zones:'Тренувальні зони',sched:'Тижневий розклад',wout:'Деталі тренування',prog:'Прогресія',
   chat:'AI Тренер',hint:'Профіль та зони передаються автоматично',
-  welcome:'Привіт! Я твій AI тренер. Заповни профіль і згенеруй план, потім запитуй про що завгодно.',
+  welcome:'Привіт! Я твій AI тренер. Згенеруй план, потім запитуй про все.',
   send:'Надіслати',quick:'Типові запитання',
-  emptyText:'Заповни профіль і згенеруй план',emptySub:'Твій персональний план тренувань з\'явиться тут',
-  rest:'Відпочинок',long:'Довга Z2',
-  znames:['Z1 Відновлення','Z2 Аеробна','Z3 Sweetspot','Z4 Threshold','Z5 VO2max'],
+  emptyText:'Заповни параметри і згенеруй план',emptySub:'Зони оновлюються автоматично при зміні профілю',
+  rest:'Відпочинок',longr:'Довга Z2',endurance:'Витривалість',recovery:'Відновлення',
+  znames:['Відновлення','Витривалість','Tempo/SS','Threshold','VO2max'],
   wt:['Sweetspot','Threshold','VO2max','Zone 2'],
-  hrmaxHint:'Формула: 220 − вік = {v}. Змінюй якщо знаєш своє реальне значення.',
-  ftpHint:'Залиш як є для оцінки по ЧСС. Онови після ramp-тесту.',
-  kmWarnShort:'⚠ Занадто коротко для цього типу. Рекомендований мінімум: {v} км.',
-  kmWarnLong:'⚠ Дуже довго — розглянь поділ. Рекомендований максимум: {v} км.',
+  dayNames:['Пн','Вт','Ср','Чт','Пт','Сб','Нд'],
+  phaseNames:{base:'Базовий тиж',build:'Розвиток',peak:'Піковий тиж',recovery:'Відновлення',taper:'Тейпер'},
+  modeTitle:'РЕЖИМ ВИМІРЮВАННЯ',modePw:'Потужність (Вати)',modeHr:'Пульсометр',
   cadTitle:'Цільовий каденс (об/хв)',
-  cadPhases:['Розгрів','База','Інтервал','Відновлення'],
-  cadNote:'Каденс <80 об/хв → навантаження на м\'язи. >100 об/хв → на серцево-судинну. Знайди оптимум.',
-  nb:{ss:'Sweetspot (88–95% FTP): найкращий стимул для FTP з відновленням 24–36h. Якщо каденс <85 об/хв — скинь 10 Вт.',
-      th:'Threshold: якщо не завершуєш всі повтори — наступного разу менше. Консистентність понад усе.',
-      vo:'VO2max: максимум раз на 10–14 днів. 48–72h відновлення. Не плануй перед довгою поїздкою.',
-      z2:'Zone 2 база: будує аеробний двигун. Розмовний темп. Не піддавайся спокусі їхати швидше.'},
-  pnote:{'1':'Мета: відчути зони та знайти ритм.','4':'Приріст: +5–10 Вт FTP. Ramp-тест після тижня 4.',
-         '8':'Приріст: +12–22 Вт FTP. Ramp-тест після тижня 8.','16':'Приріст: +25–40 Вт FTP. Ramp-тест після тижня 16.',
-         '20':'Приріст: +30–50 Вт FTP. Ramp-тест після тижня 20.'},
-  dlTitle:'Завантажити файл тренування',dlCompat:'ZWO: Zwift/MyWhoosh · FIT: Garmin/Wahoo · MRC: TrainerRoad · ERG: Wahoo SYSTM/Tacx · TCX: Garmin/Amazfit',
-  weekDesc:'Тиждень {w} з {total} — {type}',
-  phaseNames:{base:'Базовий блок',build:'Блок розвитку',peak:'Піковий блок',unload:'Розвантаження',taper:'Тейпер'},
-  ctx:'Вік: {age} | Стать: {gender} | Вага: {wt}кг | ЧСС макс: {hrmax} | ЧСС спокою: {hrrest} | FTP: {ftp}Вт ({wpkg} Вт/кг) | Режим: {mode}\nЗони потужності: Z1<{z1}Вт | Z2 {z2} | Z3 SS {z3} | Z4 TH {z4} | Z5 VO2 {z5}\nЗони ЧСС: Z2 {h2} | Z3 {h3} | Z4 {h4} уд/хв\nВідповідай тією ж мовою. Давай конкретні цифри.',
+  cadPhases:['Розгрів','База','Робота','Відновлення'],
+  cadNote:'Каденс <80 об/хв → стрес на м\'язи. >100 об/хв → на серцево-судинну. Знайди оптимум.',
+  nb:{ss:'Sweetspot (88–95% FTP): найкращий стимул для FTP з відновленням 24–36h. Каденс <85 — скинь 10 Вт.',
+      th:'Threshold: якщо не завершуєш повтори — наступного разу менше. Консистентність понад усе.',
+      vo:'VO2max: раз на 10–14 днів. Потрібно 48–72h відновлення.',
+      z2:'Zone 2: будує аеробний двигун. Розмовний темп. Не піддавайся спокусі.'},
+  dlTitle:'Завантажити файл тренування',
+  dlCompat:'ZWO: Zwift/MyWhoosh · FIT: Garmin/Wahoo · MRC: TrainerRoad · ERG: Wahoo/Tacx · TCX: Garmin/Amazfit',
+  weekTxt:'Тиждень {w} з {total}',tssWeek:'Тижневий TSS: {tss} · Тижневий обсяг: {km} км',
+  kmWarnShort:'⚠ Занадто коротко для цього типу. Мінімум: {v} км.',
+  kmWarnLong:'⚠ Дуже довго — розглянь поділ. Максимум: {v} км.',
+  calWeek:'Цей тиждень',calFull:'Повний план',
+  pnotes:{'1':'Один тиждень — зосередься на відчутті зон.',
+          '4':'4-тижневий цикл: 3 навантаження + 1 відновлення (Friel 3+1). Приріст: +5–10 Вт FTP.',
+          '8':'Два 4-тижневих цикли з прогресією. Приріст: +12–22 Вт FTP.',
+          '16':'Чотири цикли, поляризовані 80/20. Приріст: +25–40 Вт FTP.',
+          '20':'Повна періодизація: База → Розвиток → Пік → Тейпер. Приріст: +30–50 Вт FTP.'},
+  ctx:'Вік:{age} Стать:{gender} Вага:{wt}кг FTP:{ftp}Вт ({wpkg}Вт/кг) ЧСС макс:{hrmax} ЧСС спокою:{hrrest} Режим:{mode}\nЗони потужності: Z1<{z1}Вт Z2:{z2} Z3:{z3} Z4:{z4} Z5:{z5}\nЗони ЧСС: Z2:{h2} Z3:{h3} Z4:{h4} уд/хв\nТренувань/тиж:{sess} км/трен:{km} План:{weeks} тиж\nВідповідай тією ж мовою. Давай конкретні цифри.',
   loading:'Думаю...',errC:'Не вдалось з\'єднатись.',
-  qs:['Скільки відпочивати після VO2max?','Що їсти перед threshold тренуванням?','Як покращити каденс?','Ознаки перетренованості?','Як їхати 100 км рівномірно?','Коли повторно тестувати FTP?']
+  qs:['Скільки відпочивати після VO2max?','Як покращити каденс?','Ознаки перетренованості?','Що їсти перед поїздкою?','Коли тестувати FTP?','Як їхати довгу поїздку?']
 },
 pl:{
-  hdrTitle:'Plan treningowy kolarstwa',hdrSub:'Ustrukturyzowany trening oparty na FTP',
-  s1:'Profil zawodnika',s2:'Parametry planu',
-  age:'WIEK',gender:'PŁEĆ',weight:'WAGA',hrmax:'HR MAKS',hrrest:'HR SPOCZYNKOWE',ftp:'FTP (opcjonalne)',
+  hdrTitle:'Plan treningowy kolarstwa',hdrSub:'Trening oparty na nauce',
+  s1:'Profil zawodnika',s3:'Parametry planu',
+  age:'WIEK',gender:'PŁEĆ',weight:'WAGA',hrmax:'HR MAKS',hrrest:'HR SPOCZYNKOWE',ftp:'FTP (funkcjonalna moc progowa)',
   optM:'Mężczyzna',optF:'Kobieta',
-  mode:'TRYB POMIARU TRENINGU',modePw:'Miernik mocy',modePwSub:'Cel w watach',modeHr:'Tętno',modeHrSub:'Bez miernika mocy',
+  ftpHint:'Przeciągnij suwak by ustawić FTP. Testuj co 6–8 tygodni.',
   sessions:'TRENINGÓW/TYDZ',km:'KM / TRENING',dur:'DŁUGOŚĆ PLANU',
   w1:'1 tydzień',w4:'4 tygodnie',w8:'8 tygodni',w16:'16 tygodni',w20:'20 tygodni',
-  gen:'Generuj mój plan treningowy →',
+  gen:'Generuj plan →',
   zones:'Strefy treningowe',sched:'Plan tygodniowy',wout:'Szczegóły treningu',prog:'Progresja',
   chat:'Trener AI',hint:'Profil i strefy wysyłane automatycznie',
-  welcome:'Cześć! Jestem Twoim trenerem AI. Wypełnij profil i wygeneruj plan, potem pytaj o co chcesz.',
+  welcome:'Cześć! Jestem Twoim trenerem AI. Wygeneruj plan, potem pytaj.',
   send:'Wyślij',quick:'Szybkie pytania',
-  emptyText:'Wypełnij profil i wygeneruj plan',emptySub:'Twój spersonalizowany plan treningowy pojawi się tutaj',
-  rest:'Odpoczynek',long:'Długa Z2',
-  znames:['Z1 Regeneracja','Z2 Aerobowa','Z3 Sweetspot','Z4 Próg','Z5 VO2max'],
+  emptyText:'Ustaw parametry i wygeneruj plan',emptySub:'Strefy aktualizują się na żywo',
+  rest:'Odpoczynek',longr:'Długa Z2',endurance:'Wytrzymałość',recovery:'Regeneracja',
+  znames:['Regeneracja','Wytrzymałość','Tempo/SS','Próg','VO2max'],
   wt:['Sweetspot','Próg','VO2max','Zone 2'],
-  hrmaxHint:'Formuła: 220 − wiek = {v}. Zmień jeśli znasz swoje rzeczywiste HR maks.',
-  ftpHint:'Zostaw as-is dla szacowania z HR. Zaktualizuj po teście rampowym.',
-  kmWarnShort:'⚠ Za krótko dla tego treningu. Zalecane minimum: {v} km.',
-  kmWarnLong:'⚠ Bardzo długo — rozważ podział. Zalecane maksimum: {v} km.',
+  dayNames:['Pon','Wt','Śr','Czw','Pt','Sob','Nd'],
+  phaseNames:{base:'Bazowy',build:'Budowa',peak:'Szczyt',recovery:'Regeneracja',taper:'Taper'},
+  modeTitle:'TRYB POMIARU',modePw:'Moc (Waty)',modeHr:'Tętno',
   cadTitle:'Docelowa kadencja (rpm)',
-  cadPhases:['Rozgrzewka','Baza','Interwał','Regeneracja'],
-  cadNote:'Kadencja <80 rpm → obciążenie mięśni. >100 rpm → układ sercowo-naczyniowy. Znajdź optimum.',
-  nb:{ss:'Sweetspot (88–95% FTP): najlepszy bodziec FTP z regeneracją 24–36h. Kadencja <85 rpm → zmniejsz moc 10 W.',
-      th:'Próg: jeśli nie kończysz powtórzeń — rób mniej następnym razem. Konsekwencja ponad wszystko.',
-      vo:'VO2max: max raz na 10–14 dni. 48–72h regeneracji. Nie planuj przed długą jazdą.',
-      z2:'Zone 2 baza: buduje silnik aerobowy. Tempo konwersacyjne. Nie jedź szybciej — to ma być łatwe.'},
-  pnote:{'1':'Cel: poczuć strefy i znaleźć rytm.','4':'Przyrost: +5–10 W FTP. Test rampowy po tygodniu 4.',
-         '8':'Przyrost: +12–22 W FTP. Test rampowy po tygodniu 8.','16':'Przyrost: +25–40 W FTP. Test rampowy po tygodniu 16.',
-         '20':'Przyrost: +30–50 W FTP. Test rampowy po tygodniu 20.'},
-  dlTitle:'Pobierz plik treningu',dlCompat:'ZWO: Zwift/MyWhoosh · FIT: Garmin/Wahoo · MRC: TrainerRoad · ERG: Wahoo SYSTM/Tacx · TCX: Garmin/Amazfit',
-  weekDesc:'Tydzień {w} z {total} — {type}',
-  phaseNames:{base:'Blok bazowy',build:'Blok budowy',peak:'Blok szczytowy',unload:'Odciążenie',taper:'Taper'},
-  ctx:'Wiek: {age} | Płeć: {gender} | Waga: {wt}kg | HR maks: {hrmax} | HR spocz: {hrrest} | FTP: {ftp}W ({wpkg} W/kg) | Tryb: {mode}\nStrefy mocy: Z1<{z1}W | Z2 {z2} | Z3 SS {z3} | Z4 TH {z4} | Z5 VO2 {z5}\nStrefy HR: Z2 {h2} | Z3 {h3} | Z4 {h4}bpm\nOdpowiadaj w tym samym języku. Podawaj konkretne liczby.',
+  cadPhases:['Rozgrzewka','Baza','Praca','Regeneracja'],
+  cadNote:'Kadencja <80 rpm → obciążenie mięśni. >100 rpm → sercowo-naczyniowe. Znajdź optimum.',
+  nb:{ss:'Sweetspot (88–95% FTP): najlepszy bodziec FTP, regeneracja 24–36h. Kadencja <85 → zmniejsz 10 W.',
+      th:'Próg: rób mniej powtórzeń jeśli nie kończysz. Konsekwencja ponad wszystko.',
+      vo:'VO2max: max raz na 10–14 dni. 48–72h regeneracji.',
+      z2:'Zone 2: buduje silnik aerobowy. Tempo konwersacyjne.'},
+  dlTitle:'Pobierz plik treningu',
+  dlCompat:'ZWO: Zwift/MyWhoosh · FIT: Garmin/Wahoo · MRC: TrainerRoad · ERG: Wahoo/Tacx · TCX: Garmin/Amazfit',
+  weekTxt:'Tydzień {w} z {total}',tssWeek:'Tygodniowy TSS: {tss} · Objętość: {km} km',
+  kmWarnShort:'⚠ Za krótko. Minimum: {v} km.',
+  kmWarnLong:'⚠ Za długo — rozważ podział. Maksimum: {v} km.',
+  calWeek:'Ten tydzień',calFull:'Pełny plan',
+  pnotes:{'1':'Jeden tydzień — skup się na strefach.',
+          '4':'Cykl 3+1: 3 tygodnie obciążenia + 1 regeneracja. Przyrost: +5–10 W.',
+          '8':'Dwa cykle 4-tygodniowe. Przyrost: +12–22 W.',
+          '16':'Cztery cykle, polaryzacja 80/20. Przyrost: +25–40 W.',
+          '20':'Pełna periodyzacja. Przyrost: +30–50 W.'},
+  ctx:'Wiek:{age} Płeć:{gender} Waga:{wt}kg FTP:{ftp}W ({wpkg}W/kg) HR max:{hrmax} HR spocz:{hrrest} Tryb:{mode}\nStrefy mocy: Z1<{z1}W Z2:{z2} Z3:{z3} Z4:{z4} Z5:{z5}\nStrefy HR: Z2:{h2} Z3:{h3} Z4:{h4} bpm\nTreningów:{sess} km:{km} Plan:{weeks} tyg\nOdpowiadaj w tym samym języku.',
   loading:'Myślę...',errC:'Nie można połączyć.',
-  qs:['Ile odpoczynku po VO2max?','Co jeść przed treningiem progowym?','Jak poprawić kadencję?','Oznaki przetrenowania?','Jak równomiernie jechać 100km?','Kiedy powtórzyć test FTP?']
+  qs:['Ile odpoczynku po VO2max?','Jak poprawić kadencję?','Oznaki przetrenowania?','Co jeść przed treningiem?','Kiedy testować FTP?','Jak rozłożyć siły na długą jazdę?']
 }
 };
 function tr(k){return(T[curLang]&&T[curLang][k]!==undefined)?T[curLang][k]:(T.en[k]||k);}
 
-// ─── HELPERS ──────────────────────────────────────────────────────────────
-function hk(p,hrrest,hrmax){return Math.round(hrrest+p*(hrmax-hrrest));}
-function pw(lo,hi,ftp){return Math.round(lo*ftp)+'–'+Math.round(hi*ftp)+' W';}
+// ─── HELPERS — KARVONEN + COGGAN ──────────────────────────────────────────
+// Karvonen: HR_target = HR_rest + % × (HR_max − HR_rest)
+function hrKarvonen(pct,hrrest,hrmax){return Math.round(hrrest+pct*(hrmax-hrrest));}
+function hrStr(lo,hi,hrrest,hrmax){
+  if(lo===0) return '< '+hrKarvonen(hi,hrrest,hrmax)+' bpm';
+  if(hi>=1) return '> '+hrKarvonen(lo,hrrest,hrmax)+' bpm';
+  return hrKarvonen(lo,hrrest,hrmax)+'–'+hrKarvonen(hi,hrrest,hrmax)+' bpm';
+}
+// Coggan power zones — % of FTP
 function wt(p,ftp){return Math.round(p*ftp);}
-function hs(lo,hi,hrrest,hrmax){
-  var hrr=hrmax-hrrest;
-  if(lo===0)return'<'+Math.round(hrrest+hi*hrr)+' bpm';
-  if(hi>=1)return'>'+Math.round(hrrest+lo*hrr)+' bpm';
-  return Math.round(hrrest+lo*hrr)+'–'+Math.round(hrrest+hi*hrr)+' bpm';
+function pwStr(lo,hi,ftp){
+  if(lo===0) return '< '+Math.round(hi*ftp)+' W';
+  if(hi>=1.5) return '> '+Math.round(lo*ftp)+' W';
+  return Math.round(lo*ftp)+'–'+Math.round(hi*ftp)+' W';
 }
+function round3(n){return Number(n).toFixed(2);}  // 3 significant digits for W/kg
 function getInput(id){return parseFloat(document.getElementById(id).value)||0;}
-function estimateFTP(hrmax,hrrest,weight,age,gender){
-  // VO2max estimate: Uth formula + Jones FTP correction
-  var hrr=hrmax-hrrest;
-  var vo2max=15*(hrmax/hrrest);
-  // Gender factor
-  if(gender==='f') vo2max*=0.92;
-  // FTP ≈ 72–76% of VO2max-derived power
-  var ftpEst=Math.round((vo2max*weight*0.01)*0.74);
-  return Math.max(80,Math.min(500,ftpEst));
-}
 
-// ─── MODE TOGGLE ──────────────────────────────────────────────────────────
-function setMode(mode){
-  trMode=mode;
-  document.getElementById('btn-pw').classList.toggle('active',mode==='power');
-  document.getElementById('btn-hr').classList.toggle('active',mode==='hr');
-  if(plan) renderWorkout(curW);
-}
-
-// ─── PLAN GENERATION ALGORITHM ────────────────────────────────────────────
-// Based on: Friel "The Cyclist's Training Bible", Coggan power zones,
-// Seiler 80/20 principle, polarized training model
-function generatePlan(){
-  var age=Math.round(getInput('f-age')||30);
-  var gender=document.getElementById('f-gender').value;
-  var weight=getInput('f-weight')||75;
-  var hrmax=Math.round(getInput('f-hrmax')||185);
+// ─── LIVE ZONES RECALC (no button needed) ────────────────────────────────
+function recalcZones(){
+  var ftp=Math.round(getInput('f-ftp')||200);
   var hrrest=Math.round(getInput('f-hrrest')||55);
-  var ftpInput=Math.round(getInput('f-ftp')||200);
-  var sessW=Math.round(getInput('f-sess')||4);
-  var kmS=Math.round(getInput('f-km')||40);
-  var weeks=parseInt(document.getElementById('f-weeks').value)||8;
-
-  // If FTP not realistically set, estimate from HR
-  var ftpEst=estimateFTP(hrmax,hrrest,weight,age,gender);
-  var ftp=ftpInput>100?ftpInput:ftpEst;
-  var wpkg=(ftp/weight).toFixed(2);
-
-  // Karvonen HR zones [lo%,hi%] of HRR
-  var hrZones=[
-    [0,0.60],[0.60,0.70],[0.70,0.80],[0.80,0.90],[0.90,1.00]
-  ];
-  // Coggan power zones [lo%,hi%] of FTP
-  var pwZones=[
-    [0,0.55],[0.56,0.75],[0.76,0.90],[0.91,1.05],[1.06,1.20]
-  ];
-
-  // Cadence targets per type [wu,base,work,recovery]
-  var cadence={ss:[85,88,90,80],th:[83,87,90,80],vo:[85,88,94,82],z2:[80,85,88,78]};
-
-  // Build periodized weekly schedule based on weeks count
-  // Phase structure based on Friel periodization model:
-  // 1-week: intro. 4-week: base+unload. 8-week: 2x(build)+peak+unload. 16+: full cycles.
-  var phases=buildPhases(weeks);
-
-  plan={age,gender,weight,ftp,hrmax,hrrest,hrZones,pwZones,cadence,wpkg,sessW,kmS,weeks,phases};
-
-  // Show sections
-  ['sec-zones','sec-sched','sec-wout','sec-prog'].forEach(function(id){
-    document.getElementById(id).style.display='';
-  });
-  document.getElementById('empty-state').style.display='none';
-
-  renderZones();
-  renderSchedule();
-  renderWorkoutTabs();
-  renderProgression();
-  updateChatContext();
-}
-
-// Periodization algorithm
-function buildPhases(totalWeeks){
-  // Each phase entry: {week, phase, type}
-  // phase: base|build|peak|unload|taper
-  // Intensity distribution:
-  //   base:  80% Z2, 15% SS, 5% rest
-  //   build: 60% Z2, 25% SS, 10% TH, 5% rest
-  //   peak:  50% Z2, 20% SS, 20% TH, 10% VO2
-  //   unload: 90% Z2, 10% rest
-  //   taper: 70% Z2, 20% SS, 10% rest
-  var phases=[];
-  if(totalWeeks===1){
-    return [{w:1,phase:'base',label:'intro'}];
-  }
-  if(totalWeeks===4){
-    return [{w:1,phase:'base'},{w:2,phase:'base'},{w:3,phase:'build'},{w:4,phase:'unload'}];
-  }
-  if(totalWeeks===8){
-    return [{w:1,phase:'base'},{w:2,phase:'base'},{w:3,phase:'build'},{w:4,phase:'build'},
-            {w:5,phase:'peak'},{w:6,phase:'peak'},{w:7,phase:'build'},{w:8,phase:'taper'}];
-  }
-  if(totalWeeks===16){
-    // 2 full 8-week cycles
-    for(var i=0;i<2;i++){
-      var base=i*8;
-      phases.push({w:base+1,phase:'base'},{w:base+2,phase:'base'},{w:base+3,phase:'build'},{w:base+4,phase:'build'},
-                  {w:base+5,phase:'peak'},{w:base+6,phase:'peak'},{w:base+7,phase:'build'},{w:base+8,phase:i===1?'taper':'unload'});
-    }
-    return phases;
-  }
-  if(totalWeeks===20){
-    // Base block (6w) → Build (6w) → Peak (4w) → Taper (4w)
-    for(var w=1;w<=20;w++){
-      var ph=w<=5?'base':w<=6?'unload':w<=11?'build':w<=12?'unload':w<=16?'peak':w<=17?'unload':'taper';
-      phases.push({w:w,phase:ph});
-    }
-    return phases;
-  }
-  return [{w:1,phase:'base'}];
-}
-
-// Workout type distribution per phase and sessions count
-function weekWorkouts(phase, sessW){
-  // Returns array of workout types for 7 days (0=rest)
-  // Types: 'rest','z2','ss','th','vo','long'
-  var slots=['rest','rest','rest','rest','rest','rest','rest'];
-  // Based on Seiler 80/20 polarized model adapted for FTP building
-  var structured={
-    base:{1:['ss'],2:['ss','z2'],3:['ss','z2','z2'],4:['ss','z2','z2','long'],
-          5:['ss','z2','z2','long','z2'],6:['ss','th','z2','z2','long','z2'],7:['ss','th','z2','z2','long','z2','z2']},
-    build:{1:['ss'],2:['ss','th'],3:['ss','th','z2'],4:['ss','th','z2','long'],
-           5:['ss','th','z2','z2','long'],6:['ss','th','vo','z2','z2','long'],7:['ss','th','vo','z2','z2','long','z2']},
-    peak:{1:['th'],2:['ss','th'],3:['ss','th','vo'],4:['ss','th','vo','long'],
-          5:['ss','th','vo','z2','long'],6:['th','vo','ss','z2','z2','long'],7:['th','vo','ss','z2','z2','z2','long']},
-    unload:{1:['z2'],2:['z2','z2'],3:['z2','z2','z2'],4:['z2','z2','z2','long'],
-            5:['z2','z2','z2','z2','long'],6:['z2','z2','z2','z2','z2','long'],7:['z2','z2','z2','z2','z2','z2','long']},
-    taper:{1:['ss'],2:['ss','z2'],3:['ss','z2','z2'],4:['ss','z2','z2','long'],
-           5:['ss','th','z2','z2','long'],6:['ss','th','z2','z2','z2','long'],7:['ss','th','z2','z2','z2','z2','long']}
-  };
-  var n=Math.max(1,Math.min(7,sessW));
-  var order=((structured[phase]||structured.base)[n]||structured.base[4]).slice();
-  // Spread across week: SS on Tue, TH on Thu, VO on Tue/Sat, Z2 fill, long on Sat/Sun
-  var dayPrefs={ss:[1,2],th:[3,4],vo:[1,5],long:[5,6],z2:[0,2,4,6]};
-  var placed={};
-  order.forEach(function(tp){
-    var prefs=dayPrefs[tp]||[0,1,2,3,4,5,6];
-    for(var i=0;i<prefs.length;i++){
-      var d=prefs[i];
-      if(!placed[d]&&slots[d]==='rest'){slots[d]=tp;placed[d]=true;break;}
-    }
-    if(!placed[order.indexOf(tp)]){
-      for(var d2=0;d2<7;d2++){
-        if(slots[d2]==='rest'&&!placed[d2]){slots[d2]=tp;placed[d2]=true;break;}
-      }
-    }
-  });
-  return slots;
-}
-
-// ─── ZONES RENDER ─────────────────────────────────────────────────────────
-function renderZones(){
-  var p=plan;
+  var hrmax=Math.round(getInput('f-hrmax')||190);
+  var weight=getInput('f-weight')||75;
+  // Coggan zones
+  var pwZones=[[0,0.55],[0.56,0.75],[0.76,0.90],[0.91,1.05],[1.06,1.20]];
+  // Karvonen HR zones (matched to Coggan intensity levels)
+  var hrZones=[[0,0.60],[0.60,0.70],[0.70,0.80],[0.80,0.90],[0.90,1.00]];
   var znames=tr('znames');
   var colors=[
     {c:'var(--z1c)',bg:'var(--z1bg)'},{c:'var(--z2c)',bg:'var(--z2bg)'},
     {c:'var(--z3c)',bg:'var(--z3bg)'},{c:'var(--z4c)',bg:'var(--z4bg)'},
     {c:'var(--z5c)',bg:'var(--z5bg)'}
   ];
-  var barHtml=p.pwZones.map(function(z,i){
-    return'<div class="zone-seg" style="background:'+colors[i].bg+';color:'+colors[i].c+';">Z'+(i+1)+'</div>';
+  var barHtml=pwZones.map(function(z,i){
+    return'<div class="zone-seg" style="background:'+colors[i].bg+';color:'+colors[i].c+'">Z'+(i+1)+'</div>';
   }).join('');
-  var cardsHtml='<div class="zones-grid">'+p.pwZones.map(function(z,i){
-    var pwStr=pw(z[0],z[1],p.ftp);
-    var hrStr=hs(p.hrZones[i][0],p.hrZones[i][1],p.hrrest,p.hrmax);
-    return'<div class="zone-card" style="background:'+colors[i].bg+';border-color:'+colors[i].c+'30">'+
-      '<div class="zn" style="color:'+colors[i].c+'">Z'+(i+1)+'</div>'+
-      '<div class="zv" style="color:'+colors[i].c+'">'+pwStr+'</div>'+
-      '<div class="zh">'+hrStr+'</div>'+
-      '<div class="zh" style="margin-top:2px;font-size:9px">'+znames[i]+'</div></div>';
-  }).join('')+'</div>';
-  document.getElementById('zones-content').innerHTML='<div class="zone-bar" style="margin-bottom:10px">'+barHtml+'</div>'+cardsHtml+
-    '<div style="margin-top:8px;font-size:11px;color:var(--text3)">FTP: <b style="color:var(--text)">'+p.ftp+' W</b> &nbsp;·&nbsp; '+p.ftp/p.weight.toFixed(1)+' W/kg &nbsp;·&nbsp; Mode: <b style="color:var(--text)">'+(trMode==='power'?tr('modePw'):tr('modeHr'))+'</b></div>';
+  var cardsHtml=pwZones.map(function(z,i){
+    return'<div class="zone-card" style="background:'+colors[i].bg+';border-color:'+colors[i].c+'40">'+
+      '<div class="zn" style="color:'+colors[i].c+'">Z'+(i+1)+' '+znames[i]+'</div>'+
+      '<div class="zv" style="color:'+colors[i].c+'">'+pwStr(z[0],z[1],ftp)+'</div>'+
+      '<div class="zh">'+hrStr(hrZones[i][0],hrZones[i][1],hrrest,hrmax)+'</div></div>';
+  }).join('');
+  var wpkg=round3(ftp/weight);
+  document.getElementById('zones-content').innerHTML=
+    '<div class="zone-bar">'+barHtml+'</div>'+
+    '<div class="zones-grid">'+cardsHtml+'</div>'+
+    '<div class="ftp-display">'+
+    '<div>FTP: <b>'+ftp+' W</b></div>'+
+    '<div>W/kg: <b>'+wpkg+'</b></div>'+
+    '<div>HRR: <b>'+(hrmax-hrrest)+' bpm</b></div>'+
+    '</div>';
 }
 
-// ─── SCHEDULE RENDER ──────────────────────────────────────────────────────
-var currentWeekIdx=0;
-function renderSchedule(){
-  var p=plan;
-  // Show week 1 by default
-  currentWeekIdx=0;
-  renderWeek(0);
+// ─── WEEKLY PLAN ALGORITHM (80/20 + 3+1 periodization) ───────────────────
+// Phase types: base, build, peak, recovery (Friel 3+1)
+// For N weeks:
+//   1 week:  base
+//   4 weeks: base → build → peak → recovery
+//   8 weeks: 2× (base → build → peak → recovery)
+//   16 weeks: 4× (base → build → peak → recovery)
+//   20 weeks: 5× (base → build → peak → recovery)
+function getPhase(weekIdx, totalWeeks){
+  if(totalWeeks===1) return 'base';
+  var cyc=weekIdx%4;
+  var phaseOrder=['base','build','peak','recovery'];
+  return phaseOrder[cyc];
 }
 
-function renderWeek(weekIdx){
-  var p=plan;
-  var phaseInfo=p.phases[weekIdx]||p.phases[0];
-  var slots=weekWorkouts(phaseInfo.phase,p.sessW);
-  var days=tr('days')||['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  // fallback
-  if(!days||!days.length) days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+// 7-day schedule per sessions/week & phase
+// Principle: 80% Z2/endurance, 20% high intensity
+// Structure:
+//   Mon: rest
+//   Tue: high-intensity (VO2 or Threshold based on phase)
+//   Wed: recovery Z2
+//   Thu: Sweetspot/Tempo
+//   Fri: rest or short recovery
+//   Sat: Long Z2 (base endurance)
+//   Sun: Endurance Z2 (or group ride)
+function buildWeekSchedule(phase, sessW, kmS){
+  // slots[i] = {type, label, intensityFactor, durationMin, tss}
+  var slots=[null,null,null,null,null,null,null];  // Mon-Sun
 
-  var typeColors={ss:'var(--z3c)',th:'var(--z4c)',vo:'var(--z5c)',z2:'var(--z2c)',long:'var(--z2c)',rest:'var(--text3)'};
-  var typeBg={ss:'var(--z3bg)',th:'var(--z4bg)',vo:'var(--z5bg)',z2:'var(--z2bg)',long:'var(--z2bg)',rest:'var(--bg3)'};
+  // Core priority pattern per phase (high-to-low impact sessions)
+  // Format: array of day-0-indexed placements  [dayIdx, type]
+  var templates={
+    base:[
+      [3,'ss'],      // Thu: Sweetspot
+      [5,'long'],    // Sat: Long Z2
+      [6,'z2'],      // Sun: Endurance
+      [1,'z2'],      // Tue: Z2 (drops to Z2 in base, NOT VO2)
+      [2,'z2'],      // Wed: Recovery Z2
+      [4,'z2']       // Fri: Z2
+    ],
+    build:[
+      [1,'th'],      // Tue: Threshold
+      [3,'ss'],      // Thu: Sweetspot
+      [5,'long'],    // Sat: Long Z2
+      [6,'z2'],      // Sun: Endurance
+      [2,'z2'],      // Wed: Recovery
+      [4,'z2']       // Fri: Z2
+    ],
+    peak:[
+      [1,'vo'],      // Tue: VO2max
+      [3,'th'],      // Thu: Threshold
+      [5,'long'],    // Sat: Long Z2
+      [6,'z2'],      // Sun: Endurance
+      [2,'z2'],      // Wed: Recovery
+      [4,'z2']       // Fri: Z2
+    ],
+    recovery:[
+      [3,'z2'],      // Thu: Z2
+      [5,'long'],    // Sat: shorter Long
+      [1,'z2'],      // Tue: Z2
+      [6,'z2'],      // Sun: Z2
+      [2,'z2'],      // Wed: Z2
+      [4,'z2']       // Fri: Z2
+    ]
+  };
+  var template=templates[phase]||templates.base;
+  var n=Math.max(1,Math.min(7,sessW));
+  for(var i=0;i<n&&i<template.length;i++){
+    slots[template[i][0]]={type:template[i][1]};
+  }
+  // fill remaining with rest
+  for(var d=0;d<7;d++) if(!slots[d]) slots[d]={type:'rest'};
+  return slots;
+}
+
+// Compute TSS per workout (Coggan formula approximated)
+// TSS = (duration_s × NP × IF) / (FTP × 3600) × 100
+// We approximate NP and IF per workout type
+function computeTSS(type, durMin, ftp, kmS){
+  // Intensity Factor (IF) per workout type
+  var IF={ss:0.92,th:1.00,vo:1.10,z2:0.65,long:0.68,rest:0};
+  var f=IF[type]||0;
+  if(f===0) return 0;
+  // TSS = (minutes/60) × IF² × 100
+  return Math.round((durMin/60)*f*f*100);
+}
+
+// ─── GENERATE PLAN ────────────────────────────────────────────────────────
+function generatePlan(){
+  var age=Math.round(getInput('f-age')||30);
+  var gender=document.getElementById('f-gender').value;
+  var weight=getInput('f-weight')||75;
+  var hrmax=Math.round(getInput('f-hrmax')||190);
+  var hrrest=Math.round(getInput('f-hrrest')||55);
+  var ftp=Math.round(getInput('f-ftp')||200);
+  var sessW=Math.round(getInput('f-sess')||4);
+  var kmS=Math.round(getInput('f-km')||40);
+  var weeks=parseInt(document.getElementById('f-weeks').value)||4;
+
+  // Cadence per workout type [warmup, base, work, recovery]
+  var cadence={ss:[85,88,90,80],th:[83,87,90,80],vo:[85,88,94,82],z2:[80,85,88,78],long:[78,83,85,78]};
+
+  plan={age,gender,weight,ftp,hrmax,hrrest,sessW,kmS,weeks,cadence,
+    wpkg:round3(ftp/weight),
+    pwZones:[[0,0.55],[0.56,0.75],[0.76,0.90],[0.91,1.05],[1.06,1.20]],
+    hrZones:[[0,0.60],[0.60,0.70],[0.70,0.80],[0.80,0.90],[0.90,1.00]]};
+
+  document.getElementById('empty-state').style.display='none';
+  ['sec-sched','sec-wout','sec-prog'].forEach(function(id){document.getElementById(id).style.display='';});
+  curWeekIdx=0;
+  renderWeek();
+  renderWorkoutTabs();
+  renderProgression();
+}
+
+// ─── RENDER WEEK ──────────────────────────────────────────────────────────
+function renderWeek(){
+  if(!plan) return;
+  var p=plan;
+  var phase=getPhase(curWeekIdx,p.weeks);
+  var slots=buildWeekSchedule(phase,p.sessW,p.kmS);
+  var days=tr('dayNames');
   var wts=tr('wt');
-  var typeLabels={ss:wts[0],th:wts[1],vo:wts[2],z2:wts[3],long:tr('long'),rest:tr('rest')};
+  var typeLabels={ss:wts[0],th:wts[1],vo:wts[2],z2:tr('endurance'),long:tr('longr'),rest:tr('rest')};
+  var typeColors={ss:'var(--z3c)',th:'var(--z4c)',vo:'var(--z5c)',z2:'var(--z2c)',long:'var(--z2c)',rest:'var(--text3)'};
 
-  var html=slots.map(function(tp,i){
-    var isStructured=tp!=='rest';
+  // km for each session type (long = 1.5×, recovery phase reduces)
+  var kmFactor=phase==='recovery'?0.7:1.0;
+  var sessionKm={ss:Math.round(p.kmS*kmFactor),th:Math.round(p.kmS*kmFactor),vo:Math.round(p.kmS*0.9*kmFactor),z2:Math.round(p.kmS*kmFactor),long:Math.round(p.kmS*1.5*kmFactor)};
+  // duration per km ~ 2 min (30 km/h)
+  function durMin(km){return Math.round(km*2);}
+
+  var weekTSS=0;
+  var weekKm=0;
+  var html=slots.map(function(s,i){
+    var t=s.type;
+    var isStr=t!=='rest';
+    var km=t==='rest'?0:sessionKm[t];
+    var d=durMin(km);
+    var tss=computeTSS(t,d,p.ftp,km);
+    weekTSS+=tss;weekKm+=km;
     var target='';
-    if(tp!=='rest'){
+    if(t!=='rest'){
       if(trMode==='power'){
-        if(tp==='ss') target=wt(0.88,p.ftp)+'–'+wt(0.95,p.ftp)+' W';
-        else if(tp==='th') target=wt(0.96,p.ftp)+'–'+wt(1.03,p.ftp)+' W';
-        else if(tp==='vo') target=wt(1.10,p.ftp)+'–'+wt(1.20,p.ftp)+' W';
-        else target=wt(0.56,p.ftp)+'–'+wt(0.75,p.ftp)+' W';
+        if(t==='ss') target=pwStr(0.88,0.95,p.ftp);
+        else if(t==='th') target=pwStr(0.96,1.03,p.ftp);
+        else if(t==='vo') target=pwStr(1.10,1.20,p.ftp);
+        else target=pwStr(0.56,0.75,p.ftp);
       } else {
-        if(tp==='ss') target=hk(0.70,p.hrrest,p.hrmax)+'–'+hk(0.80,p.hrrest,p.hrmax)+' bpm';
-        else if(tp==='th') target=hk(0.80,p.hrrest,p.hrmax)+'–'+hk(0.90,p.hrrest,p.hrmax)+' bpm';
-        else if(tp==='vo') target='>'+hk(0.90,p.hrrest,p.hrmax)+' bpm';
-        else target=hk(0.60,p.hrrest,p.hrmax)+'–'+hk(0.70,p.hrrest,p.hrmax)+' bpm';
+        if(t==='ss') target=hrStr(0.70,0.80,p.hrrest,p.hrmax);
+        else if(t==='th') target=hrStr(0.80,0.90,p.hrrest,p.hrmax);
+        else if(t==='vo') target='> '+hrKarvonen(0.90,p.hrrest,p.hrmax)+' bpm';
+        else target=hrStr(0.60,0.70,p.hrrest,p.hrmax);
       }
     }
-    var km=tp==='rest'?'':tp==='long'?Math.round(p.kmS*1.5)+' km':p.kmS+' km';
-    return'<div class="day-card'+(isStructured?' dc-structured':'')+'">'+
+    return'<div class="day-card'+(isStr?' dc-structured':'')+'">'+
       '<div class="dc-name">'+days[i]+'</div>'+
-      '<div class="dc-type" style="color:'+typeColors[tp]+'">'+typeLabels[tp]+'</div>'+
+      '<div class="dc-type" style="color:'+typeColors[t]+'">'+typeLabels[t]+'</div>'+
       (target?'<div class="dc-target">'+target+'</div>':'')+
-      (km?'<div class="dc-km">'+km+'</div>':'')+
-      '<div class="dc-dot" style="background:'+typeColors[tp]+';opacity:'+(tp==='rest'?'.3':'1')+'"></div>'+
+      (km?'<div class="dc-km">'+km+' km</div>':'')+
+      (d?'<div class="dc-dur">'+d+' min</div>':'')+
+      (tss?'<div class="dc-tss" style="color:'+typeColors[t]+'">TSS '+tss+'</div>':'')+
       '</div>';
   }).join('');
 
   document.getElementById('week-sched').innerHTML=html;
+  document.getElementById('week-txt').textContent=(tr('weekTxt')||'Week {w} of {total}').replace('{w}',curWeekIdx+1).replace('{total}',p.weeks);
+  var phaseColors={base:'var(--z2c)',build:'var(--z3c)',peak:'var(--z4c)',recovery:'var(--z1c)',taper:'var(--z5c)'};
+  var phaseName=(tr('phaseNames')||{})[phase]||phase;
+  var pb=document.getElementById('week-phase-badge');
+  pb.textContent=phaseName;
+  pb.style.background=phaseColors[phase]+'22';
+  pb.style.color=phaseColors[phase];
+  document.getElementById('week-tss').textContent=
+    (tr('tssWeek')||'Weekly TSS: {tss} · km: {km}').replace('{tss}',weekTSS).replace('{km}',weekKm);
 
-  var phaseName=(tr('phaseNames')||{})[phaseInfo.phase]||phaseInfo.phase;
-  document.getElementById('week-desc').textContent=
-    (tr('weekDesc')||'Week {w} of {total} — {type}')
-      .replace('{w}',weekIdx+1).replace('{total}',p.weeks).replace('{type}',phaseName);
-
-  // Cal buttons
+  // Calendar buttons
   document.getElementById('cal-row').innerHTML=
-    '<button class="cal-btn primary" onclick="downloadICS(1)">📅 '+(tr('cal_week')||'This week')+'</button>'+
-    '<button class="cal-btn" onclick="downloadICS(4)">📅 4 '+(tr('weeks')||'wk')+'</button>'+
-    '<button class="cal-btn" onclick="downloadICS(8)">📅 8 '+(tr('weeks')||'wk')+'</button>'+
-    '<button class="cal-btn" onclick="downloadICS(p.weeks)">📅 '+(tr('all')||'Full plan')+'</button>';
+    '<button class="cal-btn primary" onclick="downloadICS(1)">📅 '+tr('calWeek')+'</button>'+
+    (p.weeks>=4?'<button class="cal-btn" onclick="downloadICS(4)">📅 4 wk</button>':'')+
+    (p.weeks>=8?'<button class="cal-btn" onclick="downloadICS(8)">📅 8 wk</button>':'')+
+    '<button class="cal-btn" onclick="downloadICS('+p.weeks+')">📅 '+tr('calFull')+'</button>';
 }
 
-// ─── WORKOUT ALGORITHM ────────────────────────────────────────────────────
+function navWeek(dir){
+  if(!plan) return;
+  curWeekIdx=Math.max(0,Math.min(plan.weeks-1,curWeekIdx+dir));
+  renderWeek();
+}
+
+// ─── WORKOUT DETAIL ───────────────────────────────────────────────────────
 function getWorkout(idx){
-  var p=plan;
-  var wts=tr('wt');
-  var phases=tr('cadPhases')||['Warm-up','Base','Work','Recovery'];
-  // Duration estimate: ~30 km/h = 2 min/km
-  var totalMin=Math.max(25,Math.round(p.kmS/30*60));
+  if(!plan) return null;
+  var p=plan, wts=tr('wt'), phases=tr('cadPhases');
+  var totalMin=Math.max(25,Math.round(p.kmS*2));
   var wu=Math.min(15,Math.max(8,Math.round(totalMin*0.14)));
   var cd=Math.min(15,Math.max(8,Math.round(totalMin*0.14)));
   var work=totalMin-wu-cd;
 
-  // km validation
   var kmLimits=[[20,30,80,120],[25,35,80,100],[20,25,60,80],[30,40,200,300]];
-  var lim=kmLimits[idx]||kmLimits[3];
+  var lim=kmLimits[idx];
   var warnHtml='';
-  if(p.kmS<lim[0]) warnHtml='<div class="km-warn" style="background:var(--z3bg);border-color:var(--z3c);color:var(--z3c)">'+(tr('kmWarnShort')||'⚠ Too short. Min: {v} km').replace('{v}',lim[0])+'</div>';
-  else if(p.kmS>lim[3]) warnHtml='<div class="km-warn" style="background:var(--z4bg);border-color:var(--z4c);color:var(--z4c)">'+(tr('kmWarnLong')||'⚠ Too long. Max: {v} km').replace('{v}',lim[3])+'</div>';
+  if(p.kmS<lim[0]) warnHtml='<div class="km-warn" style="background:var(--z3bg);border-color:var(--z3c);color:var(--z3c)">'+tr('kmWarnShort').replace('{v}',lim[0])+'</div>';
+  else if(p.kmS>lim[3]) warnHtml='<div class="km-warn" style="background:var(--z4bg);border-color:var(--z4c);color:var(--z4c)">'+tr('kmWarnLong').replace('{v}',lim[3])+'</div>';
 
-  // Helpers for target display
-  function pwTarget(lo,hi){return wt(lo,p.ftp)+'–'+wt(hi,p.ftp)+' W';}
-  function hrTarget(lo,hi){return hk(lo,p.hrrest,p.hrmax)+'–'+hk(hi,p.hrrest,p.hrmax)+' bpm';}
-  function target(pwLo,pwHi,hrLo,hrHi){
-    return trMode==='power'?pwTarget(pwLo,pwHi):hrTarget(hrLo,hrHi);
+  function target(pLo,pHi,hLo,hHi){
+    return trMode==='power'?pwStr(pLo,pHi,p.ftp):hrStr(hLo,hHi,p.hrrest,p.hrmax);
   }
   var cad=p.cadence;
 
   if(idx===0){ // SWEETSPOT
-    var blks=Math.max(1,Math.floor(work/25)),bl=Math.max(10,Math.round(work/blks/5)*5);
+    var blks=Math.max(1,Math.floor(work/25)), bl=Math.max(10,Math.round(work/blks/5)*5);
     var tgt=target(0.88,0.95,0.70,0.80);
     return{ti:wts[0],tp:'ss',dist:'~'+p.kmS+' km · ~'+totalMin+' min',goal:blks+'×'+bl+' min @ '+tgt,warn:warnHtml,
       segs:[{l:wu+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:wu},{l:blks+'×'+bl+' min',c:'var(--z3bg)',tc:'var(--z3c)',f:bl*blks},
             {l:'5 min',c:'var(--z2bg)',tc:'var(--z2c)',f:5*(blks-1||1)},{l:cd+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:cd}],
       steps:[
-        {dot:'var(--z1c)',t:'0–'+wu+' min',main:phases[0],sub:pwTarget(0.50,0.60)+' · '+hrTarget(0.50,0.62)+' · '+cad.ss[0]+'–'+cad.ss[1]+' rpm'},
-        {dot:'var(--z3c)',t:'Blocks 1–'+blks,main:wts[0]+' × '+bl+' min',sub:tgt+' · '+cad.ss[2]+' rpm'},
-        {dot:'var(--z2c)',t:'Recovery (5 min)',main:phases[3],sub:pwTarget(0.50,0.58)+' · '+hrTarget(0.50,0.60)+' · '+cad.ss[3]+' rpm'},
+        {dot:'var(--z1c)',t:'0–'+wu+' min',main:phases[0],sub:pwStr(0.50,0.60,p.ftp)+' · '+hrStr(0.50,0.62,p.hrrest,p.hrmax)+' · '+cad.ss[0]+'–'+cad.ss[1]+' rpm'},
+        {dot:'var(--z3c)',t:'Blocks 1–'+blks,main:wts[0]+' · '+bl+' min',sub:tgt+' · cadence '+cad.ss[2]+' rpm'},
+        {dot:'var(--z2c)',t:'Recovery 5 min',main:phases[3],sub:pwStr(0.50,0.58,p.ftp)+' · '+cad.ss[3]+' rpm'},
         {dot:'var(--z1c)',t:'Last '+cd+' min',main:phases[0],sub:'Easy Z1 · '+cad.ss[3]+' rpm'}
       ],
       note:tr('nb').ss,cad:cad.ss,
       zwo:buildZwo(wu,bl,blks,5,cd,0.92,p.ftp,cad.ss)};
   }
   if(idx===1){ // THRESHOLD
-    var reps=Math.max(2,Math.floor(work/11)),rl=Math.max(6,Math.round(work/(reps*1.35)/2)*2);
+    var reps=Math.max(2,Math.floor(work/11)), rl=Math.max(6,Math.round(work/(reps*1.35)/2)*2);
     var tgt=target(0.96,1.03,0.80,0.90);
     return{ti:wts[1],tp:'th',dist:'~'+p.kmS+' km · ~'+totalMin+' min',goal:reps+'×'+rl+' min @ '+tgt,warn:warnHtml,
       segs:[{l:wu+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:wu},{l:reps+'×'+rl+' min',c:'var(--z4bg)',tc:'var(--z4c)',f:rl*reps},
             {l:'3 min',c:'var(--z2bg)',tc:'var(--z2c)',f:3*reps},{l:cd+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:cd}],
       steps:[
-        {dot:'var(--z1c)',t:'0–'+wu+' min',main:phases[0]+' (+Z3 last 2min)',sub:pwTarget(0.50,0.65)+' · '+hrTarget(0.50,0.68)+' · '+cad.th[0]+'–'+cad.th[1]+' rpm'},
-        {dot:'var(--z4c)',t:'Intervals 1–'+reps+' ('+rl+' min)',main:wts[1],sub:tgt+' · '+cad.th[2]+' rpm'},
-        {dot:'var(--z2c)',t:'Recovery (3 min)',main:phases[3],sub:pwTarget(0.50,0.58)+' · '+cad.th[3]+' rpm'},
+        {dot:'var(--z1c)',t:'0–'+wu+' min',main:phases[0]+' (+Z3 last 2min)',sub:pwStr(0.50,0.65,p.ftp)+' · '+cad.th[0]+'–'+cad.th[1]+' rpm'},
+        {dot:'var(--z4c)',t:'Intervals 1–'+reps,main:wts[1]+' · '+rl+' min',sub:tgt+' · cadence '+cad.th[2]+' rpm'},
+        {dot:'var(--z2c)',t:'Recovery 3 min',main:phases[3],sub:pwStr(0.50,0.58,p.ftp)+' · '+cad.th[3]+' rpm'},
         {dot:'var(--z1c)',t:'Last '+cd+' min',main:phases[0],sub:'Easy Z1 · '+cad.th[3]+' rpm'}
       ],
       note:tr('nb').th,cad:cad.th,
@@ -855,9 +826,9 @@ function getWorkout(idx){
       segs:[{l:wu+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:wu},{l:reps+'×4 min',c:'var(--z5bg)',tc:'var(--z5c)',f:4*reps},
             {l:'4 min',c:'var(--z2bg)',tc:'var(--z2c)',f:4*reps},{l:cd+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:cd}],
       steps:[
-        {dot:'var(--z1c)',t:'0–'+wu+' min',main:phases[0]+' + 2×30s accelerations',sub:pwTarget(0.50,0.65)+' · '+cad.vo[0]+'–'+cad.vo[1]+' rpm'},
-        {dot:'var(--z5c)',t:'Intervals 1–'+reps+' (4 min)',main:wts[2],sub:tgt+' · '+cad.vo[2]+' rpm'},
-        {dot:'var(--z2c)',t:'Recovery (4 min)',main:phases[3]+' (HR → '+hk(0.60,p.hrrest,p.hrmax)+' bpm)',sub:pwTarget(0.45,0.55)+' · '+cad.vo[3]+' rpm'},
+        {dot:'var(--z1c)',t:'0–'+wu+' min',main:phases[0]+' + 2×30s accelerations',sub:pwStr(0.50,0.65,p.ftp)+' · '+cad.vo[0]+'–'+cad.vo[1]+' rpm'},
+        {dot:'var(--z5c)',t:'Intervals 1–'+reps,main:wts[2]+' · 4 min',sub:tgt+' · cadence '+cad.vo[2]+' rpm'},
+        {dot:'var(--z2c)',t:'Recovery 4 min',main:phases[3]+' (HR → '+hrKarvonen(0.60,p.hrrest,p.hrmax)+')',sub:pwStr(0.45,0.55,p.ftp)+' · '+cad.vo[3]+' rpm'},
         {dot:'var(--z1c)',t:'Last '+cd+' min',main:phases[0]+' — mandatory',sub:'Easy Z1 · '+cad.vo[3]+' rpm'}
       ],
       note:tr('nb').vo,cad:cad.vo,
@@ -868,8 +839,8 @@ function getWorkout(idx){
   return{ti:wts[3],tp:'z2',dist:'~'+p.kmS+' km · ~'+totalMin+' min',goal:totalMin+' min @ '+tgt,warn:warnHtml,
     segs:[{l:'10 min',c:'var(--z1bg)',tc:'var(--z1c)',f:10},{l:(totalMin-20)+' min Z2',c:'var(--z2bg)',tc:'var(--z2c)',f:Math.max(5,totalMin-20)},{l:'10 min',c:'var(--z1bg)',tc:'var(--z1c)',f:10}],
     steps:[
-      {dot:'var(--z1c)',t:'0–10 min',main:phases[0],sub:pwTarget(0.45,0.58)+' · '+cad.z2[0]+'–'+cad.z2[1]+' rpm'},
-      {dot:'var(--z2c)',t:'10–'+(totalMin-10)+' min',main:wts[3]+' — steady',sub:tgt+' · '+cad.z2[2]+' rpm'},
+      {dot:'var(--z1c)',t:'0–10 min',main:phases[0],sub:pwStr(0.45,0.58,p.ftp)+' · '+cad.z2[0]+'–'+cad.z2[1]+' rpm'},
+      {dot:'var(--z2c)',t:'10–'+(totalMin-10)+' min',main:wts[3]+' — steady',sub:tgt+' · cadence '+cad.z2[2]+' rpm'},
       {dot:'var(--z1c)',t:'Last 10 min',main:phases[0],sub:'Easy Z1 · '+cad.z2[3]+' rpm'}
     ],
     note:tr('nb').z2,cad:cad.z2,
@@ -886,7 +857,6 @@ function buildZwo(wu,repLen,reps,rest,cd,pFrac,ftp,cad){
   return parts;
 }
 
-// ─── WORKOUT RENDER ───────────────────────────────────────────────────────
 function renderWorkoutTabs(){
   var wts=tr('wt');
   document.getElementById('wtabs').innerHTML=wts.map(function(n,i){
@@ -907,102 +877,140 @@ function renderWorkout(idx){
   var tf=w.segs.reduce(function(s,x){return s+x.f;},0);
   var segHtml=w.segs.map(function(s){
     var pct=Math.round(s.f/tf*100);
-    return'<div class="seg" style="flex:'+s.f+';background:'+s.c+';color:'+s.tc+';">'+(pct>14?s.l:'')+'</div>';
+    return'<div class="seg" style="flex:'+s.f+';background:'+s.c+';color:'+s.tc+'">'+(pct>14?s.l:'')+'</div>';
   }).join('');
   var stHtml=w.steps.map(function(s){
     return'<li><div class="st-dot" style="background:'+s.dot+'"></div>'+
       '<span class="st-time">'+s.t+'</span>'+
-      '<span><span class="st-target">'+s.main+'</span><br><span style="font-size:10px;color:var(--text3)">'+s.sub+'</span></span></li>';
+      '<span><span class="st-main">'+s.main+'</span><span class="st-sub">'+s.sub+'</span></span></li>';
   }).join('');
-
-  // Cadence block
-  var phases=tr('cadPhases')||['Warm-up','Base','Work','Recovery'];
+  var phases=tr('cadPhases');
   var cadHtml='<div class="cad-block">'+
     '<div class="cad-title">🎯 '+tr('cadTitle')+'</div>'+
     '<div class="cad-segs">'+
     [0,1,2,3].map(function(i){
-      return'<div class="cad-seg">'+
-        '<div class="cs-ph">'+phases[i]+'</div>'+
-        '<div class="cs-val">'+w.cad[i]+'</div>'+
-        '<div class="cs-unit">rpm</div></div>';
+      return'<div class="cad-seg"><div class="cs-ph">'+phases[i]+'</div>'+
+        '<div class="cs-val">'+w.cad[i]+'</div><div class="cs-unit">rpm</div></div>';
     }).join('')+
     '</div><div class="cad-note">'+tr('cadNote')+'</div></div>';
-
-  // Badge colors
   var bc={ss:'background:var(--z3bg);color:var(--z3c)',th:'background:var(--z4bg);color:var(--z4c)',vo:'background:var(--z5bg);color:var(--z5c)',z2:'background:var(--z2bg);color:var(--z2c)'};
-
+  // Mode toggle before download
+  var modeHtml='<div class="mode-toggle-block">'+
+    '<div class="mode-toggle-title">'+tr('modeTitle')+'</div>'+
+    '<div class="mode-toggle">'+
+    '<button class="mode-btn'+(trMode==='power'?' active':'')+'" onclick="setMode(\'power\')"><span class="mb-icon">⚡</span>'+tr('modePw')+'</button>'+
+    '<button class="mode-btn'+(trMode==='hr'?' active':'')+'" onclick="setMode(\'hr\')"><span class="mb-icon">❤️</span>'+tr('modeHr')+'</button>'+
+    '</div></div>';
   document.getElementById('wout-area').innerHTML='<div class="wcard">'+
     (w.warn||'')+
     '<div class="wcard-hdr"><span class="wcard-title">'+w.ti+'</span><span class="wbadge" style="'+bc[w.tp]+'">'+w.tp.toUpperCase()+'</span></div>'+
-    '<div class="wmeta">'+w.dist+' &nbsp;·&nbsp; '+w.goal+'</div>'+
+    '<div class="wmeta">'+w.dist+' · '+w.goal+'</div>'+
     '<div class="seg-bar">'+segHtml+'</div>'+
     '<ul class="steps">'+stHtml+'</ul>'+
     cadHtml+
     '<div class="wnote">'+w.note+'</div>'+
-    renderDLSection(idx,w)+
+    modeHtml+
+    '<div class="dl-section">'+
+    '<div class="dl-section-title">📥 '+tr('dlTitle')+'</div>'+
+    '<div class="dl-btns">'+
+    ['ZWO','FIT','MRC','ERG','TCX'].map(function(f){return'<button class="dl-btn" onclick="dlFormat('+idx+',\''+f+'\')">.'+f+'</button>';}).join('')+
+    '</div><div class="dl-compat">'+tr('dlCompat')+'</div></div>'+
     '</div>';
 }
 
-function renderDLSection(idx,w){
-  return'<div class="dl-section">'+
-    '<div class="dl-section-title">📥 '+tr('dlTitle')+'</div>'+
-    '<div class="dl-btns">'+
-    ['ZWO','FIT','MRC','ERG','TCX'].map(function(fmt){
-      return'<button class="dl-btn" onclick="dlFormat('+idx+',\''+fmt+'\')">'+dlSvg()+' .'+fmt+'</button>';
-    }).join('')+
-    '</div>'+
-    '<div class="dl-compat">'+tr('dlCompat')+'</div></div>';
+function setMode(m){
+  trMode=m;
+  if(plan){renderWorkout(curW);renderWeek();}
 }
-function dlSvg(){return'<svg viewBox="0 0 14 14"><line x1="7" y1="1" x2="7" y2="9"/><polyline points="4,6 7,9 10,6"/><line x1="2" y1="12" x2="12" y2="12"/></svg>';}
+
+// ─── PROGRESSION ──────────────────────────────────────────────────────────
+function renderProgression(){
+  if(!plan) return;
+  var p=plan;
+  var phaseColors={base:'var(--z2c)',build:'var(--z3c)',peak:'var(--z4c)',recovery:'var(--z1c)',taper:'var(--z5c)'};
+  var phNames=tr('phaseNames');
+  var legend='<div class="prog-legend">'+
+    Object.keys(phaseColors).map(function(k){return'<span><i style="background:'+phaseColors[k]+'"></i>'+phNames[k]+'</span>';}).join('')+'</div>';
+
+  // Compute TSS per week
+  var rows='';
+  for(var w=0;w<p.weeks;w++){
+    var phase=getPhase(w,p.weeks);
+    var slots=buildWeekSchedule(phase,p.sessW,p.kmS);
+    var wTSS=0;
+    var kmFactor=phase==='recovery'?0.7:1.0;
+    var sessionKm={ss:p.kmS*kmFactor,th:p.kmS*kmFactor,vo:p.kmS*0.9*kmFactor,z2:p.kmS*kmFactor,long:p.kmS*1.5*kmFactor};
+    slots.forEach(function(s){
+      if(s.type!=='rest'){
+        var d=Math.round(sessionKm[s.type]*2);
+        wTSS+=computeTSS(s.type,d,p.ftp,sessionKm[s.type]);
+      }
+    });
+    // Volume bar proportions by phase
+    var intPct=phase==='base'?15:phase==='build'?28:phase==='peak'?38:phase==='recovery'?8:20;
+    var z2Pct=100-intPct;
+    var col=phaseColors[phase];
+    rows+='<div class="prog-row">'+
+      '<span class="prog-lbl">W'+(w+1)+'</span>'+
+      '<div class="prog-bar-wrap">'+
+      '<div style="flex:'+z2Pct+';background:var(--z2c);opacity:.35;border-radius:3px"></div>'+
+      '<div style="flex:'+intPct+';background:'+col+';border-radius:3px"></div>'+
+      '</div>'+
+      '<span class="prog-tss" style="color:'+col+'">'+wTSS+' TSS</span>'+
+      '<span class="prog-note-txt">'+phNames[phase]+'</span></div>';
+  }
+  var pnote=(tr('pnotes')||{})[String(p.weeks)]||'';
+  document.getElementById('prog-area').innerHTML=legend+
+    '<div class="prog-rows">'+rows+'</div>'+
+    (pnote?'<div class="prog-footer">'+pnote+'</div>':'');
+}
 
 // ─── DOWNLOAD FORMATS ─────────────────────────────────────────────────────
 function dlFormat(idx,fmt){
-  if(!plan) return;
   var w=getWorkout(idx);
   var nm=w.ti.replace(/[^a-zA-Z0-9]/g,'_');
-  if(fmt==='ZWO') return dlZWO(w,nm);
-  if(fmt==='FIT') return dlFIT(w,nm);
-  if(fmt==='MRC') return dlMRC(w,nm);
-  if(fmt==='ERG') return dlERG(w,nm);
-  if(fmt==='TCX') return dlTCX(w,nm);
+  if(fmt==='ZWO')return dlZWO(w,nm);
+  if(fmt==='FIT')return dlFIT(w,nm);
+  if(fmt==='MRC')return dlMRC(w,nm);
+  if(fmt==='ERG')return dlERG(w,nm);
+  if(fmt==='TCX')return dlTCX(w,nm);
 }
 function fileSave(blob,fn){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);}
-
 function dlZWO(w,nm){
-  var x='<?xml version="1.0" encoding="UTF-8"?>\n<workout_file>\n  <n>'+w.ti+'</n>\n  <description>FTP '+plan.ftp+' W | Mode: '+(trMode==='power'?'Power':'HR')+'</description>\n  <sportType>bike</sportType>\n  <tags><tag name="FTP_'+plan.ftp+'W"/><tag name="Cadence"/></tags>\n  <workout>\n';
+  var x='<?xml version="1.0" encoding="UTF-8"?>\n<workout_file>\n  <name>'+w.ti+'</name>\n  <description>FTP '+plan.ftp+' W · Mode: '+(trMode==='power'?'Power':'HR')+'</description>\n  <sportType>bike</sportType>\n  <workout>\n';
   w.zwo.forEach(function(p){
-    var cad=' cadence="'+(p.cad||85)+'"';
-    if(p.n==='WarmUp') x+='    <Warmup Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(2)+'"'+cad+'/>\n';
-    else if(p.n==='CoolDown') x+='    <Cooldown Duration="'+p.d+'" PowerLow="'+p.p.toFixed(2)+'" PowerHigh="0.40"'+cad+'/>\n';
-    else x+='    <SteadyState Duration="'+p.d+'" Power="'+p.p.toFixed(2)+'"'+cad+'/>\n';
+    var c=' Cadence="'+(p.cad||85)+'"';
+    if(p.n==='WarmUp')x+='    <Warmup Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(2)+'"'+c+'/>\n';
+    else if(p.n==='CoolDown')x+='    <Cooldown Duration="'+p.d+'" PowerLow="'+p.p.toFixed(2)+'" PowerHigh="0.40"'+c+'/>\n';
+    else x+='    <SteadyState Duration="'+p.d+'" Power="'+p.p.toFixed(2)+'"'+c+'/>\n';
   });
   x+='  </workout>\n</workout_file>';
   fileSave(new Blob([x],{type:'application/xml'}),nm+'_FTP'+plan.ftp+'.zwo');
 }
 function dlMRC(w,nm){
-  var lines=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC','DESCRIPTION = '+w.ti+' (FTP '+plan.ftp+'W)','FILE NAME = '+nm,'MINUTES PERCENT','[END COURSE HEADER]','[COURSE DATA]'];
+  var L=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC','DESCRIPTION = '+w.ti+' (FTP '+plan.ftp+'W)','FILE NAME = '+nm,'MINUTES PERCENT','[END COURSE HEADER]','[COURSE DATA]'];
   var t=0;
-  w.zwo.forEach(function(p){var pct=Math.round(p.p*100),mins=(p.d/60);lines.push(t.toFixed(2)+'\t'+pct+'\t; cadence: '+(p.cad||85));t+=mins;lines.push(t.toFixed(2)+'\t'+pct);});
-  lines.push('[END COURSE DATA]');
-  fileSave(new Blob([lines.join('\n')],{type:'text/plain'}),nm+'_FTP'+plan.ftp+'.mrc');
+  w.zwo.forEach(function(p){var pct=Math.round(p.p*100);L.push(t.toFixed(2)+'\t'+pct+'\t; cad:'+(p.cad||85));t+=(p.d/60);L.push(t.toFixed(2)+'\t'+pct);});
+  L.push('[END COURSE DATA]');
+  fileSave(new Blob([L.join('\n')],{type:'text/plain'}),nm+'_FTP'+plan.ftp+'.mrc');
 }
 function dlERG(w,nm){
-  var lines=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC','DESCRIPTION = '+w.ti+' (FTP '+plan.ftp+'W)','FILE NAME = '+nm,'MINUTES WATTS','[END COURSE HEADER]','[COURSE DATA]'];
+  var L=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC','DESCRIPTION = '+w.ti+' (FTP '+plan.ftp+'W)','FILE NAME = '+nm,'MINUTES WATTS','[END COURSE HEADER]','[COURSE DATA]'];
   var t=0;
-  w.zwo.forEach(function(p){var watts=Math.round(p.p*plan.ftp),mins=(p.d/60);lines.push(t.toFixed(2)+'\t'+watts+'\t; cadence: '+(p.cad||85));t+=mins;lines.push(t.toFixed(2)+'\t'+watts);});
-  lines.push('[END COURSE DATA]');
-  fileSave(new Blob([lines.join('\n')],{type:'text/plain'}),nm+'_FTP'+plan.ftp+'.erg');
+  w.zwo.forEach(function(p){var wts=Math.round(p.p*plan.ftp);L.push(t.toFixed(2)+'\t'+wts+'\t; cad:'+(p.cad||85));t+=(p.d/60);L.push(t.toFixed(2)+'\t'+wts);});
+  L.push('[END COURSE DATA]');
+  fileSave(new Blob([L.join('\n')],{type:'text/plain'}),nm+'_FTP'+plan.ftp+'.erg');
 }
 function dlTCX(w,nm){
   var steps='',si=1;
   w.zwo.forEach(function(p){
-    var watts=Math.round(p.p*plan.ftp);
+    var wts=Math.round(p.p*plan.ftp);
     steps+='    <Step xsi:type="Step_t"><StepId>'+si+'</StepId><Name>'+p.n+'</Name>'+
       '<Duration xsi:type="Time_t"><Seconds>'+p.d+'</Seconds></Duration>'+
       '<Intensity>'+(p.p>=0.76?'Active':'Resting')+'</Intensity>'+
       '<Target xsi:type="Speed_t"><PowerZone xsi:type="CustomSpeedZone_t">'+
-      '<LowInMetersPerSecond>'+Math.round(watts*0.95)+'</LowInMetersPerSecond>'+
-      '<HighInMetersPerSecond>'+Math.round(watts*1.05)+'</HighInMetersPerSecond>'+
+      '<LowInMetersPerSecond>'+Math.round(wts*0.95)+'</LowInMetersPerSecond>'+
+      '<HighInMetersPerSecond>'+Math.round(wts*1.05)+'</HighInMetersPerSecond>'+
       '</PowerZone></Target></Step>\n';si++;
   });
   var x='<?xml version="1.0" encoding="UTF-8"?>\n<TrainingCenterDatabase xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n  <Workouts>\n    <Workout Sport="Biking">\n      <Name>'+w.ti+' FTP'+plan.ftp+'W</Name>\n'+steps+'    </Workout>\n  </Workouts>\n</TrainingCenterDatabase>';
@@ -1027,35 +1035,7 @@ function buildFIT(steps,title){
   return new Uint8Array(all);
 }
 
-// ─── PROGRESSION RENDER ───────────────────────────────────────────────────
-function renderProgression(){
-  var p=plan;
-  var colors={base:'var(--z2c)',build:'var(--z3c)',peak:'var(--z4c)',unload:'var(--z1c)',taper:'var(--z5c)'};
-  var phNames=tr('phaseNames')||{base:'Base',build:'Build',peak:'Peak',unload:'Unload',taper:'Taper'};
-  var legend='<div class="prog-legend">'+
-    Object.keys(colors).map(function(k){return'<span><i style="background:'+colors[k]+'"></i>'+phNames[k]+'</span>';}).join('')+'</div>';
-
-  var rows=p.phases.map(function(ph){
-    var col=colors[ph.phase]||'var(--text3)';
-    var intPct=ph.phase==='base'?15:ph.phase==='build'?35:ph.phase==='peak'?50:ph.phase==='unload'?5:20;
-    var z2Pct=100-intPct;
-    return'<div class="prog-row">'+
-      '<span class="prog-lbl">W'+ph.w+'</span>'+
-      '<div class="prog-bar-wrap">'+
-      '<div style="flex:'+z2Pct+';background:var(--z2c);opacity:.35;border-radius:3px"></div>'+
-      '<div style="flex:'+intPct+';background:'+col+';border-radius:3px"></div>'+
-      '</div>'+
-      '<span class="prog-note-txt">'+phNames[ph.phase]+'</span></div>';
-  }).join('');
-
-  var pnoteMap=tr('pnote')||{};
-  var pnote=pnoteMap[String(p.weeks)]||'';
-  var footer=pnote?'<div class="prog-footer">'+pnote+'</div>':'';
-  document.getElementById('prog-area').innerHTML=legend+
-    '<div class="prog-rows">'+rows+'</div>'+footer;
-}
-
-// ─── CALENDAR (ICS) ───────────────────────────────────────────────────────
+// ─── CALENDAR (ICS) — matches WEEKLY SCHEDULE exactly ─────────────────────
 function icsDate(d){var y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return y+m+dd;}
 function icsEsc(s){return s.replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');}
 function downloadICS(wks){
@@ -1064,67 +1044,74 @@ function downloadICS(wks){
   var today=new Date(),dow=today.getDay(),skip=dow===0?1:(8-dow);
   var start=new Date(today);start.setDate(today.getDate()+skip);start.setHours(0,0,0,0);
   var wts=tr('wt');
-  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Cycling Training Plan v3.0//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Cycling Training Plan'];
-  var days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  var typeLabels={ss:wts[0],th:wts[1],vo:wts[2],z2:wts[3],long:tr('long'),rest:tr('rest')};
-  for(var w=0;w<Math.min(wks,p.weeks);w++){
-    var phaseInfo=p.phases[w]||p.phases[p.phases.length-1];
-    var slots=weekWorkouts(phaseInfo.phase,p.sessW);
-    slots.forEach(function(tp,di){
+  var typeLabels={ss:wts[0],th:wts[1],vo:wts[2],z2:tr('endurance'),long:tr('longr'),rest:tr('rest')};
+  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Cycling Training Plan v3.1//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Cycling Training Plan'];
+  var totalWeeks=Math.min(wks,p.weeks);
+  for(var w=0;w<totalWeeks;w++){
+    var phase=getPhase(w,p.weeks);
+    var slots=buildWeekSchedule(phase,p.sessW,p.kmS);
+    var kmFactor=phase==='recovery'?0.7:1.0;
+    var sessionKm={ss:Math.round(p.kmS*kmFactor),th:Math.round(p.kmS*kmFactor),vo:Math.round(p.kmS*0.9*kmFactor),z2:Math.round(p.kmS*kmFactor),long:Math.round(p.kmS*1.5*kmFactor)};
+    slots.forEach(function(s,di){
+      if(s.type==='rest') return;  // skip rest days in calendar
       var d=new Date(start);d.setDate(start.getDate()+w*7+di);
       var ed=new Date(d);ed.setDate(d.getDate()+1);
-      var tpIdx=tp==='ss'?0:tp==='th'?1:tp==='vo'?2:3;
-      var wo=tp!=='rest'?getWorkout(tpIdx):null;
-      var title='[🚴] '+(typeLabels[tp]||tp);
-      var desc=wo?wo.goal+'\nFTP: '+p.ftp+' W | Mode: '+(trMode==='power'?'Power':'HR'):'Rest day';
-      L.push('BEGIN:VEVENT','UID:'+Date.now()+'-'+Math.random().toString(36).substr(2,6)+'@cyc',
+      var tpIdx=s.type==='ss'?0:s.type==='th'?1:s.type==='vo'?2:3;
+      var km=sessionKm[s.type]||p.kmS;
+      var durMin=Math.round(km*2);
+      var tss=computeTSS(s.type,durMin,p.ftp,km);
+      var target='';
+      if(trMode==='power'){
+        if(s.type==='ss') target=pwStr(0.88,0.95,p.ftp);
+        else if(s.type==='th') target=pwStr(0.96,1.03,p.ftp);
+        else if(s.type==='vo') target=pwStr(1.10,1.20,p.ftp);
+        else target=pwStr(0.56,0.75,p.ftp);
+      } else {
+        if(s.type==='ss') target=hrStr(0.70,0.80,p.hrrest,p.hrmax);
+        else if(s.type==='th') target=hrStr(0.80,0.90,p.hrrest,p.hrmax);
+        else if(s.type==='vo') target='>'+hrKarvonen(0.90,p.hrrest,p.hrmax)+' bpm';
+        else target=hrStr(0.60,0.70,p.hrrest,p.hrmax);
+      }
+      var title='🚴 '+(typeLabels[s.type]||s.type);
+      var desc='Target: '+target+'\\nDuration: '+durMin+' min\\nDistance: '+km+' km\\nTSS: '+tss+'\\nFTP: '+p.ftp+' W\\nPhase: '+(tr('phaseNames')[phase]||phase);
+      L.push('BEGIN:VEVENT','UID:'+Date.now()+'-'+w+'-'+di+'@cyc',
         'DTSTART;VALUE=DATE:'+icsDate(d),'DTEND;VALUE=DATE:'+icsDate(ed),
         'SUMMARY:'+icsEsc(title),'DESCRIPTION:'+icsEsc(desc),
-        'CATEGORIES:'+(tp==='rest'?'REST':'CYCLING'),'STATUS:CONFIRMED','END:VEVENT');
+        'CATEGORIES:CYCLING','STATUS:CONFIRMED','END:VEVENT');
     });
   }
   L.push('END:VCALENDAR');
   fileSave(new Blob([L.join('\r\n')],{type:'text/calendar;charset=utf-8'}),'cycling-plan-'+wks+'w.ics');
 }
 
-// ─── LANGUAGE ─────────────────────────────────────────────────────────────
+// ─── LANG ─────────────────────────────────────────────────────────────────
 function setLang(lang){
   curLang=lang;
   document.querySelectorAll('.lang-btn').forEach(function(b){
     b.classList.toggle('active',(lang==='en'&&b.textContent==='EN')||(lang==='uk'&&b.textContent==='УК')||(lang==='pl'&&b.textContent==='PL'));
   });
   applyTr();
-  if(plan){renderZones();renderSchedule();renderWorkoutTabs();renderProgression();}
+  recalcZones();
+  if(plan){renderWeek();renderWorkoutTabs();renderProgression();}
 }
 
 function applyTr(){
   var mp={
     'hdr-title':'hdrTitle','hdr-sub':'hdrSub',
-    'lbl-s1':'s1','lbl-s2':'s2',
-    'lbl-age':'age','lbl-gender':'gender','lbl-weight':'weight','lbl-hrmax2':'hrmax','lbl-hrrest2':'hrrest','lbl-ftp2':'ftp',
+    'lbl-s1':'s1','lbl-s3':'s3',
+    'lbl-age':'age','lbl-gender':'gender','lbl-weight':'weight','lbl-hrmax':'hrmax','lbl-hrrest':'hrrest','lbl-ftp':'ftp',
     'opt-m':'optM','opt-f':'optF',
-    'lbl-mode':'mode','lbl-mode-pw':'modePw','lbl-mode-pw-sub':'modePwSub','lbl-mode-hr':'modeHr','lbl-mode-hr-sub':'modeHrSub',
-    'lbl-sessions2':'sessions','lbl-km2':'km','lbl-dur':'dur',
+    'ftp-hint':'ftpHint',
+    'lbl-sessions':'sessions','lbl-km':'km','lbl-dur':'dur',
     'opt-w1':'w1','opt-w4':'w4','opt-w8':'w8','opt-w16':'w16','opt-w20':'w20',
     'lbl-gen':'gen',
     'lbl-zones':'zones','lbl-sched':'sched','lbl-wout':'wout','lbl-prog':'prog',
     'lbl-chat':'chat','chat-hint':'hint','chat-welcome':'welcome','lbl-send':'send','lbl-quick':'quick',
-    'empty-text':'emptyText','empty-sub':'emptySub','ft-copy':'ftCopy','ft-top':'ftTop'
+    'empty-text':'emptyText','empty-sub':'emptySub'
   };
   Object.keys(mp).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=tr(mp[id]);});
-  // hrmax hint
-  var age=getInput('f-age')||30;
-  var hint=document.getElementById('hrmax-hint');
-  if(hint) hint.textContent=(tr('hrmaxHint')||'').replace('{v}',220-age);
-  var fhint=document.getElementById('ftp-hint');
-  if(fhint) fhint.textContent=tr('ftpHint')||'';
-  document.getElementById('chat-input').placeholder=
-    curLang==='uk'?'Запитай тренера...':curLang==='pl'?'Zapytaj trenera...':'Ask your coach...';
+  document.getElementById('chat-input').placeholder=curLang==='uk'?'Запитай тренера...':curLang==='pl'?'Zapytaj trenera...':'Ask your coach...';
   // Quick buttons
-  renderQuickBtns();
-}
-
-function renderQuickBtns(){
   var qs=tr('qs')||[];
   document.getElementById('quick-list').innerHTML=qs.map(function(q){
     return'<button class="qbtn" onclick="askQuick(this.textContent)">'+q+'</button>';
@@ -1134,21 +1121,18 @@ function askQuick(q){document.getElementById('chat-input').value=q;sendMsg();}
 
 // ─── CHAT ─────────────────────────────────────────────────────────────────
 function getChatCtx(){
-  if(!plan) return 'No plan generated yet. Ask general cycling questions.';
+  if(!plan) return 'No plan generated yet. User is exploring zones with FTP='+Math.round(getInput('f-ftp'))+'W.';
   var p=plan;
-  var zstr=p.pwZones.map(function(z,i){return'Z'+(i+1)+' '+Math.round(z[0]*p.ftp)+'–'+Math.round(z[1]*p.ftp)+'W';}).join(' | ');
-  var tmpl=tr('ctx')||'';
-  return tmpl.replace('{age}',p.age).replace('{gender}',p.gender).replace('{wt}',p.weight)
+  return (tr('ctx')||'').replace('{age}',p.age).replace('{gender}',p.gender).replace('{wt}',p.weight)
     .replace('{hrmax}',p.hrmax).replace('{hrrest}',p.hrrest).replace('{ftp}',p.ftp).replace('{wpkg}',p.wpkg)
-    .replace('{mode}',trMode==='power'?'Power Meter':'Heart Rate')
-    .replace('{z1}',wt(0.55,p.ftp)).replace('{z2}',pw(0.56,0.75,p.ftp)).replace('{z3}',pw(0.76,0.90,p.ftp))
-    .replace('{z4}',pw(0.91,1.05,p.ftp)).replace('{z5}',pw(1.06,1.20,p.ftp))
-    .replace('{h2}',hk(0.60,p.hrrest,p.hrmax)+'–'+hk(0.70,p.hrrest,p.hrmax))
-    .replace('{h3}',hk(0.70,p.hrrest,p.hrmax)+'–'+hk(0.80,p.hrrest,p.hrmax))
-    .replace('{h4}',hk(0.80,p.hrrest,p.hrmax)+'–'+hk(0.90,p.hrrest,p.hrmax));
+    .replace('{mode}',trMode==='power'?'Power':'HR')
+    .replace('{z1}',wt(0.55,p.ftp)).replace('{z2}',pwStr(0.56,0.75,p.ftp)).replace('{z3}',pwStr(0.76,0.90,p.ftp))
+    .replace('{z4}',pwStr(0.91,1.05,p.ftp)).replace('{z5}',pwStr(1.06,1.20,p.ftp))
+    .replace('{h2}',hrKarvonen(0.60,p.hrrest,p.hrmax)+'–'+hrKarvonen(0.70,p.hrrest,p.hrmax))
+    .replace('{h3}',hrKarvonen(0.70,p.hrrest,p.hrmax)+'–'+hrKarvonen(0.80,p.hrrest,p.hrmax))
+    .replace('{h4}',hrKarvonen(0.80,p.hrrest,p.hrmax)+'–'+hrKarvonen(0.90,p.hrrest,p.hrmax))
+    .replace('{sess}',p.sessW).replace('{km}',p.kmS).replace('{weeks}',p.weeks);
 }
-function updateChatContext(){}// context fetched on each send
-
 async function sendMsg(){
   var inp=document.getElementById('chat-input'),btn=document.getElementById('chat-send');
   var txt=inp.value.trim();if(!txt)return;
@@ -1163,29 +1147,24 @@ async function sendMsg(){
   }catch(e){ld.remove();appendM(tr('errC'),'err');}
   btn.disabled=false;
 }
-function appendM(txt,cls){
-  var box=document.getElementById('chat-msgs'),el=document.createElement('div');
-  el.className='msg '+cls;el.textContent=txt;box.appendChild(el);box.scrollTop=box.scrollHeight;return el;
-}
-function clearChat(){
-  chatHist=[];
-  document.getElementById('chat-msgs').innerHTML='<div class="msg ai">'+tr('welcome')+'</div>';
-}
+function appendM(txt,cls){var box=document.getElementById('chat-msgs'),el=document.createElement('div');el.className='msg '+cls;el.textContent=txt;box.appendChild(el);box.scrollTop=box.scrollHeight;return el;}
+function clearChat(){chatHist=[];document.getElementById('chat-msgs').innerHTML='<div class="msg ai">'+tr('welcome')+'</div>';}
 document.getElementById('chat-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
 document.getElementById('chat-input').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px';});
 
-// Auto-update hrmax hint on age change
-document.getElementById('f-age').addEventListener('input',function(){
-  var hint=document.getElementById('hrmax-hint');
-  if(hint){var age=parseInt(this.value)||30;hint.textContent=(tr('hrmaxHint')||'').replace('{v}',220-age);}
-});
-document.getElementById('f-ftp').addEventListener('input',function(){
-  var hint=document.getElementById('ftp-hint');
-  if(hint) hint.textContent=tr('ftpHint')||'';
+// ─── LIVE LISTENERS for zone recalc ───────────────────────────────────────
+['f-ftp','f-hrrest','f-hrmax','f-weight'].forEach(function(id){
+  var el=document.getElementById(id);
+  if(id==='f-ftp'){
+    el.addEventListener('input',function(){document.getElementById('ftp-out').textContent=this.value;recalcZones();});
+  } else {
+    el.addEventListener('input',recalcZones);
+  }
 });
 
 // ─── INIT ─────────────────────────────────────────────────────────────────
 applyTr();
+recalcZones();
 </script>
 </body>
 </html>
