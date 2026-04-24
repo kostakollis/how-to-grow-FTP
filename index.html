@@ -968,71 +968,191 @@ function renderProgression(){
 // ─── DOWNLOAD FORMATS ─────────────────────────────────────────────────────
 function dlFormat(idx,fmt){
   var w=getWorkout(idx);
-  var nm=w.ti.replace(/[^a-zA-Z0-9]/g,'_');
+  var nm=w.ti.replace(/[^a-zA-Z0-9_-]/g,'_').replace(/__+/g,'_');
   if(fmt==='ZWO')return dlZWO(w,nm);
   if(fmt==='FIT')return dlFIT(w,nm);
   if(fmt==='MRC')return dlMRC(w,nm);
   if(fmt==='ERG')return dlERG(w,nm);
   if(fmt==='TCX')return dlTCX(w,nm);
 }
-function fileSave(blob,fn){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);}
+function fileSave(blob,fn){
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url; a.download=fn; a.style.display='none';
+  document.body.appendChild(a); a.click();
+  setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},500);
+}
+
+// helpers shared
+function xmlEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/[^\x09\x0A\x0D\x20-\x7E]/g,'');}
+function u16le(v){return[v&0xFF,(v>>8)&0xFF];}
+function u32le(v){return[v&0xFF,(v>>8)&0xFF,(v>>16)&0xFF,(v>>24)&0xFF];}
+function fitStr(s,len){var b=[];for(var i=0;i<len;i++)b.push(i<s.length?s.charCodeAt(i)&0x7F:0x00);b[len-1]=0x00;return b;}
+function fitCRC16(bytes){
+  var t=[0x0000,0xCC01,0xD801,0x1400,0xF001,0x3C00,0x2800,0xE401,0xA001,0x6C00,0x7800,0xB401,0x5000,0x9C01,0x8801,0x4400],c=0;
+  for(var i=0;i<bytes.length;i++){var b=bytes[i],tmp=t[c&0xF];c=(c>>4)&0x0FFF;c^=tmp^t[b&0xF];tmp=t[c&0xF];c=(c>>4)&0x0FFF;c^=tmp^t[(b>>4)&0xF];}
+  return c;
+}
+
+// ZWO ─ Zwift/MyWhoosh
+// Spec: fraction-of-FTP Power, IntervalsT for repeats, CadenceLow/CadenceHigh
 function dlZWO(w,nm){
-  var x='<?xml version="1.0" encoding="UTF-8"?>\n<workout_file>\n  <name>'+w.ti+'</name>\n  <description>FTP '+plan.ftp+' W · Mode: '+(trMode==='power'?'Power':'HR')+'</description>\n  <sportType>bike</sportType>\n  <workout>\n';
-  w.zwo.forEach(function(p){
-    var c=' Cadence="'+(p.cad||85)+'"';
-    if(p.n==='WarmUp')x+='    <Warmup Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(2)+'"'+c+'/>\n';
-    else if(p.n==='CoolDown')x+='    <Cooldown Duration="'+p.d+'" PowerLow="'+p.p.toFixed(2)+'" PowerHigh="0.40"'+c+'/>\n';
-    else x+='    <SteadyState Duration="'+p.d+'" Power="'+p.p.toFixed(2)+'"'+c+'/>\n';
-  });
-  x+='  </workout>\n</workout_file>';
-  fileSave(new Blob([x],{type:'application/xml'}),nm+'_FTP'+plan.ftp+'.zwo');
+  var ftp=plan.ftp;
+  var lines=[
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<workout_file>',
+    '  <n>'+xmlEsc(w.ti+' FTP'+ftp+'W')+'</n>',
+    '  <author>Cycling Training Plan v3.1</author>',
+    '  <description>'+xmlEsc('FTP: '+ftp+'W | Mode: '+(trMode==='power'?'Power':'HR'))+'</description>',
+    '  <sportType>bike</sportType>',
+    '  <workout>'
+  ];
+  var segs=w.zwo, i=0;
+  while(i<segs.length){
+    var p=segs[i];
+    var cLo=p.cad||85, cHi=Math.min(100,cLo+5);
+    var cAttr=' CadenceLow="'+cLo+'" CadenceHigh="'+cHi+'"';
+    if(p.n==='WarmUp'){
+      lines.push('    <Warmup Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(4)+'"'+cAttr+'/>');
+      i++;
+    } else if(p.n==='CoolDown'){
+      lines.push('    <Cooldown Duration="'+p.d+'" PowerLow="'+p.p.toFixed(4)+'" PowerHigh="0.40"'+cAttr+'/>');
+      i++;
+    } else if(p.n&&p.n.indexOf('Work')===0 && segs[i+1]&&segs[i+1].n==='Rest'){
+      // Detect repeating Work+Rest → use IntervalsT
+      var rep=0, j=i;
+      while(j<segs.length && segs[j].n&&segs[j].n.indexOf('Work')===0){
+        if(segs[j+1]&&segs[j+1].n==='Rest'){rep++;j+=2;} else {rep++;j++;break;}
+      }
+      var wCLo=p.cad||88, wCHi=Math.min(100,wCLo+6);
+      var rSeg=segs[i+1];
+      lines.push('    <IntervalsT Repeat="'+rep+'" OnDuration="'+p.d+'" OffDuration="'+rSeg.d+'" OnPower="'+p.p.toFixed(4)+'" OffPower="'+rSeg.p.toFixed(4)+'" CadenceLow="'+wCLo+'" CadenceHigh="'+wCHi+'"/>');
+      i=j;
+    } else {
+      var pCLo=p.cad||82, pCHi=Math.min(100,pCLo+8);
+      lines.push('    <SteadyState Duration="'+p.d+'" Power="'+p.p.toFixed(4)+'" CadenceLow="'+pCLo+'" CadenceHigh="'+pCHi+'"/>');
+      i++;
+    }
+  }
+  lines.push('  </workout>','</workout_file>');
+  fileSave(new Blob([lines.join('\n')],{type:'application/xml;charset=utf-8'}),nm+'_FTP'+ftp+'.zwo');
 }
+
+// MRC ─ TrainerRoad / Wahoo SYSTM (% FTP, no inline comments in data)
 function dlMRC(w,nm){
-  var L=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC','DESCRIPTION = '+w.ti+' (FTP '+plan.ftp+'W)','FILE NAME = '+nm,'MINUTES PERCENT','[END COURSE HEADER]','[COURSE DATA]'];
+  var ftp=plan.ftp;
+  var avgCad=0; w.zwo.forEach(function(p){avgCad+=(p.cad||85);}); avgCad=Math.round(avgCad/w.zwo.length);
+  var L=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC',
+    'DESCRIPTION = '+w.ti.replace(/[^\x20-\x7E]/g,'')+' FTP '+ftp+'W Cadence '+avgCad+'rpm',
+    'FILE NAME = '+nm,'MINUTES PERCENT','[END COURSE HEADER]','[COURSE DATA]'];
   var t=0;
-  w.zwo.forEach(function(p){var pct=Math.round(p.p*100);L.push(t.toFixed(2)+'\t'+pct+'\t; cad:'+(p.cad||85));t+=(p.d/60);L.push(t.toFixed(2)+'\t'+pct);});
-  L.push('[END COURSE DATA]');
-  fileSave(new Blob([L.join('\n')],{type:'text/plain'}),nm+'_FTP'+plan.ftp+'.mrc');
-}
-function dlERG(w,nm){
-  var L=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC','DESCRIPTION = '+w.ti+' (FTP '+plan.ftp+'W)','FILE NAME = '+nm,'MINUTES WATTS','[END COURSE HEADER]','[COURSE DATA]'];
-  var t=0;
-  w.zwo.forEach(function(p){var wts=Math.round(p.p*plan.ftp);L.push(t.toFixed(2)+'\t'+wts+'\t; cad:'+(p.cad||85));t+=(p.d/60);L.push(t.toFixed(2)+'\t'+wts);});
-  L.push('[END COURSE DATA]');
-  fileSave(new Blob([L.join('\n')],{type:'text/plain'}),nm+'_FTP'+plan.ftp+'.erg');
-}
-function dlTCX(w,nm){
-  var steps='',si=1;
   w.zwo.forEach(function(p){
-    var wts=Math.round(p.p*plan.ftp);
-    steps+='    <Step xsi:type="Step_t"><StepId>'+si+'</StepId><Name>'+p.n+'</Name>'+
-      '<Duration xsi:type="Time_t"><Seconds>'+p.d+'</Seconds></Duration>'+
-      '<Intensity>'+(p.p>=0.76?'Active':'Resting')+'</Intensity>'+
-      '<Target xsi:type="Speed_t"><PowerZone xsi:type="CustomSpeedZone_t">'+
-      '<LowInMetersPerSecond>'+Math.round(wts*0.95)+'</LowInMetersPerSecond>'+
-      '<HighInMetersPerSecond>'+Math.round(wts*1.05)+'</HighInMetersPerSecond>'+
-      '</PowerZone></Target></Step>\n';si++;
+    var pct=Math.round(p.p*100), end=+(t+(p.d/60)).toFixed(4);
+    L.push(t.toFixed(4)+'\t'+pct);
+    L.push(end.toFixed(4)+'\t'+pct);
+    t=end;
   });
-  var x='<?xml version="1.0" encoding="UTF-8"?>\n<TrainingCenterDatabase xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n  <Workouts>\n    <Workout Sport="Biking">\n      <Name>'+w.ti+' FTP'+plan.ftp+'W</Name>\n'+steps+'    </Workout>\n  </Workouts>\n</TrainingCenterDatabase>';
-  fileSave(new Blob([x],{type:'application/xml'}),nm+'_FTP'+plan.ftp+'.tcx');
+  L.push('[END COURSE DATA]');
+  fileSave(new Blob([L.join('\r\n')],{type:'text/plain;charset=utf-8'}),nm+'_FTP'+ftp+'.mrc');
 }
+
+// ERG ─ Wahoo SYSTM / Tacx (absolute watts, no inline comments in data)
+function dlERG(w,nm){
+  var ftp=plan.ftp;
+  var avgCad=0; w.zwo.forEach(function(p){avgCad+=(p.cad||85);}); avgCad=Math.round(avgCad/w.zwo.length);
+  var L=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC',
+    'DESCRIPTION = '+w.ti.replace(/[^\x20-\x7E]/g,'')+' FTP '+ftp+'W Cadence '+avgCad+'rpm',
+    'FILE NAME = '+nm,'FTP = '+ftp,'MINUTES WATTS','[END COURSE HEADER]','[COURSE DATA]'];
+  var t=0;
+  w.zwo.forEach(function(p){
+    var watts=Math.round(p.p*ftp), end=+(t+(p.d/60)).toFixed(4);
+    L.push(t.toFixed(4)+'\t'+watts);
+    L.push(end.toFixed(4)+'\t'+watts);
+    t=end;
+  });
+  L.push('[END COURSE DATA]');
+  fileSave(new Blob([L.join('\r\n')],{type:'text/plain;charset=utf-8'}),nm+'_FTP'+ftp+'.erg');
+}
+
+// TCX ─ Garmin Connect / Amazfit / Garmin Edge (proper TCX workout schema)
+function dlTCX(w,nm){
+  var ftp=plan.ftp;
+  var steps='';
+  w.zwo.forEach(function(p,si){
+    var watts=Math.round(p.p*ftp);
+    var lo=Math.max(1,Math.round(watts*0.97)), hi=Math.round(watts*1.03);
+    steps+=
+      '      <Step xsi:type="Step_t">\n'+
+      '        <StepId>'+(si+1)+'</StepId>\n'+
+      '        <Name>'+xmlEsc(p.n||('Step '+(si+1)))+'</Name>\n'+
+      '        <Duration xsi:type="Time_t"><Seconds>'+p.d+'</Seconds></Duration>\n'+
+      '        <Intensity>'+(p.p>=0.76?'Active':'Resting')+'</Intensity>\n'+
+      '        <Target xsi:type="Power_t">\n'+
+      '          <PowerZone xsi:type="CustomPowerZone_t">\n'+
+      '            <Low xsi:type="PowerInWatts_t"><Watts>'+lo+'</Watts></Low>\n'+
+      '            <High xsi:type="PowerInWatts_t"><Watts>'+hi+'</Watts></High>\n'+
+      '          </PowerZone>\n'+
+      '        </Target>\n'+
+      '      </Step>\n';
+  });
+  var xml=
+    '<?xml version="1.0" encoding="UTF-8"?>\n'+
+    '<TrainingCenterDatabase\n'+
+    '  xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2"\n'+
+    '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"\n'+
+    '  xsi:schemaLocation="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2 https://www8.garmin.com/xmlschemas/TrainingCenterDatabasev2.xsd">\n'+
+    '  <Workouts>\n    <Workout Sport="Biking">\n'+
+    '      <Name>'+xmlEsc(w.ti+' FTP'+ftp+'W')+'</Name>\n'+
+    steps+
+    '    </Workout>\n  </Workouts>\n</TrainingCenterDatabase>';
+  fileSave(new Blob([xml],{type:'application/xml;charset=utf-8'}),nm+'_FTP'+ftp+'.tcx');
+}
+
+// FIT binary ─ Garmin Edge / Wahoo Elemnt / Hammerhead
+// FIT Protocol v2, profile 21.xx — proper file_id + workout + workout_step messages
 function dlFIT(w,nm){
-  var steps=w.zwo.map(function(p){return{dur:p.d,pow:Math.round(p.p*plan.ftp),name:p.n};});
-  fileSave(new Blob([buildFIT(steps,w.ti)],{type:'application/octet-stream'}),nm+'_FTP'+plan.ftp+'.fit');
-}
-function u16(v){return[v&0xFF,(v>>8)&0xFF];}function u32(v){return[v&0xFF,(v>>8)&0xFF,(v>>16)&0xFF,(v>>24)&0xFF];}
-function fCRC(b){var t=[0x0000,0xCC01,0xD801,0x1400,0xF001,0x3C00,0x2800,0xE401,0xA001,0x6C00,0x7800,0xB401,0x5000,0x9C01,0x8801,0x4400],c=0;for(var i=0;i<b.length;i++){var x=b[i],tmp=t[c&0xF];c=(c>>4)&0x0FFF;c=c^tmp^t[x&0xF];tmp=t[c&0xF];c=(c>>4)&0x0FFF;c=c^tmp^t[(x>>4)&0xF];}return c;}
-function sB(s,n){var b=[];for(var i=0;i<n;i++)b.push(i<s.length?s.charCodeAt(i):0);return b;}
-function buildFIT(steps,title){
-  var r=[];
-  r=r.concat([0x40,0x00,0x00,0x1A,0x03,0x08,0x10,0x07,0x04,0x01,0x00,0x09,0x02,0x84]);
-  r=r.concat([0x00].concat(sB(title.substring(0,15),16),[0x02]).concat(u16(steps.length)));
-  r=r.concat([0x41,0x00,0x00,0x1B,0x06,0xFE,0x02,0x84,0x00,0x10,0x07,0x01,0x01,0x00,0x02,0x04,0x86,0x03,0x01,0x00,0x04,0x04,0x86]);
-  for(var i=0;i<steps.length;i++){var s=steps[i];r=r.concat([0x01].concat(u16(i)).concat(sB(s.name.substring(0,15),16),[0x00]).concat(u32(s.dur*1000),[0x02]).concat(u32(s.pow+1000)));}
-  var ds=r.length,hdr=[0x0E,0x10,0x67,0x08].concat(u32(ds)).concat([0x2E,0x46,0x49,0x54,0x00,0x00]);
-  var hc=fCRC(hdr.slice(0,12));hdr[12]=hc&0xFF;hdr[13]=(hc>>8)&0xFF;
-  var all=hdr.concat(r),fc=fCRC(all);all.push(fc&0xFF,(fc>>8)&0xFF);
-  return new Uint8Array(all);
+  var ftp=plan.ftp;
+  var steps=w.zwo.map(function(p,i){
+    return{
+      name:(p.n||('Step '+(i+1))).replace(/[^\x20-\x7E]/g,'').substring(0,15),
+      durMs:p.d*1000,
+      pwrLo:Math.round(p.p*ftp*0.97)+1000,  // FIT power offset +1000
+      pwrHi:Math.round(p.p*ftp*1.03)+1000
+    };
+  });
+  var msgs=[];
+  // Def local 0 = file_id (global 0): type(0,enum,1), manufacturer(1,uint16,2), product(2,uint16,2), time_created(4,uint32,4)
+  msgs=msgs.concat([0x40,0x00,0x00,0x00,0x00,0x04,
+    0x00,0x01,0x00, 0x01,0x02,0x84, 0x02,0x02,0x84, 0x04,0x04,0x86]);
+  // Data local 0: type=5(workout), manufacturer=255, product=0, time=0
+  msgs=msgs.concat([0x00,0x05]).concat(u16le(255)).concat(u16le(0)).concat(u32le(0));
+  // Def local 1 = workout (global 26): sport(0,enum,1), num_valid_steps(2,uint16,2), wkt_name(8,string,16)
+  msgs=msgs.concat([0x41,0x00,0x00,0x1A,0x00,0x03,
+    0x00,0x01,0x00, 0x02,0x02,0x84, 0x08,0x10,0x07]);
+  // Data local 1: sport=2(cycling), num_steps, name
+  msgs=msgs.concat([0x01,0x02]).concat(u16le(steps.length))
+       .concat(fitStr((w.ti+' FTP'+ftp+'W').replace(/[^\x20-\x7E]/g,'').substring(0,15),16));
+  // Def local 2 = workout_step (global 27): msg_idx(254,uint16,2), name(0,string,16),
+  //   dur_type(1,enum,1), dur_val(2,uint32,4), tgt_type(3,enum,1), tgt_val(4,uint32,4),
+  //   tgt_lo(5,uint32,4), tgt_hi(6,uint32,4)
+  msgs=msgs.concat([0x42,0x00,0x00,0x1B,0x00,0x08,
+    0xFE,0x02,0x84, 0x00,0x10,0x07, 0x01,0x01,0x00,
+    0x02,0x04,0x86, 0x03,0x01,0x00, 0x04,0x04,0x86,
+    0x05,0x04,0x86, 0x06,0x04,0x86]);
+  // Data local 2 per step
+  steps.forEach(function(s,idx){
+    msgs=msgs.concat([0x02]).concat(u16le(idx)).concat(fitStr(s.name,16))
+         .concat([0x00]).concat(u32le(s.durMs))   // duration_type=0(time), duration_value=ms
+         .concat([0x02]).concat(u32le(0))           // target_type=2(power), target_value=0(custom)
+         .concat(u32le(s.pwrLo)).concat(u32le(s.pwrHi));
+  });
+  // Header 14 bytes
+  var hdr=[0x0E,0x10,0x09,0x08].concat(u32le(msgs.length))
+           .concat([0x2E,0x46,0x49,0x54,0x00,0x00]);
+  var hc=fitCRC16(hdr.slice(0,12)); hdr[12]=hc&0xFF; hdr[13]=(hc>>8)&0xFF;
+  var all=hdr.concat(msgs);
+  var fc=fitCRC16(all); all.push(fc&0xFF,(fc>>8)&0xFF);
+  fileSave(new Blob([new Uint8Array(all)],{type:'application/octet-stream'}),nm+'_FTP'+ftp+'.fit');
 }
 
 // ─── CALENDAR (ICS) — matches WEEKLY SCHEDULE exactly ─────────────────────
