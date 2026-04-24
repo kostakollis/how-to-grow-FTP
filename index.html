@@ -3,234 +3,237 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cycling Training Plan</title>
+<title>Cycling Training Plan v3.0</title>
 <style>
-:root {
-  --bg: #f7f7f5;
-  --bg2: #ffffff;
-  --bg3: #f0efe8;
-  --bg4: #e8e6de;
-  --text: #111110;
-  --text2: #555552;
-  --text3: #999896;
-  --border: rgba(0,0,0,0.10);
-  --border2: rgba(0,0,0,0.18);
-  --accent: #111110;
-  --accent-fg: #f7f7f5;
-  --card-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  --z1c:#B5D4F4;--z1t:#0C447C;
-  --z2c:#9FE1CB;--z2t:#085041;
-  --z3c:#FAC775;--z3t:#633806;
-  --z4c:#F0997B;--z4t:#4A1B0C;
-  --z5c:#F09595;--z5t:#791F1F;
+:root{
+  --bg:#f5f5f2;--bg2:#ffffff;--bg3:#efefeb;--bg4:#e6e5df;
+  --text:#111110;--text2:#55544f;--text3:#999892;
+  --border:rgba(0,0,0,0.09);--border2:rgba(0,0,0,0.16);
+  --accent:#111110;--accent-fg:#f5f5f2;
+  --shadow:0 1px 3px rgba(0,0,0,0.07),0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md:0 4px 12px rgba(0,0,0,0.08),0 1px 3px rgba(0,0,0,0.05);
+  --z1c:#4A90D9;--z1bg:#EBF4FF;
+  --z2c:#27AE7A;--z2bg:#E6F7F1;
+  --z3c:#E8970A;--z3bg:#FEF3DC;
+  --z4c:#D95B2E;--z4bg:#FDEEE8;
+  --z5c:#C0392B;--z5bg:#FDECEA;
+  --radius:12px;--radius-sm:8px;--radius-lg:16px;
 }
 @media(prefers-color-scheme:dark){
   :root{
-    --bg:#111110;--bg2:#1a1a18;--bg3:#222220;--bg4:#2a2a28;
-    --text:#f0efe8;--text2:#aaa89f;--text3:#666460;
-    --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.15);
-    --accent:#f0efe8;--accent-fg:#111110;
-    --card-shadow:0 1px 4px rgba(0,0,0,0.4);
-    --z1c:#0C447C;--z1t:#B5D4F4;
-    --z2c:#085041;--z2t:#9FE1CB;
-    --z3c:#633806;--z3t:#FAC775;
-    --z4c:#4A1B0C;--z4t:#F0997B;
-    --z5c:#791F1F;--z5t:#F09595;
+    --bg:#0f0f0e;--bg2:#1a1a18;--bg3:#232320;--bg4:#2c2c29;
+    --text:#f0efe8;--text2:#aaa89e;--text3:#66635d;
+    --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.14);
+    --accent:#f0efe8;--accent-fg:#0f0f0e;
+    --shadow:0 1px 3px rgba(0,0,0,0.4);
+    --shadow-md:0 4px 12px rgba(0,0,0,0.5);
+    --z1c:#5BA3E8;--z1bg:rgba(91,163,232,0.12);
+    --z2c:#34C58A;--z2bg:rgba(52,197,138,0.12);
+    --z3c:#F0A420;--z3bg:rgba(240,164,32,0.12);
+    --z4c:#E8703A;--z4bg:rgba(232,112,58,0.12);
+    --z5c:#E05050;--z5bg:rgba(224,80,80,0.12);
   }
 }
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
-body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;font-size:14px;line-height:1.5}
 
 /* HEADER */
-header{background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;backdrop-filter:blur(12px)}
-.header-inner{max-width:1200px;margin:0 auto;padding:.75rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
-.logo{display:flex;align-items:center;gap:.6rem}
-.logo-icon{width:32px;height:32px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+header{background:var(--bg2);border-bottom:1px solid var(--border2);position:sticky;top:0;z-index:100}
+.hdr{max-width:1240px;margin:0 auto;padding:.7rem 1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.logo{display:flex;align-items:center;gap:.65rem}
+.logo-icon{width:34px;height:34px;background:var(--accent);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .logo-icon svg{width:18px;height:18px;stroke:var(--accent-fg);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.logo-text{font-size:15px;font-weight:600;color:var(--text);letter-spacing:-.01em}
+.logo-text{font-size:15px;font-weight:700;letter-spacing:-.02em}
+.logo-ver{font-size:10px;font-weight:600;background:var(--z3bg);color:var(--z3c);padding:2px 7px;border-radius:20px;margin-left:6px;vertical-align:middle}
 .logo-sub{font-size:11px;color:var(--text3);margin-top:1px}
-.header-right{display:flex;align-items:center;gap:.75rem}
-.lang-row{display:flex;gap:4px}
-.lang-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--border2);font-size:11px;font-weight:500;color:var(--text2);cursor:pointer;background:transparent;transition:all .15s}
+.hdr-right{display:flex;align-items:center;gap:.6rem}
+.lang-row{display:flex;gap:3px}
+.lang-btn{padding:4px 10px;border-radius:6px;border:1px solid var(--border2);font-size:11px;font-weight:600;color:var(--text2);cursor:pointer;background:transparent;transition:all .14s;letter-spacing:.01em}
 .lang-btn.active{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-.lang-btn:hover:not(.active){background:var(--bg3);color:var(--text)}
 
 /* LAYOUT */
-.page{max-width:1200px;margin:0 auto;padding:2rem 1.5rem;flex:1;width:100%}
-.main-grid{display:grid;grid-template-columns:1fr 380px;gap:2rem;align-items:start}
-.left-col{min-width:0}
+.page{max-width:1240px;margin:0 auto;padding:1.75rem 1.5rem;flex:1;width:100%}
+.main-grid{display:grid;grid-template-columns:1fr 390px;gap:2rem;align-items:start}
+.left{min-width:0}
 
-/* SECTIONS */
-.sec{margin-bottom:2rem}
-.sec-title{font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin:0 0 1rem}
+/* SECTION */
+.sec{margin-bottom:1.75rem}
+.sec-hdr{display:flex;align-items:center;gap:.5rem;margin-bottom:.9rem}
+.sec-hdr-icon{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sec-hdr-icon svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sec-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.sec-num{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:var(--accent);color:var(--accent-fg);font-size:10px;font-weight:700;flex-shrink:0}
 
-/* CARDS */
-.card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;box-shadow:var(--card-shadow)}
-.card+.card{margin-top:1rem}
+/* CARD */
+.card{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--radius-lg);padding:1.25rem 1.35rem;box-shadow:var(--shadow)}
+.card-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:1rem;padding-bottom:.65rem;border-bottom:1px solid var(--border)}
 
-/* PARAMS */
-.params-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.param-row{display:flex;align-items:center;gap:12px;padding:.75rem 0;border-bottom:1px solid var(--border)}
-.param-row:last-child{border-bottom:none}
-.param-label{font-size:12px;color:var(--text2);min-width:120px;flex-shrink:0}
-.param-row input[type=range]{flex:1;accent-color:var(--accent)}
-.param-val{font-size:13px;font-weight:600;color:var(--text);min-width:54px;text-align:right}
-.inp-field{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:.6rem .85rem}
-.inp-field .l{font-size:10px;color:var(--text3);margin-bottom:4px;font-weight:500;letter-spacing:.04em;text-transform:uppercase}
-.inp-field .ir{display:flex;align-items:center;gap:6px}
-.inp-field input{width:64px;padding:3px 6px;border:1px solid var(--border2);border-radius:6px;font-size:15px;font-weight:600;background:var(--bg2);color:var(--text);outline:none}
-.inp-field input:focus{border-color:var(--accent)}
-.inp-field .unit{font-size:11px;color:var(--text3)}
-
-/* ZONES */
-.zone-bar{display:flex;border-radius:10px;overflow:hidden;height:34px;margin-bottom:10px}
-.zone-seg{display:flex;align-items:center;justify-content:center;flex:1;font-size:10px;font-weight:700;letter-spacing:.02em}
-.zones-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
-.zone-card{border-radius:8px;padding:.5rem .6rem;border-left:3px solid}
-.zone-card .zn{font-size:10px;font-weight:600;color:var(--text2);margin-bottom:2px}
-.zone-card .zv{font-size:13px;font-weight:700;color:var(--text)}
-.zone-card .zh{font-size:10px;color:var(--text3);margin-top:1px}
-
-/* SCHEDULE — horizontal */
-.sched-row{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
-.sched-row::-webkit-scrollbar{height:3px}
-.sched-row::-webkit-scrollbar-track{background:transparent}
-.sched-row::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.day-card{flex:1;min-width:90px;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:.65rem .5rem;text-align:center;cursor:default;transition:box-shadow .15s}
-.day-card.active-day{background:var(--bg2);border-color:var(--border2);box-shadow:var(--card-shadow)}
-.day-card .dc-name{font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
-.day-card .dc-type{font-size:10px;font-weight:600;margin-bottom:3px}
-.day-card .dc-km{font-size:10px;color:var(--text3)}
-.day-dot{width:6px;height:6px;border-radius:50%;margin:4px auto 0}
-.cal-bar{display:flex;gap:8px;margin-top:1rem;flex-wrap:wrap}
-.cal-btn{display:flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;border:1px solid var(--border2);font-size:12px;font-weight:500;cursor:pointer;background:var(--bg2);color:var(--text);transition:all .15s;line-height:1}
-.cal-btn:hover{background:var(--bg3)}
-.cal-btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
-.cal-btn.primary:hover{opacity:.88}
-.cal-btn svg{width:13px;height:13px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-
-/* TABS */
-.tab-row{display:flex;gap:5px;margin-bottom:1rem;flex-wrap:wrap;background:var(--bg3);padding:4px;border-radius:10px;border:1px solid var(--border)}
-.tab{padding:6px 14px;border-radius:7px;border:none;font-size:12px;font-weight:500;color:var(--text2);cursor:pointer;background:transparent;transition:all .15s}
-.tab.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 3px rgba(0,0,0,.10)}
-.tab:hover:not(.active){color:var(--text)}
-
-/* WORKOUT CARD */
-.wcard{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:1.25rem;box-shadow:var(--card-shadow)}
-.wheader{display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem}
-.wtitle{font-size:15px;font-weight:600;color:var(--text)}
-.badge{font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;letter-spacing:.03em}
-.badge.ss{background:var(--z3c);color:var(--z3t)}
-.badge.th{background:var(--z4c);color:var(--z4t)}
-.badge.vo{background:var(--z5c);color:var(--z5t)}
-.badge.z2{background:var(--z2c);color:var(--z2t)}
-.wmeta{font-size:11px;color:var(--text3);margin:0 0 12px}
-.seg-bar{display:flex;gap:2px;height:20px;border-radius:6px;overflow:hidden;margin-bottom:12px}
-.seg{display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700}
-.step-list{list-style:none;margin:0 0 12px;padding:0}
-.step-list li{display:flex;gap:8px;font-size:11px;color:var(--text2);padding:5px 0;border-bottom:1px solid var(--border);align-items:flex-start;line-height:1.5}
-.step-list li:last-child{border-bottom:none}
-.step-list .t{font-size:11px;font-weight:600;color:var(--text);min-width:72px;flex-shrink:0}
-.zdot{width:7px;height:7px;border-radius:50%;margin-top:3px;flex-shrink:0}
-.note{font-size:11px;color:var(--text2);line-height:1.65;padding:10px 12px;background:var(--bg3);border-radius:8px;margin-bottom:12px;border-left:3px solid var(--border2)}
-.dl-row{display:flex;gap:7px;flex-wrap:wrap}
-.dl-btn{display:flex;align-items:center;gap:6px;padding:7px 13px;border-radius:8px;border:1px solid var(--border2);font-size:11px;font-weight:500;cursor:pointer;background:var(--bg2);color:var(--text);transition:all .15s;line-height:1}
-.dl-btn:hover{background:var(--bg3)}
-.dl-btn svg{width:13px;height:13px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
-
-/* PROGRESSION */
-.prog-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.prog-label{font-size:11px;color:var(--text3);min-width:36px;font-weight:500}
-.prog-bar-wrap{flex:1;display:flex;gap:2px;height:14px;border-radius:4px;overflow:hidden}
-.prog-note{font-size:10px;color:var(--text3);min-width:100px}
-.prog-legend{display:flex;gap:14px;margin-bottom:10px;font-size:11px;color:var(--text2);flex-wrap:wrap}
-.prog-legend span{display:flex;align-items:center;gap:5px}
-.prog-legend i{width:10px;height:10px;border-radius:2px;display:inline-block}
-.prog-note-card{margin-top:10px;padding:9px 12px;background:var(--bg3);border-radius:8px;font-size:11px;color:var(--text2);line-height:1.6;border-left:3px solid var(--border2)}
-
-/* RIGHT COL — AI CHAT */
-.chat-col{position:sticky;top:72px;display:flex;flex-direction:column;gap:0;background:var(--bg2);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:var(--card-shadow);height:calc(100vh - 100px);max-height:800px}
-.chat-header{padding:1rem 1.25rem;border-bottom:1px solid var(--border);background:var(--bg2);flex-shrink:0}
-.chat-header-title{font-size:14px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:.5rem}
-.chat-header-title svg{width:16px;height:16px;stroke:var(--text2);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.chat-header-sub{font-size:10px;color:var(--text3);margin-top:2px}
-.chat-messages{flex:1;overflow-y:auto;padding:1rem;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
-.chat-messages::-webkit-scrollbar{width:3px}
-.chat-messages::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-.msg{max-width:88%;padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.55;white-space:pre-wrap}
-.msg.user{align-self:flex-end;background:var(--accent);color:var(--accent-fg);border-bottom-right-radius:4px}
-.msg.ai{align-self:flex-start;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-bottom-left-radius:4px}
-.msg.ai.loading{color:var(--text3);font-style:italic}
-.msg.err{align-self:flex-start;background:#FCEBEB;color:#791F1F;border:1px solid #F09595}
-.quick-btns{padding:.75rem 1rem;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:5px;flex-shrink:0;background:var(--bg2)}
-.quick-label{font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
-.qbtn{padding:6px 10px;border-radius:7px;border:1px solid var(--border);font-size:11px;color:var(--text2);cursor:pointer;background:var(--bg3);text-align:left;transition:all .15s;line-height:1.3}
-.qbtn:hover{background:var(--bg4);color:var(--text)}
-.chat-input-area{padding:.75rem 1rem;border-top:1px solid var(--border);background:var(--bg2);flex-shrink:0}
-.chat-input-row{display:flex;gap:7px;align-items:flex-end}
-#chat-input{flex:1;padding:8px 11px;border:1px solid var(--border2);border-radius:9px;font-size:12px;font-family:inherit;resize:none;background:var(--bg3);color:var(--text);min-height:38px;max-height:100px;line-height:1.45;outline:none;transition:border-color .15s}
-#chat-input:focus{border-color:var(--accent)}
-#chat-send{padding:8px 14px;border-radius:9px;border:none;background:var(--accent);color:var(--accent-fg);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;line-height:1;flex-shrink:0}
-#chat-send:disabled{opacity:.4;cursor:not-allowed}
-#chat-clear{padding:8px 10px;border-radius:9px;border:1px solid var(--border);background:transparent;color:var(--text3);font-size:12px;cursor:pointer;flex-shrink:0}
-#chat-clear:hover{color:var(--text);background:var(--bg3)}
-
-/* FOOTER */
-footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:auto}
-.footer-inner{max-width:1200px;margin:0 auto;padding:1.25rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.75rem}
-.footer-left{font-size:12px;color:var(--text3);line-height:1.6}
-.footer-left strong{color:var(--text2);font-weight:500}
-.footer-right{display:flex;gap:1rem;font-size:11px;color:var(--text3)}
-.footer-right a{color:var(--text3);text-decoration:none}
-.footer-right a:hover{color:var(--text)}
+/* FORM */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+.field{display:flex;flex-direction:column;gap:4px}
+.field-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.07em;text-transform:uppercase}
+.field-input{padding:.55rem .8rem;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-weight:500;background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;width:100%}
+.field-input:focus{border-color:var(--accent)}
+.field-input.has-unit{padding-right:2.8rem}
+.field-wrap{position:relative}
+.field-unit{position:absolute;right:.75rem;top:50%;transform:translateY(-50%);font-size:11px;font-weight:600;color:var(--text3);pointer-events:none}
+select.field-input{cursor:pointer}
+.ftp-slider-row{display:flex;align-items:center;gap:10px;margin-top:4px}
+.ftp-slider-row input[type=range]{flex:1;accent-color:var(--accent)}
+.ftp-slider-val{font-size:14px;font-weight:700;min-width:54px;text-align:right}
 
 /* MODE TOGGLE */
-.mode-toggle{display:flex;background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:3px;gap:3px;margin-bottom:1rem}
-.mode-btn{flex:1;padding:7px 12px;border-radius:7px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:transparent;color:var(--text2);transition:all .18s;text-align:center}
-.mode-btn.active{background:var(--bg2);color:var(--text);box-shadow:0 1px 4px rgba(0,0,0,.12)}
-.mode-btn.active.pw-mode{color:#633806}
-.mode-btn.active.hr-mode{color:#791F1F}
-.mode-badge{display:inline-block;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px;margin-left:5px;vertical-align:middle}
-.badge-pw{background:var(--z3c);color:var(--z3t)}
-.badge-hr{background:var(--z5c);color:var(--z5t)}
+.mode-toggle{display:flex;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:3px;gap:3px;margin-top:10px}
+.mode-btn{flex:1;padding:8px 10px;border-radius:6px;border:none;font-size:12px;font-weight:600;cursor:pointer;background:transparent;color:var(--text2);transition:all .16s;text-align:center;line-height:1.3}
+.mode-btn.active{background:var(--bg2);color:var(--text);box-shadow:var(--shadow)}
+.mode-btn .mb-icon{font-size:16px;display:block;margin-bottom:2px}
+.mode-btn .mb-label{display:block;font-size:11px;font-weight:700;letter-spacing:.01em}
+.mode-btn .mb-sub{display:block;font-size:10px;color:var(--text3);font-weight:400}
+.mode-btn.active .mb-sub{color:var(--text2)}
+
+/* PLAN PARAMS */
+.plan-params{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-top:10px}
+
+/* GENERATE BTN */
+.gen-btn{width:100%;padding:.9rem;border-radius:var(--radius-sm);border:none;background:var(--accent);color:var(--accent-fg);font-size:14px;font-weight:700;cursor:pointer;letter-spacing:.02em;transition:opacity .15s;margin-top:14px}
+.gen-btn:hover{opacity:.88}
+.gen-btn:active{opacity:.75}
+
+/* ZONES */
+.zones-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:.5rem}
+.zone-card{border-radius:var(--radius-sm);padding:.6rem .7rem;border:1.5px solid transparent}
+.zone-card .zn{font-size:9px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px;opacity:.7}
+.zone-card .zv{font-size:13px;font-weight:700;margin-bottom:1px}
+.zone-card .zh{font-size:10px;opacity:.65}
+.zone-bar{display:flex;border-radius:9px;overflow:hidden;height:30px;margin-bottom:10px}
+.zone-seg{display:flex;align-items:center;justify-content:center;flex:1;font-size:10px;font-weight:700}
+
+/* SCHEDULE */
+.sched-wrap{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px}
+.sched-wrap::-webkit-scrollbar{height:3px}
+.sched-wrap::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.day-card{flex:1;min-width:88px;background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.65rem .5rem;text-align:center;transition:all .15s}
+.day-card.dc-structured{border-color:var(--border2);background:var(--bg2);box-shadow:var(--shadow)}
+.dc-name{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.dc-type{font-size:11px;font-weight:700;margin-bottom:3px;line-height:1.2}
+.dc-target{font-size:9px;color:var(--text3);line-height:1.3;margin-bottom:3px}
+.dc-km{font-size:10px;font-weight:600;color:var(--text3)}
+.dc-dot{width:6px;height:6px;border-radius:50%;margin:4px auto 0}
+.cal-row{display:flex;gap:7px;margin-top:12px;flex-wrap:wrap}
+.cal-btn{display:flex;align-items:center;gap:5px;padding:6px 13px;border-radius:7px;border:1.5px solid var(--border2);font-size:11px;font-weight:600;cursor:pointer;background:var(--bg2);color:var(--text);transition:all .14s}
+.cal-btn:hover{background:var(--bg3)}
+.cal-btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.cal-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* TABS */
+.tab-bar{display:flex;gap:4px;background:var(--bg3);border:1.5px solid var(--border2);padding:3px;border-radius:var(--radius-sm);margin-bottom:1rem;flex-wrap:wrap}
+.tab{padding:6px 14px;border-radius:6px;border:none;font-size:12px;font-weight:600;color:var(--text2);cursor:pointer;background:transparent;transition:all .14s;letter-spacing:.01em}
+.tab.active{background:var(--bg2);color:var(--text);box-shadow:var(--shadow)}
+
+/* WORKOUT CARD */
+.wcard{background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius-lg);padding:1.25rem 1.35rem;box-shadow:var(--shadow-md)}
+.wcard-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.35rem}
+.wcard-title{font-size:15px;font-weight:700}
+.wbadge{font-size:10px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:.04em;text-transform:uppercase}
+.wmeta{font-size:11px;color:var(--text3);margin-bottom:10px}
+.seg-bar{display:flex;gap:2px;height:20px;border-radius:6px;overflow:hidden;margin-bottom:12px}
+.seg{display:flex;align-items:center;justify-content:center;font-size:8px;font-weight:700}
+/* STEPS */
+.steps{list-style:none;margin-bottom:12px}
+.steps li{display:flex;gap:8px;font-size:12px;color:var(--text2);padding:6px 0;border-bottom:1px solid var(--border);align-items:flex-start;line-height:1.5}
+.steps li:last-child{border:none}
+.st-dot{width:8px;height:8px;border-radius:50%;margin-top:4px;flex-shrink:0}
+.st-time{font-size:11px;font-weight:700;color:var(--text);min-width:75px;flex-shrink:0}
+.st-target{font-weight:600;color:var(--text)}
 /* CADENCE BLOCK */
-.cadence-bar{display:flex;gap:4px;margin:10px 0 4px;align-items:stretch}
-.cad-seg{flex:1;border-radius:7px;padding:7px 6px;text-align:center;border:1px solid var(--border)}
-.cad-seg .cs-label{font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--text3);margin-bottom:3px}
-.cad-seg .cs-val{font-size:14px;font-weight:700;color:var(--text)}
-.cad-seg .cs-sub{font-size:9px;color:var(--text3);margin-top:2px}
-.cad-seg.highlight{border-color:var(--border2);background:var(--bg3)}
-/* FTP hidden when HR mode */
-.ftp-row-wrap.hidden{opacity:.35;pointer-events:none}
-@media(max-width:860px){
-  .main-grid{grid-template-columns:1fr}
-  .chat-col{position:static;height:600px;max-height:600px}
-  .zones-grid{grid-template-columns:repeat(3,1fr)}
-}
-@media(max-width:480px){
-  .params-grid{grid-template-columns:1fr}
-  .zones-grid{grid-template-columns:repeat(3,1fr)}
-  .header-inner{padding:.65rem 1rem}
-  .page{padding:1.25rem 1rem}
-}
+.cad-block{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.75rem 1rem;margin-bottom:12px}
+.cad-title{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:8px}
+.cad-segs{display:flex;gap:6px}
+.cad-seg{flex:1;background:var(--bg2);border:1.5px solid var(--border);border-radius:7px;padding:6px 5px;text-align:center}
+.cad-seg .cs-ph{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px}
+.cad-seg .cs-val{font-size:14px;font-weight:800;line-height:1}
+.cad-seg .cs-unit{font-size:9px;color:var(--text3);margin-top:1px}
+.cad-note{font-size:10px;color:var(--text3);margin-top:6px;line-height:1.5}
+/* WARNING */
+.km-warn{font-size:11px;padding:7px 10px;border-radius:7px;margin-bottom:10px;border-left:3px solid;line-height:1.5;font-weight:500}
+/* NOTE */
+.wnote{font-size:11px;color:var(--text2);line-height:1.65;padding:10px 12px;background:var(--bg3);border-radius:var(--radius-sm);margin-bottom:12px;border-left:3px solid var(--border2)}
+/* METRIC TOGGLE */
+.metric-toggle{display:flex;gap:4px;background:var(--bg3);border:1.5px solid var(--border2);padding:3px;border-radius:var(--radius-sm);margin-bottom:12px}
+.metric-btn{flex:1;padding:6px;border-radius:5px;border:none;font-size:11px;font-weight:700;cursor:pointer;background:transparent;color:var(--text2);transition:all .14s}
+.metric-btn.active{background:var(--bg2);color:var(--text);box-shadow:var(--shadow)}
+/* DL BUTTONS */
+.dl-section{border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.85rem 1rem;background:var(--bg3)}
+.dl-section-title{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--text3);margin-bottom:8px}
+.dl-btns{display:flex;gap:6px;flex-wrap:wrap}
+.dl-btn{display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:7px;border:1.5px solid var(--border2);font-size:11px;font-weight:700;cursor:pointer;background:var(--bg2);color:var(--text);transition:all .14s;letter-spacing:.02em}
+.dl-btn:hover{background:var(--bg4)}
+.dl-btn svg{width:12px;height:12px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.dl-compat{font-size:10px;color:var(--text3);margin-top:6px;line-height:1.5}
+/* PROGRESSION */
+.prog-legend{display:flex;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.prog-legend span{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--text2);font-weight:500}
+.prog-legend i{width:10px;height:10px;border-radius:3px;display:inline-block;flex-shrink:0}
+.prog-rows{display:flex;flex-direction:column;gap:5px}
+.prog-row{display:flex;align-items:center;gap:10px}
+.prog-lbl{font-size:10px;font-weight:700;color:var(--text3);min-width:34px}
+.prog-bar-wrap{flex:1;display:flex;gap:2px;height:14px;border-radius:4px;overflow:hidden}
+.prog-note-txt{font-size:10px;color:var(--text3);min-width:110px;font-weight:500}
+.prog-footer{margin-top:10px;padding:9px 12px;background:var(--bg3);border-radius:var(--radius-sm);font-size:11px;color:var(--text2);line-height:1.6;border-left:3px solid var(--border2)}
+/* CHAT */
+.chat-col{position:sticky;top:65px;display:flex;flex-direction:column;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-md);height:calc(100vh - 90px);max-height:820px}
+.chat-hdr{padding:.9rem 1.1rem;border-bottom:1.5px solid var(--border2);flex-shrink:0}
+.chat-hdr-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:.4rem}
+.chat-hdr-sub{font-size:10px;color:var(--text3);margin-top:2px}
+.chat-msgs{flex:1;overflow-y:auto;padding:.9rem;display:flex;flex-direction:column;gap:8px;background:var(--bg)}
+.chat-msgs::-webkit-scrollbar{width:3px}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+.msg{max-width:88%;padding:9px 12px;border-radius:12px;font-size:12px;line-height:1.6;white-space:pre-wrap}
+.msg.user{align-self:flex-end;background:var(--accent);color:var(--accent-fg);border-bottom-right-radius:4px}
+.msg.ai{align-self:flex-start;background:var(--bg2);border:1.5px solid var(--border);color:var(--text);border-bottom-left-radius:4px}
+.msg.ai.loading{color:var(--text3);font-style:italic}
+.msg.err{align-self:flex-start;background:var(--z5bg);color:var(--z5c);border:1px solid var(--z5c)40}
+.quick-btns{padding:.7rem .9rem;border-top:1.5px solid var(--border);background:var(--bg2);flex-shrink:0}
+.quick-lbl{font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;margin-bottom:5px}
+.qbtn{display:block;width:100%;padding:5px 9px;border-radius:6px;border:1px solid var(--border);font-size:11px;color:var(--text2);cursor:pointer;background:var(--bg3);text-align:left;margin-bottom:4px;transition:all .13s;line-height:1.35;font-weight:500}
+.qbtn:last-child{margin-bottom:0}
+.qbtn:hover{background:var(--bg4);color:var(--text)}
+.chat-input-area{padding:.75rem .9rem;border-top:1.5px solid var(--border2);background:var(--bg2);flex-shrink:0}
+.chat-input-row{display:flex;gap:6px;align-items:flex-end}
+#chat-input{flex:1;padding:8px 11px;border:1.5px solid var(--border2);border-radius:9px;font-size:12px;font-family:inherit;resize:none;background:var(--bg3);color:var(--text);min-height:38px;max-height:100px;line-height:1.45;outline:none;transition:border-color .15s}
+#chat-input:focus{border-color:var(--accent)}
+#chat-send{padding:8px 14px;border-radius:9px;border:none;background:var(--accent);color:var(--accent-fg);font-size:12px;font-weight:700;cursor:pointer;line-height:1;flex-shrink:0}
+#chat-send:disabled{opacity:.4;cursor:not-allowed}
+#chat-clear{padding:8px 10px;border-radius:9px;border:1.5px solid var(--border);background:transparent;color:var(--text3);font-size:12px;cursor:pointer;flex-shrink:0}
+/* FOOTER */
+footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:auto}
+.ftr{max-width:1240px;margin:0 auto;padding:1rem 1.5rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:.5rem}
+.ftr-left{font-size:11px;color:var(--text3);line-height:1.6}
+.ftr-right{font-size:11px;color:var(--text3)}
+/* DIVIDER */
+.divider{height:1px;background:var(--border2);margin:1rem 0}
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:2.5rem 1rem;color:var(--text3)}
+.empty-icon{font-size:36px;margin-bottom:.75rem}
+.empty-text{font-size:13px;font-weight:500}
+.empty-sub{font-size:11px;margin-top:.35rem}
+@media(max-width:880px){.main-grid{grid-template-columns:1fr}.chat-col{position:static;height:580px;max-height:580px}.zones-grid{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:500px){.form-grid{grid-template-columns:1fr}.form-grid-3{grid-template-columns:1fr 1fr}.plan-params{grid-template-columns:1fr 1fr}.hdr{padding:.6rem 1rem}.page{padding:1.25rem 1rem}}
 </style>
 </head>
 <body>
-
-<!-- HEADER -->
 <header>
-  <div class="header-inner">
+  <div class="hdr">
     <div class="logo">
-      <div class="logo-icon">
-        <svg viewBox="0 0 20 20"><circle cx="5" cy="14" r="3"/><circle cx="15" cy="14" r="3"/><path d="M5 14l4-8 3 5 2-3"/><circle cx="12" cy="6" r="1.5" fill="currentColor" stroke="none"/></svg>
-      </div>
+      <div class="logo-icon"><svg viewBox="0 0 20 20"><circle cx="5" cy="14" r="3"/><circle cx="15" cy="14" r="3"/><path d="M5 14l4-8 3 5 2-3"/><circle cx="12" cy="6" r="1.2" fill="currentColor" stroke="none"/></svg></div>
       <div>
-        <div class="logo-text" id="hdr-title">Cycling Training Plan</div>
+        <div class="logo-text" id="hdr-title">Cycling Training Plan <span class="logo-ver">v3.0</span></div>
         <div class="logo-sub" id="hdr-sub">FTP-based structured training</div>
       </div>
     </div>
-    <div class="header-right">
+    <div class="hdr-right">
       <div class="lang-row">
         <button class="lang-btn active" onclick="setLang('en')">EN</button>
         <button class="lang-btn" onclick="setLang('uk')">УК</button>
@@ -242,106 +245,168 @@ footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:auto}
 
 <div class="page">
 <div class="main-grid">
+<div class="left">
 
-<!-- LEFT COLUMN -->
-<div class="left-col">
-
-  <!-- PARAMS -->
-  <div class="sec">
-    <p class="sec-title" id="lbl-params">Athlete parameters</p>
-    <div class="card">
-      <!-- MODE TOGGLE -->
-      <div class="mode-toggle" id="mode-toggle">
-        <button class="mode-btn pw-mode active" id="btn-pw" onclick="setMode('power')">
-          <span id="lbl-mode-pw">Power (Watts)</span>
-          <span class="mode-badge badge-pw">W</span>
+<!-- STEP 1: ATHLETE PROFILE -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">1</span>
+    <span class="sec-title" id="lbl-s1">Athlete Profile</span>
+  </div>
+  <div class="card">
+    <div class="form-grid">
+      <div class="field">
+        <label class="field-label" id="lbl-age">AGE</label>
+        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-age" value="30" min="15" max="80"><span class="field-unit">yr</span></div>
+      </div>
+      <div class="field">
+        <label class="field-label" id="lbl-gender">GENDER</label>
+        <select class="field-input" id="f-gender">
+          <option value="m" id="opt-m">Male</option>
+          <option value="f" id="opt-f">Female</option>
+        </select>
+      </div>
+      <div class="field">
+        <label class="field-label" id="lbl-weight">WEIGHT</label>
+        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-weight" value="75" min="40" max="150"><span class="field-unit">kg</span></div>
+      </div>
+      <div class="field">
+        <label class="field-label" id="lbl-hrmax2">MAX HR</label>
+        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-hrmax" value="185" min="140" max="220"><span class="field-unit">bpm</span></div>
+        <small id="hrmax-hint" style="font-size:10px;color:var(--text3);margin-top:2px"></small>
+      </div>
+      <div class="field">
+        <label class="field-label" id="lbl-hrrest2">RESTING HR</label>
+        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-hrrest" value="55" min="30" max="90"><span class="field-unit">bpm</span></div>
+      </div>
+      <div class="field">
+        <label class="field-label" id="lbl-ftp2">FTP (optional)</label>
+        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-ftp" value="200" min="80" max="500"><span class="field-unit">W</span></div>
+        <small id="ftp-hint" style="font-size:10px;color:var(--text3);margin-top:2px"></small>
+      </div>
+    </div>
+    <!-- MEASUREMENT MODE -->
+    <div style="margin-top:14px">
+      <div class="field-label" id="lbl-mode" style="margin-bottom:6px">TRAINING MEASUREMENT MODE</div>
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="btn-pw" onclick="setMode('power')">
+          <span class="mb-icon">⚡</span>
+          <span class="mb-label" id="lbl-mode-pw">Power Meter</span>
+          <span class="mb-sub" id="lbl-mode-pw-sub">Target in Watts</span>
         </button>
-        <button class="mode-btn hr-mode" id="btn-hr" onclick="setMode('hr')">
-          <span id="lbl-mode-hr">Heart Rate only</span>
-          <span class="mode-badge badge-hr">bpm</span>
+        <button class="mode-btn" id="btn-hr" onclick="setMode('hr')">
+          <span class="mb-icon">❤️</span>
+          <span class="mb-label" id="lbl-mode-hr">Heart Rate</span>
+          <span class="mb-sub" id="lbl-mode-hr-sub">No power meter</span>
         </button>
       </div>
-      <!-- FTP (hidden in HR mode) -->
-      <div class="param-row ftp-row-wrap" id="ftp-row">
-        <span class="param-label" id="lbl-ftp">FTP</span>
-        <input type="range" min="100" max="400" value="200" step="1" id="ftp-sl">
-        <span class="param-val" id="ftp-out">200 W</span>
+    </div>
+  </div>
+</div>
+
+<!-- STEP 2: PLAN PARAMETERS -->
+<div class="sec">
+  <div class="sec-hdr">
+    <span class="sec-num">2</span>
+    <span class="sec-title" id="lbl-s2">Plan Parameters</span>
+  </div>
+  <div class="card">
+    <div class="plan-params">
+      <div class="field">
+        <label class="field-label" id="lbl-sessions2">SESSIONS/WEEK</label>
+        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-sess" value="4" min="1" max="7"><span class="field-unit" id="lbl-pw-unit">/ wk</span></div>
       </div>
-      <div class="params-grid" style="margin-top:10px;gap:8px">
-        <div class="inp-field"><p class="l" id="lbl-hrrest">RESTING HR</p><div class="ir"><input type="number" id="hr-rest" value="50" min="30" max="80"><span class="unit">bpm</span></div></div>
-        <div class="inp-field"><p class="l" id="lbl-hrmax">MAX HR</p><div class="ir"><input type="number" id="hr-max" value="185" min="140" max="220"><span class="unit">bpm</span></div></div>
-        <div class="inp-field"><p class="l" id="lbl-sessions">SESSIONS / WEEK</p><div class="ir"><input type="number" id="sess-w" value="3" min="1" max="7" style="width:52px"><span class="unit" id="lbl-pw">/ week</span></div></div>
-        <div class="inp-field"><p class="l" id="lbl-km">KM / SESSION</p><div class="ir"><input type="number" id="km-s" value="40" min="10" max="200"><span class="unit">km</span></div></div>
+      <div class="field">
+        <label class="field-label" id="lbl-km2">KM / SESSION</label>
+        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-km" value="40" min="10" max="250"><span class="field-unit">km</span></div>
+      </div>
+      <div class="field">
+        <label class="field-label" id="lbl-dur">PLAN LENGTH</label>
+        <select class="field-input" id="f-weeks">
+          <option value="1" id="opt-w1">1 week</option>
+          <option value="4" id="opt-w4" selected>4 weeks</option>
+          <option value="8" id="opt-w8">8 weeks</option>
+          <option value="16" id="opt-w16">16 weeks</option>
+          <option value="20" id="opt-w20">20 weeks</option>
+        </select>
       </div>
     </div>
+    <button class="gen-btn" id="gen-btn" onclick="generatePlan()">
+      <span id="lbl-gen">Generate My Training Plan →</span>
+    </button>
   </div>
+</div>
 
-  <!-- ZONES -->
-  <div class="sec">
-    <p class="sec-title" id="lbl-zones">Power & HR zones</p>
-    <div class="card">
-      <div class="zone-bar" id="zone-bar"></div>
-      <div class="zones-grid" id="zone-cards"></div>
-    </div>
+<!-- ZONES (shown after generate) -->
+<div class="sec" id="sec-zones" style="display:none">
+  <div class="sec-hdr">
+    <span class="sec-num">3</span>
+    <span class="sec-title" id="lbl-zones">Training Zones</span>
   </div>
-
-  <!-- SCHEDULE -->
-  <div class="sec">
-    <p class="sec-title" id="lbl-sched">Weekly schedule</p>
-    <div class="card">
-      <div class="sched-row" id="week-sched"></div>
-      <div class="cal-bar" id="cal-bar"></div>
-    </div>
+  <div class="card">
+    <div id="zones-content"></div>
   </div>
+</div>
 
-  <!-- WORKOUT -->
-  <div class="sec">
-    <p class="sec-title" id="lbl-wout">Workout detail</p>
-    <div class="tab-row" id="wtabs"></div>
-    <div id="wout-area"></div>
+<!-- SCHEDULE (shown after generate) -->
+<div class="sec" id="sec-sched" style="display:none">
+  <div class="sec-hdr">
+    <span class="sec-num">4</span>
+    <span class="sec-title" id="lbl-sched">Weekly Schedule</span>
   </div>
-
-  <!-- PROGRESSION -->
-  <div class="sec">
-    <p class="sec-title" id="lbl-prog">Progression plan</p>
-    <div class="tab-row" id="ptabs">
-      <button class="tab active" onclick="showProg(0,this)">2 <span class="pw"></span></button>
-      <button class="tab" onclick="showProg(1,this)">4 <span class="pw"></span></button>
-      <button class="tab" onclick="showProg(2,this)">8 <span class="pw"></span></button>
-      <button class="tab" onclick="showProg(3,this)">12 <span class="pw"></span></button>
-      <button class="tab" onclick="showProg(4,this)">16 <span class="pw"></span></button>
-      <button class="tab" onclick="showProg(5,this)">18 <span class="pw"></span></button>
-      <button class="tab" onclick="showProg(6,this)">20 <span class="pw"></span></button>
-    </div>
-    <div class="card" id="prog-area"></div>
+  <div class="card">
+    <div id="week-desc" style="font-size:12px;color:var(--text2);margin-bottom:12px;font-weight:500"></div>
+    <div class="sched-wrap" id="week-sched"></div>
+    <div class="cal-row" id="cal-row"></div>
   </div>
+</div>
 
-</div><!-- /left-col -->
+<!-- WORKOUT DETAIL (shown after generate) -->
+<div class="sec" id="sec-wout" style="display:none">
+  <div class="sec-hdr">
+    <span class="sec-num">5</span>
+    <span class="sec-title" id="lbl-wout">Workout Detail</span>
+  </div>
+  <div class="tab-bar" id="wtabs"></div>
+  <div id="wout-area"></div>
+</div>
 
-<!-- RIGHT COLUMN — AI CHAT -->
+<!-- PROGRESSION (shown after generate) -->
+<div class="sec" id="sec-prog" style="display:none">
+  <div class="sec-hdr">
+    <span class="sec-num">6</span>
+    <span class="sec-title" id="lbl-prog">Training Progression</span>
+  </div>
+  <div class="card" id="prog-area"></div>
+</div>
+
+<!-- EMPTY STATE (before generate) -->
+<div id="empty-state" class="card empty-state">
+  <div class="empty-icon">🚴</div>
+  <div class="empty-text" id="empty-text">Fill in your profile and generate your plan</div>
+  <div class="empty-sub" id="empty-sub">Your personalised FTP training plan will appear here</div>
+</div>
+
+</div><!-- /left -->
+
+<!-- RIGHT: AI CHAT -->
 <div class="chat-col">
-  <div class="chat-header">
-    <div class="chat-header-title">
-      <svg viewBox="0 0 20 20"><path d="M10 2a8 8 0 110 16A8 8 0 0110 2z"/><path d="M7 10h6M10 7v6" stroke-width="1.6"/></svg>
-      <span id="lbl-chat">AI Coach</span>
-    </div>
-    <div class="chat-header-sub" id="chat-hint">FTP, zones and plan sent automatically</div>
+  <div class="chat-hdr">
+    <div class="chat-hdr-title">🤖 <span id="lbl-chat">AI Coach</span></div>
+    <div class="chat-hdr-sub" id="chat-hint">Your profile and zones sent automatically</div>
   </div>
-
-  <div class="chat-messages" id="chat-messages">
-    <div class="msg ai" id="chat-welcome">Hello! I am your AI cycling coach. Ask me anything about training, recovery, nutrition or race strategy.</div>
+  <div class="chat-msgs" id="chat-msgs">
+    <div class="msg ai" id="chat-welcome">Hello! I am your AI cycling coach. Fill in your profile and generate a plan, then ask me anything about your training.</div>
   </div>
-
-  <div class="quick-btns" id="quick-btns">
-    <div class="quick-label" id="lbl-quick">Quick questions</div>
+  <div class="quick-btns">
+    <div class="quick-lbl" id="lbl-quick">Quick questions</div>
     <div id="quick-list"></div>
   </div>
-
   <div class="chat-input-area">
     <div class="chat-input-row">
       <textarea id="chat-input" rows="1" placeholder="Ask your coach..."></textarea>
       <button id="chat-send" onclick="sendMsg()"><span id="lbl-send">Send</span></button>
-      <button id="chat-clear" onclick="clearChat()" title="Clear">✕</button>
+      <button id="chat-clear" onclick="clearChat()">✕</button>
     </div>
   </div>
 </div>
@@ -349,353 +414,480 @@ footer{background:var(--bg2);border-top:1px solid var(--border);margin-top:auto}
 </div><!-- /main-grid -->
 </div><!-- /page -->
 
-<!-- FOOTER -->
 <footer>
-  <div class="footer-inner">
-    <div class="footer-left">
-      <strong id="ft-made">Made with</strong> <span id="ft-heart">❤️</span> <span id="ft-by">for cyclists everywhere</span><br>
-      <span id="ft-copy">© 2026 Cycling Training Plan. Built on science, powered by AI.</span>
-    </div>
-    <div class="footer-right">
-      <span id="ft-version">v2.0</span>
-      <a href="#" id="ft-top" onclick="window.scrollTo({top:0,behavior:'smooth'});return false">↑ Top</a>
-    </div>
+  <div class="ftr">
+    <div class="ftr-left" id="ft-copy">© 2026 Cycling Training Plan v3.0 · Built on sports science, powered by AI</div>
+    <div class="ftr-right"><a href="#" onclick="window.scrollTo({top:0,behavior:'smooth'});return false" id="ft-top" style="color:var(--text3);text-decoration:none">↑ Top</a></div>
   </div>
 </footer>
 
 <script>
-var ftp=200,hrRest=50,hrMax=185,sessW=3,kmS=40,curW=0,curProg=0,curLang='en',chatHist=[],trMode='power';
+// ─── STATE ────────────────────────────────────────────────────────────────
+var plan=null, curW=0, curLang='en', trMode='power', chatHist=[];
 
+// ─── TRANSLATIONS ─────────────────────────────────────────────────────────
 var T={
 en:{
   hdrTitle:'Cycling Training Plan',hdrSub:'FTP-based structured training',
-  params:'Athlete parameters',ftpL:'FTP',hrrest:'RESTING HR',hrmax:'MAX HR',sessions:'SESSIONS / WEEK',pw:'/ week',km:'KM / SESSION',
-  zones:'Power & HR zones',sched:'Weekly schedule',wout:'Workout detail',prog:'Progression plan',
-  chat:'AI Coach',hint:'FTP, zones and plan sent automatically',welcome:'Hello! I am your AI cycling coach. Ask me anything about training, recovery, nutrition or race strategy.',
-  send:'Send',weeks:'weeks',rest:'Rest',long:'Long ride',
-  days:['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+  s1:'Athlete Profile',s2:'Plan Parameters',
+  age:'AGE',gender:'GENDER',weight:'WEIGHT',hrmax:'MAX HR',hrrest:'RESTING HR',ftp:'FTP (optional)',
+  optM:'Male',optF:'Female',
+  mode:'TRAINING MEASUREMENT MODE',modePw:'Power Meter',modePwSub:'Target in Watts',modeHr:'Heart Rate',modeHrSub:'No power meter',
+  sessions:'SESSIONS/WEEK',km:'KM / SESSION',dur:'PLAN LENGTH',
+  w1:'1 week',w4:'4 weeks',w8:'8 weeks',w16:'16 weeks',w20:'20 weeks',
+  gen:'Generate My Training Plan →',
+  zones:'Training Zones',sched:'Weekly Schedule',wout:'Workout Detail',prog:'Training Progression',
+  chat:'AI Coach',hint:'Your profile and zones sent automatically',
+  welcome:'Hello! I am your AI cycling coach. Fill in your profile and generate a plan, then ask me anything.',
+  send:'Send',quick:'Quick questions',
+  emptyText:'Fill in your profile and generate your plan',emptySub:'Your personalised FTP training plan will appear here',
+  rest:'Rest',long:'Long Z2',
+  znames:['Z1 Recovery','Z2 Aerobic','Z3 Sweetspot','Z4 Threshold','Z5 VO2max'],
   wt:['Sweetspot','Threshold','VO2max','Zone 2'],
-  nb_ss:'Sweetspot (88–95% FTP): best FTP stimulus with 24–36h recovery. Drop 10 W if cadence falls below 85 rpm.',
-  nb_th:'Threshold: if you cannot complete all intervals, do fewer reps next session. Consistency beats heroics.',
-  nb_vo:'VO2max: max once every 10–14 days. 48–72h recovery required. Do not schedule before long rides.',
-  nb_z2:'Zone 2: the aerobic engine builder. Conversational pace. Resist the urge to go harder.',
-  pnote:['Goal: feel the zones, build rhythm. No test needed.',
-         'Expected gain: +5–10 W FTP. Ramp test after week 4.',
-         'Expected gain: +12–22 W FTP. Ramp test after week 8.',
-         'Expected gain: +20–35 W FTP. Ramp test after week 12.',
-         'Expected gain: +28–42 W FTP. Ramp test after week 16.',
-         'Expected gain: +32–48 W FTP. Ramp test after week 18.',
-         'Expected gain: +36–55 W FTP. Ramp test after week 20.'],
-  dl_zwo:'Download .ZWO',dl_fit:'Download .FIT',dl_mrc:'Download .MRC (TrainerRoad/Wahoo)',dl_erg:'Download .ERG (Wahoo/Tacx)',dl_tcx:'Download .TCX (Garmin/Amazfit)',
-  km_short:'⚠ Too short for this workout type. Minimum recommended:',km_long:'⚠ Very long — consider splitting into 2 sessions. Max recommended:',km_ok:'Optimal distance for this workout.',
-  s_warmup:'Warm-up Z2, cadence 88–90 rpm.',s_ss1:'W · HR {hr} bpm · cadence 88–92 rpm.',s_ssrec:'Z2 recovery, HR → {hr} bpm.',s_sslast:'Hold power. Cadence <85 → drop 10 W.',s_cd:'min Cool-down Z1.',
-  s_thwu:'Warm-up Z2, last 2 min pick up to ~Z3.',s_th1:'W · HR {hr} bpm.',s_threc:'Active recovery, keep pedalling.',s_threst:'Same target, cadence 87–92 rpm.',
-  s_vwu:'Warm-up + 2×30s hard accelerations.',s_v1:'W, cadence 90–95 rpm.',s_vrec:'Z1 recovery, HR → {hr} bpm.',s_vrest:'Same protocol, HR rises faster — normal.',s_vcd:'min mandatory cool-down.',
-  s_z2start:'Easy warm-up Z1→Z2.',s_z2mid:' · HR {hr} bpm · conversational pace.',s_z2cd:'Cool-down Z1 10min.',
-  blk:'Block',intv:'Interval',rec:'Recovery',rest2:'Rest',cd2:'Cool-down',
-  mode_pw:'Power (Watts)',mode_hr:'Heart Rate only',mode_hint_pw:'Training targets shown in watts (power meter required)',mode_hint_hr:'Training targets shown in heart rate zones (no power meter needed)',
-  cad_title:'Cadence targets (rpm)',cad_warmup:'Warm-up',cad_base:'Base',cad_work:'Work',cad_sprint:'Sprint',cad_note:'Keep cadence in target range throughout. Cadence below 80 rpm shifts stress to muscles; above 100 shifts to cardiovascular system.',
-  loading:'Thinking...',errC:'Could not connect to server.',
-  cal_week:'This week',cal_4:'4 weeks',cal_8:'8 weeks',cal_12:'12 weeks',
-  cal_desc_ss:'Sweetspot: {goal}\nFTP: {ftp} W',cal_desc_th:'Threshold: {goal}\nFTP: {ftp} W',
-  cal_desc_vo:'VO2max: {goal}\nFTP: {ftp} W',cal_desc_z2:'Zone 2: {goal}',
-  cal_desc_long:'Long ride: ~{km} km at Z2 pace',cal_desc_rest:'Rest day',
-  quick:'Quick questions',
-  qs:['How much rest after VO2max?','What is sweetspot training?','How to improve cadence?','How to fuel a 3h ride?','Signs of overtraining?','Best warm-up routine?'],
-  ctx:'Athlete FTP: {ftp} W | Resting HR: {hr1} bpm | Max HR: {hr2} bpm | Sessions/week: {sw} | km/session: {km}\nZones — Power: Z1 <{z1}W | Z2 {z2} | Z3 Sweetspot {z3} | Z4 Threshold {z4} | Z5 VO2max {z5} | HR (Karvonen): Z2 {h2} | Z3 {h3} | Z4 {h4} bpm\nAnswer in same language as question. Be specific, give numbers.',
-  ftMade:'Made with',ftHeart:'❤️',ftBy:'for cyclists everywhere',ftCopy:'© 2026 Cycling Training Plan. Built on science, powered by AI.',ftTop:'↑ Top'
+  hrmaxHint:'Formula: 220 − age = {v}. Override if you know your actual max.',
+  ftpHint:'Leave as-is to use HR-based estimate. Update after ramp test.',
+  kmWarnShort:'⚠ Too short for this workout. Recommended min: {v} km.',
+  kmWarnLong:'⚠ Very long — consider splitting. Recommended max: {v} km.',
+  cadTitle:'Target cadence (rpm)',
+  cadPhases:['Warm-up','Base','Work interval','Recovery'],
+  cadNote:'Cadence <80 rpm → muscular stress. >100 rpm → cardiovascular stress. Find the sweet spot.',
+  nb:{ss:'Sweetspot (88–95% FTP): the best FTP builder with only 24–36h recovery. If cadence drops below 85 rpm, reduce power by 10 W.',
+      th:'Threshold: complete all reps at target power. If you can\'t — fewer reps next time. Consistency beats heroics.',
+      vo:'VO2max: max once per 10–14 days. 48–72h recovery required. Do not schedule before a long ride.',
+      z2:'Zone 2 base: builds your aerobic engine. Conversational pace. Resist going harder — this is meant to feel easy.'},
+  pnote:{'1':'Goal: establish rhythm and zone feel.','4':'Expected gain: +5–10 W FTP. Ramp test after week 4.',
+         '8':'Expected gain: +12–22 W FTP. Ramp test after week 8.','16':'Expected gain: +25–40 W FTP. Ramp test after week 16.',
+         '20':'Expected gain: +30–50 W FTP. Ramp test after week 20.'},
+  dlTitle:'Download workout file',dlCompat:'ZWO: Zwift/MyWhoosh · FIT: Garmin/Wahoo/Hammerhead · MRC: TrainerRoad/Wahoo · ERG: Wahoo SYSTM/Tacx · TCX: Garmin/Amazfit',
+  weekDesc:'Week {w} of {total} — {type}',
+  phaseNames:{base:'Base block',build:'Build block',peak:'Peak block',unload:'Unload week',taper:'Taper'},
+  ctx:'Age: {age} | Gender: {gender} | Weight: {wt}kg | Max HR: {hrmax}bpm | Rest HR: {hrrest}bpm | FTP: {ftp}W ({wpkg} W/kg) | Mode: {mode}\nZones (Power): Z1<{z1}W | Z2 {z2} | Z3 SS {z3} | Z4 TH {z4} | Z5 VO2 {z5}\nZones (HR Karvonen): Z2 {h2} | Z3 {h3} | Z4 {h4}bpm\nAnswer in same language. Be specific with numbers.',
+  loading:'Thinking...',errC:'Could not connect.',
+  qs:['How much rest after VO2max?','Best food before a threshold ride?','How to improve cadence?','Signs of overtraining?','How to pace a 100km ride?','When should I retest my FTP?']
 },
 uk:{
-  hdrTitle:'План велотренувань',hdrSub:'Структоровані тренування на основі FTP',
-  params:'Параметри атлета',ftpL:'FTP',hrrest:'ЧСС СПОКОЮ',hrmax:'ЧСС МАКС',sessions:'ТРЕНУВАНЬ / ТИЖ',pw:'/ тиж',km:'КМ / ТРЕНУВАННЯ',
-  zones:'Зони потужності та ЧСС',sched:'Тижневий розклад',wout:'Деталі тренування',prog:'Прогресія',
-  chat:'AI Тренер',hint:'FTP, зони та план передаються автоматично',welcome:'Привіт! Я твій AI-тренер. Запитуй про тренування, відновлення, харчування або тактику.',
-  send:'Надіслати',weeks:'тижнів',rest:'Відпочинок',long:'Довга поїздка',
-  days:['Пн','Вт','Ср','Чт','Пт','Сб','Нд'],
+  hdrTitle:'План велотренувань',hdrSub:'Структуровані тренування на основі FTP',
+  s1:'Профіль атлета',s2:'Параметри плану',
+  age:'ВІК',gender:'СТАТЬ',weight:'ВАГА',hrmax:'ЧСС МАКС',hrrest:'ЧСС СПОКОЮ',ftp:'FTP (необов\'язково)',
+  optM:'Чоловік',optF:'Жінка',
+  mode:'РЕЖИМ ВИМІРЮВАННЯ ТРЕНУВАННЯ',modePw:'Потужномір',modePwSub:'Ціль у ватах',modeHr:'Пульсометр',modeHrSub:'Без потужноміра',
+  sessions:'ТРЕНУВАНЬ/ТИЖ',km:'КМ / ТРЕНУВАННЯ',dur:'ТРИВАЛІСТЬ ПЛАНУ',
+  w1:'1 тиждень',w4:'4 тижні',w8:'8 тижнів',w16:'16 тижнів',w20:'20 тижнів',
+  gen:'Згенерувати план тренувань →',
+  zones:'Тренувальні зони',sched:'Тижневий розклад',wout:'Деталі тренування',prog:'Прогресія',
+  chat:'AI Тренер',hint:'Профіль та зони передаються автоматично',
+  welcome:'Привіт! Я твій AI тренер. Заповни профіль і згенеруй план, потім запитуй про що завгодно.',
+  send:'Надіслати',quick:'Типові запитання',
+  emptyText:'Заповни профіль і згенеруй план',emptySub:'Твій персональний план тренувань з\'явиться тут',
+  rest:'Відпочинок',long:'Довга Z2',
+  znames:['Z1 Відновлення','Z2 Аеробна','Z3 Sweetspot','Z4 Threshold','Z5 VO2max'],
   wt:['Sweetspot','Threshold','VO2max','Zone 2'],
-  nb_ss:'Sweetspot (88–95% FTP): найкращий стимул для FTP з відновленням 24–36h. Якщо каденс <85 об/хв — скинь 10 Вт.',
-  nb_th:'Threshold: якщо не завершуєш всі інтервали — наступного разу роби менше. Консистентність понад усе.',
-  nb_vo:'VO2max: максимум раз на 10–14 днів. Потрібно 48–72h відновлення.',
-  nb_z2:'Zone 2: будує аеробний двигун. Розмовний темп. Не піддавайся спокусі їхати швидше.',
-  pnote:['Мета: відчути зони, знайти ритм. Тест не потрібен.',
-         'Приріст: +5–10 Вт FTP. Ramp-тест після тижня 4.',
-         'Приріст: +12–22 Вт FTP. Ramp-тест після тижня 8.',
-         'Приріст: +20–35 Вт FTP. Ramp-тест після тижня 12.',
-         'Приріст: +28–42 Вт FTP. Ramp-тест після тижня 16.',
-         'Приріст: +32–48 Вт FTP. Ramp-тест після тижня 18.',
-         'Приріст: +36–55 Вт FTP. Ramp-тест після тижня 20.'],
-  dl_zwo:'Завантажити .ZWO',dl_fit:'Завантажити .FIT',dl_mrc:'Завантажити .MRC (TrainerRoad/Wahoo)',dl_erg:'Завантажити .ERG (Wahoo/Tacx)',dl_tcx:'Завантажити .TCX (Garmin/Amazfit)',
-  km_short:'⚠ Занадто коротко для цього типу. Мінімум:',km_long:'⚠ Дуже довго — розглянь поділ на 2 сесії. Максимум:',km_ok:'Оптимальна дистанція для цього тренування.',
-  s_warmup:'Розгрів Z2, каденс 88–90 об/хв.',s_ss1:'Вт · ЧСС {hr} уд/хв · каденс 88–92 об/хв.',s_ssrec:'Відновлення Z2, ЧСС → {hr} уд/хв.',s_sslast:'Тримай потужність. Каденс <85 → скинь 10 Вт.',s_cd:'хв Заминка Z1.',
-  s_thwu:'Розгрів Z2, останні 2 хв до ~Z3.',s_th1:'Вт · ЧСС {hr} уд/хв.',s_threc:'Активне відновлення, продовжуй крутити.',s_threst:'Той самий темп, каденс 87–92 об/хв.',
-  s_vwu:'Розгрів + 2×30 сек прискорення.',s_v1:'Вт, каденс 90–95 об/хв.',s_vrec:'Z1, ЧСС → {hr} уд/хв.',s_vrest:'Той самий протокол, ЧСС зростає швидше — нормально.',s_vcd:'хв обов\'язкова заминка.',
-  s_z2start:'Легкий початок Z1→Z2.',s_z2mid:' · ЧСС {hr} уд/хв · розмовний темп.',s_z2cd:'Заминка Z1 10 хв.',
-  blk:'Блок',intv:'Інтервал',rec:'Відновлення',rest2:'Відпочинок',cd2:'Заминка',
-  mode_pw:'Потужність (Вати)',mode_hr:'Тільки ЧСС',mode_hint_pw:'Цілі тренування у ватах (потрібен потужномір)',mode_hint_hr:'Цілі тренування за зонами ЧСС (потужномір не потрібен)',
-  cad_title:'Цільовий каденс (об/хв)',cad_warmup:'Розгрів',cad_base:'База',cad_work:'Робота',cad_sprint:'Спринт',cad_note:'Тримай каденс у цільовому діапазоні. Нижче 80 об/хв — навантаження на м\'язи; вище 100 — на серцево-судинну систему.',
-  loading:'Думаю...',errC:'Не вдалось з\'єднатись із сервером.',
-  cal_week:'Цей тиждень',cal_4:'4 тижні',cal_8:'8 тижнів',cal_12:'12 тижнів',
-  cal_desc_ss:'Sweetspot: {goal}\nFTP: {ftp} Вт',cal_desc_th:'Threshold: {goal}\nFTP: {ftp} Вт',
-  cal_desc_vo:'VO2max: {goal}\nFTP: {ftp} Вт',cal_desc_z2:'Zone 2: {goal}',
-  cal_desc_long:'Довга поїздка: ~{km} км у темпі Z2',cal_desc_rest:'День відпочинку',
-  quick:'Типові запитання',
-  qs:['Скільки відпочивати після VO2max?','Що таке sweetspot тренування?','Як покращити каденс?','Як харчуватись на 3-годинній поїздці?','Ознаки перетренованості?','Найкращий розігрів перед тренуванням?'],
-  ctx:'FTP: {ftp} Вт | ЧСС спокою: {hr1} | ЧСС макс: {hr2} | Тренувань/тиж: {sw} | км/трен: {km}\nЗони потужності: Z1 <{z1}Вт | Z2 {z2} | Z3 Sweetspot {z3} | Z4 Threshold {z4} | Z5 VO2max {z5} | ЧСС: Z2 {h2} | Z3 {h3} | Z4 {h4} уд/хв\nВідповідай тією ж мовою що питання. Давай конкретні цифри.',
-  ftMade:'Зроблено з',ftHeart:'❤️',ftBy:'для велосипедистів',ftCopy:'© 2026 Cycling Training Plan. Наука + AI.',ftTop:'↑ Вгору'
+  hrmaxHint:'Формула: 220 − вік = {v}. Змінюй якщо знаєш своє реальне значення.',
+  ftpHint:'Залиш як є для оцінки по ЧСС. Онови після ramp-тесту.',
+  kmWarnShort:'⚠ Занадто коротко для цього типу. Рекомендований мінімум: {v} км.',
+  kmWarnLong:'⚠ Дуже довго — розглянь поділ. Рекомендований максимум: {v} км.',
+  cadTitle:'Цільовий каденс (об/хв)',
+  cadPhases:['Розгрів','База','Інтервал','Відновлення'],
+  cadNote:'Каденс <80 об/хв → навантаження на м\'язи. >100 об/хв → на серцево-судинну. Знайди оптимум.',
+  nb:{ss:'Sweetspot (88–95% FTP): найкращий стимул для FTP з відновленням 24–36h. Якщо каденс <85 об/хв — скинь 10 Вт.',
+      th:'Threshold: якщо не завершуєш всі повтори — наступного разу менше. Консистентність понад усе.',
+      vo:'VO2max: максимум раз на 10–14 днів. 48–72h відновлення. Не плануй перед довгою поїздкою.',
+      z2:'Zone 2 база: будує аеробний двигун. Розмовний темп. Не піддавайся спокусі їхати швидше.'},
+  pnote:{'1':'Мета: відчути зони та знайти ритм.','4':'Приріст: +5–10 Вт FTP. Ramp-тест після тижня 4.',
+         '8':'Приріст: +12–22 Вт FTP. Ramp-тест після тижня 8.','16':'Приріст: +25–40 Вт FTP. Ramp-тест після тижня 16.',
+         '20':'Приріст: +30–50 Вт FTP. Ramp-тест після тижня 20.'},
+  dlTitle:'Завантажити файл тренування',dlCompat:'ZWO: Zwift/MyWhoosh · FIT: Garmin/Wahoo · MRC: TrainerRoad · ERG: Wahoo SYSTM/Tacx · TCX: Garmin/Amazfit',
+  weekDesc:'Тиждень {w} з {total} — {type}',
+  phaseNames:{base:'Базовий блок',build:'Блок розвитку',peak:'Піковий блок',unload:'Розвантаження',taper:'Тейпер'},
+  ctx:'Вік: {age} | Стать: {gender} | Вага: {wt}кг | ЧСС макс: {hrmax} | ЧСС спокою: {hrrest} | FTP: {ftp}Вт ({wpkg} Вт/кг) | Режим: {mode}\nЗони потужності: Z1<{z1}Вт | Z2 {z2} | Z3 SS {z3} | Z4 TH {z4} | Z5 VO2 {z5}\nЗони ЧСС: Z2 {h2} | Z3 {h3} | Z4 {h4} уд/хв\nВідповідай тією ж мовою. Давай конкретні цифри.',
+  loading:'Думаю...',errC:'Не вдалось з\'єднатись.',
+  qs:['Скільки відпочивати після VO2max?','Що їсти перед threshold тренуванням?','Як покращити каденс?','Ознаки перетренованості?','Як їхати 100 км рівномірно?','Коли повторно тестувати FTP?']
 },
 pl:{
   hdrTitle:'Plan treningowy kolarstwa',hdrSub:'Ustrukturyzowany trening oparty na FTP',
-  params:'Parametry zawodnika',ftpL:'FTP',hrrest:'HR SPOCZYNKOWE',hrmax:'HR MAKSYMALNE',sessions:'TRENINGÓW / TYDZ',pw:'/ tydz',km:'KM / TRENING',
-  zones:'Strefy mocy i tętna',sched:'Plan tygodniowy',wout:'Szczegóły treningu',prog:'Progresja',
-  chat:'Trener AI',hint:'FTP, strefy i plan są wysyłane automatycznie',welcome:'Cześć! Jestem Twoim trenerem AI. Pytaj o trening, regenerację, żywienie lub taktykę.',
-  send:'Wyślij',weeks:'tygodnie',rest:'Odpoczynek',long:'Długa jazda',
-  days:['Pon','Wt','Śr','Czw','Pt','Sob','Nd'],
+  s1:'Profil zawodnika',s2:'Parametry planu',
+  age:'WIEK',gender:'PŁEĆ',weight:'WAGA',hrmax:'HR MAKS',hrrest:'HR SPOCZYNKOWE',ftp:'FTP (opcjonalne)',
+  optM:'Mężczyzna',optF:'Kobieta',
+  mode:'TRYB POMIARU TRENINGU',modePw:'Miernik mocy',modePwSub:'Cel w watach',modeHr:'Tętno',modeHrSub:'Bez miernika mocy',
+  sessions:'TRENINGÓW/TYDZ',km:'KM / TRENING',dur:'DŁUGOŚĆ PLANU',
+  w1:'1 tydzień',w4:'4 tygodnie',w8:'8 tygodni',w16:'16 tygodni',w20:'20 tygodni',
+  gen:'Generuj mój plan treningowy →',
+  zones:'Strefy treningowe',sched:'Plan tygodniowy',wout:'Szczegóły treningu',prog:'Progresja',
+  chat:'Trener AI',hint:'Profil i strefy wysyłane automatycznie',
+  welcome:'Cześć! Jestem Twoim trenerem AI. Wypełnij profil i wygeneruj plan, potem pytaj o co chcesz.',
+  send:'Wyślij',quick:'Szybkie pytania',
+  emptyText:'Wypełnij profil i wygeneruj plan',emptySub:'Twój spersonalizowany plan treningowy pojawi się tutaj',
+  rest:'Odpoczynek',long:'Długa Z2',
+  znames:['Z1 Regeneracja','Z2 Aerobowa','Z3 Sweetspot','Z4 Próg','Z5 VO2max'],
   wt:['Sweetspot','Próg','VO2max','Zone 2'],
-  nb_ss:'Sweetspot (88–95% FTP): najlepszy bodziec FTP z regeneracją 24–36h. Jeśli kadencja <85 rpm — zmniejsz moc o 10 W.',
-  nb_th:'Próg: jeśli nie kończysz interwałów — rób mniej powtórzeń. Konsekwencja ważniejsza niż heroizm.',
-  nb_vo:'VO2max: max raz na 10–14 dni. Potrzeba 48–72h regeneracji.',
-  nb_z2:'Zone 2: buduje silnik aerobowy. Tempo konwersacyjne. Nie jedź szybciej niż trzeba.',
-  pnote:['Cel: poczuć strefy, znaleźć rytm. Test nie jest wymagany.',
-         'Przyrost: +5–10 W FTP. Test rampowy po tygodniu 4.',
-         'Przyrost: +12–22 W FTP. Test rampowy po tygodniu 8.',
-         'Przyrost: +20–35 W FTP. Test rampowy po tygodniu 12.',
-         'Przyrost: +28–42 W FTP. Test rampowy po tygodniu 16.',
-         'Przyrost: +32–48 W FTP. Test rampowy po tygodniu 18.',
-         'Przyrost: +36–55 W FTP. Test rampowy po tygodniu 20.'],
-  dl_zwo:'Pobierz .ZWO',dl_fit:'Pobierz .FIT',dl_mrc:'Pobierz .MRC (TrainerRoad/Wahoo)',dl_erg:'Pobierz .ERG (Wahoo/Tacx)',dl_tcx:'Pobierz .TCX (Garmin/Amazfit)',
-  km_short:'⚠ Za krótko dla tego treningu. Minimum:',km_long:'⚠ Bardzo długo — rozważ podział na 2 sesje. Maksimum:',km_ok:'Optymalna odległość dla tego treningu.',
-  s_warmup:'Rozgrzewka Z2, kadencja 88–90 rpm.',s_ss1:'W · HR {hr} bpm · kadencja 88–92 rpm.',s_ssrec:'Regeneracja Z2, HR → {hr} bpm.',s_sslast:'Utrzymaj moc. Kadencja <85 → zmniejsz 10 W.',s_cd:'min schłodzenie Z1.',
-  s_thwu:'Rozgrzewka Z2, ostatnie 2 min do ~Z3.',s_th1:'W · HR {hr} bpm.',s_threc:'Aktywna regeneracja, pedałuj dalej.',s_threst:'Taki sam cel, kadencja 87–92 rpm.',
-  s_vwu:'Rozgrzewka + 2×30s mocnych przyspieszeń.',s_v1:'W, kadencja 90–95 rpm.',s_vrec:'Z1, HR → {hr} bpm.',s_vrest:'Ten sam protokół, HR rośnie szybciej — normalne.',s_vcd:'min obowiązkowe schłodzenie.',
-  s_z2start:'Łatwy start Z1→Z2.',s_z2mid:' · HR {hr} bpm · tempo konwersacyjne.',s_z2cd:'Schłodzenie Z1 10 min.',
-  blk:'Blok',intv:'Interwał',rec:'Regeneracja',rest2:'Odpoczynek',cd2:'Schłodzenie',
-  mode_pw:'Moc (Waty)',mode_hr:'Tylko tętno',mode_hint_pw:'Cele treningu w watach (wymagany miernik mocy)',mode_hint_hr:'Cele treningu według stref tętna (bez miernika mocy)',
-  cad_title:'Docelowa kadencja (rpm)',cad_warmup:'Rozgrzewka',cad_base:'Baza',cad_work:'Praca',cad_sprint:'Sprint',cad_note:'Utrzymuj kadencję w docelowym zakresie. Poniżej 80 rpm — obciążenie mięśni; powyżej 100 rpm — obciążenie układu sercowo-naczyniowego.',
-  loading:'Myślę...',errC:'Nie można połączyć się z serwerem.',
-  cal_week:'Ten tydzień',cal_4:'4 tygodnie',cal_8:'8 tygodni',cal_12:'12 tygodni',
-  cal_desc_ss:'Sweetspot: {goal}\nFTP: {ftp} W',cal_desc_th:'Próg: {goal}\nFTP: {ftp} W',
-  cal_desc_vo:'VO2max: {goal}\nFTP: {ftp} W',cal_desc_z2:'Zone 2: {goal}',
-  cal_desc_long:'Długa jazda: ~{km} km w tempie Z2',cal_desc_rest:'Dzień odpoczynku',
-  quick:'Szybkie pytania',
-  qs:['Ile odpoczynku po VO2max?','Co to jest trening sweetspot?','Jak poprawić kadencję?','Jak się żywić na 3h jeździe?','Oznaki przetrenowania?','Najlepsza rozgrzewka przed treningiem?'],
-  ctx:'FTP: {ftp} W | HR spoczynkowe: {hr1} | HR max: {hr2} | Treningów/tydz: {sw} | km/trening: {km}\nStrefy mocy: Z1 <{z1}W | Z2 {z2} | Z3 Sweetspot {z3} | Z4 Próg {z4} | Z5 VO2max {z5} | HR: Z2 {h2} | Z3 {h3} | Z4 {h4} bpm\nOdpowiadaj w tym samym języku. Podawaj konkretne liczby.',
-  ftMade:'Stworzone z',ftHeart:'❤️',ftBy:'dla kolarzy',ftCopy:'© 2026 Cycling Training Plan. Nauka + AI.',ftTop:'↑ Góra'
+  hrmaxHint:'Formuła: 220 − wiek = {v}. Zmień jeśli znasz swoje rzeczywiste HR maks.',
+  ftpHint:'Zostaw as-is dla szacowania z HR. Zaktualizuj po teście rampowym.',
+  kmWarnShort:'⚠ Za krótko dla tego treningu. Zalecane minimum: {v} km.',
+  kmWarnLong:'⚠ Bardzo długo — rozważ podział. Zalecane maksimum: {v} km.',
+  cadTitle:'Docelowa kadencja (rpm)',
+  cadPhases:['Rozgrzewka','Baza','Interwał','Regeneracja'],
+  cadNote:'Kadencja <80 rpm → obciążenie mięśni. >100 rpm → układ sercowo-naczyniowy. Znajdź optimum.',
+  nb:{ss:'Sweetspot (88–95% FTP): najlepszy bodziec FTP z regeneracją 24–36h. Kadencja <85 rpm → zmniejsz moc 10 W.',
+      th:'Próg: jeśli nie kończysz powtórzeń — rób mniej następnym razem. Konsekwencja ponad wszystko.',
+      vo:'VO2max: max raz na 10–14 dni. 48–72h regeneracji. Nie planuj przed długą jazdą.',
+      z2:'Zone 2 baza: buduje silnik aerobowy. Tempo konwersacyjne. Nie jedź szybciej — to ma być łatwe.'},
+  pnote:{'1':'Cel: poczuć strefy i znaleźć rytm.','4':'Przyrost: +5–10 W FTP. Test rampowy po tygodniu 4.',
+         '8':'Przyrost: +12–22 W FTP. Test rampowy po tygodniu 8.','16':'Przyrost: +25–40 W FTP. Test rampowy po tygodniu 16.',
+         '20':'Przyrost: +30–50 W FTP. Test rampowy po tygodniu 20.'},
+  dlTitle:'Pobierz plik treningu',dlCompat:'ZWO: Zwift/MyWhoosh · FIT: Garmin/Wahoo · MRC: TrainerRoad · ERG: Wahoo SYSTM/Tacx · TCX: Garmin/Amazfit',
+  weekDesc:'Tydzień {w} z {total} — {type}',
+  phaseNames:{base:'Blok bazowy',build:'Blok budowy',peak:'Blok szczytowy',unload:'Odciążenie',taper:'Taper'},
+  ctx:'Wiek: {age} | Płeć: {gender} | Waga: {wt}kg | HR maks: {hrmax} | HR spocz: {hrrest} | FTP: {ftp}W ({wpkg} W/kg) | Tryb: {mode}\nStrefy mocy: Z1<{z1}W | Z2 {z2} | Z3 SS {z3} | Z4 TH {z4} | Z5 VO2 {z5}\nStrefy HR: Z2 {h2} | Z3 {h3} | Z4 {h4}bpm\nOdpowiadaj w tym samym języku. Podawaj konkretne liczby.',
+  loading:'Myślę...',errC:'Nie można połączyć.',
+  qs:['Ile odpoczynku po VO2max?','Co jeść przed treningiem progowym?','Jak poprawić kadencję?','Oznaki przetrenowania?','Jak równomiernie jechać 100km?','Kiedy powtórzyć test FTP?']
 }
 };
 function tr(k){return(T[curLang]&&T[curLang][k]!==undefined)?T[curLang][k]:(T.en[k]||k);}
 
+// ─── HELPERS ──────────────────────────────────────────────────────────────
+function hk(p,hrrest,hrmax){return Math.round(hrrest+p*(hrmax-hrrest));}
+function pw(lo,hi,ftp){return Math.round(lo*ftp)+'–'+Math.round(hi*ftp)+' W';}
+function wt(p,ftp){return Math.round(p*ftp);}
+function hs(lo,hi,hrrest,hrmax){
+  var hrr=hrmax-hrrest;
+  if(lo===0)return'<'+Math.round(hrrest+hi*hrr)+' bpm';
+  if(hi>=1)return'>'+Math.round(hrrest+lo*hrr)+' bpm';
+  return Math.round(hrrest+lo*hrr)+'–'+Math.round(hrrest+hi*hrr)+' bpm';
+}
+function getInput(id){return parseFloat(document.getElementById(id).value)||0;}
+function estimateFTP(hrmax,hrrest,weight,age,gender){
+  // VO2max estimate: Uth formula + Jones FTP correction
+  var hrr=hrmax-hrrest;
+  var vo2max=15*(hrmax/hrrest);
+  // Gender factor
+  if(gender==='f') vo2max*=0.92;
+  // FTP ≈ 72–76% of VO2max-derived power
+  var ftpEst=Math.round((vo2max*weight*0.01)*0.74);
+  return Math.max(80,Math.min(500,ftpEst));
+}
+
+// ─── MODE TOGGLE ──────────────────────────────────────────────────────────
 function setMode(mode){
   trMode=mode;
   document.getElementById('btn-pw').classList.toggle('active',mode==='power');
   document.getElementById('btn-hr').classList.toggle('active',mode==='hr');
-  document.getElementById('ftp-row').classList.toggle('hidden',mode==='hr');
-  renderW(curW);
+  if(plan) renderWorkout(curW);
 }
 
-// Cadence targets per workout type [warmup, base_z2, work, sprint/high]
-var cadenceTargets={
-  ss:{wu:[80,88],base:[85,92],work:[88,95],note:''},
-  th:{wu:[80,88],base:[85,92],work:[85,95],note:''},
-  vo:{wu:[82,90],base:[85,92],work:[90,100],note:''},
-  z2:{wu:[78,86],base:[83,92],work:[83,92],note:''},
-};
-function cadRange(type,phase){
-  var t=cadenceTargets[type]||cadenceTargets.z2;
-  var r=t[phase]||t.work;
-  return r[0]+'–'+r[1];
-}
-function buildCadenceBlock(tp){
-  var t=cadenceTargets[tp]||cadenceTargets.z2;
-  var segments=[
-    {label:tr('cad_warmup'),range:t.wu,cc:'--z1c'},
-    {label:tr('cad_base'),range:t.base,cc:'--z2c'},
-    {label:tr('cad_work'),range:t.work,cc:tp==='vo'?'--z5c':tp==='th'?'--z4c':'--z3c'},
+// ─── PLAN GENERATION ALGORITHM ────────────────────────────────────────────
+// Based on: Friel "The Cyclist's Training Bible", Coggan power zones,
+// Seiler 80/20 principle, polarized training model
+function generatePlan(){
+  var age=Math.round(getInput('f-age')||30);
+  var gender=document.getElementById('f-gender').value;
+  var weight=getInput('f-weight')||75;
+  var hrmax=Math.round(getInput('f-hrmax')||185);
+  var hrrest=Math.round(getInput('f-hrrest')||55);
+  var ftpInput=Math.round(getInput('f-ftp')||200);
+  var sessW=Math.round(getInput('f-sess')||4);
+  var kmS=Math.round(getInput('f-km')||40);
+  var weeks=parseInt(document.getElementById('f-weeks').value)||8;
+
+  // If FTP not realistically set, estimate from HR
+  var ftpEst=estimateFTP(hrmax,hrrest,weight,age,gender);
+  var ftp=ftpInput>100?ftpInput:ftpEst;
+  var wpkg=(ftp/weight).toFixed(2);
+
+  // Karvonen HR zones [lo%,hi%] of HRR
+  var hrZones=[
+    [0,0.60],[0.60,0.70],[0.70,0.80],[0.80,0.90],[0.90,1.00]
   ];
-  return '<div style="margin:10px 0 4px"><div style="font-size:10px;font-weight:600;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px">'+tr('cad_title')+'</div>'+
-    '<div class="cadence-bar">'+
-    segments.map(function(s){
-      return '<div class="cad-seg highlight" style="border-color:var('+s.cc+')20">'+
-        '<div class="cs-label">'+s.label+'</div>'+
-        '<div class="cs-val" style="color:var('+s.cc+')">'+s.range[0]+'–'+s.range[1]+'</div>'+
-        '<div class="cs-sub">rpm</div></div>';
-    }).join('')+
-    '</div>'+
-    '<div style="font-size:10px;color:var(--text3);line-height:1.5;margin-top:4px">'+tr('cad_note')+'</div></div>';
-}
+  // Coggan power zones [lo%,hi%] of FTP
+  var pwZones=[
+    [0,0.55],[0.56,0.75],[0.76,0.90],[0.91,1.05],[1.06,1.20]
+  ];
 
-var zDef=[
-  {pwr:[0,0.55],hp:[0,0.60],ck:'--z1c',tk:'--z1t'},
-  {pwr:[0.56,0.75],hp:[0.60,0.70],ck:'--z2c',tk:'--z2t'},
-  {pwr:[0.76,0.90],hp:[0.70,0.80],ck:'--z3c',tk:'--z3t'},
-  {pwr:[0.91,1.05],hp:[0.80,0.90],ck:'--z4c',tk:'--z4t'},
-  {pwr:[1.06,1.20],hp:[0.90,1.00],ck:'--z5c',tk:'--z5t'}
-];
-function cv(k){return getComputedStyle(document.documentElement).getPropertyValue(k).trim();}
-function hk(p){return Math.round(hrRest+p*(hrMax-hrRest));}
-function hs(lo,hi){if(lo===0)return'<'+hk(hi)+' bpm';if(hi>=1)return'>'+hk(lo)+' bpm';return hk(lo)+'–'+hk(hi)+' bpm';}
-function pw2(lo,hi){return Math.round(lo*ftp)+'–'+Math.round(hi*ftp)+' W';}
-function wt(p){return Math.round(p*ftp);}
+  // Cadence targets per type [wu,base,work,recovery]
+  var cadence={ss:[85,88,90,80],th:[83,87,90,80],vo:[85,88,94,82],z2:[80,85,88,78]};
 
-function renderZones(){
-  var zn=['Z1','Z2','Z3','Z4','Z5'];
-  document.getElementById('zone-bar').innerHTML=zDef.map(function(z,i){
-    return'<div class="zone-seg" style="background:var('+z.ck+');color:var('+z.tk+');">'+zn[i]+'</div>';
-  }).join('');
-  document.getElementById('zone-cards').innerHTML=zDef.map(function(z,i){
-    return'<div class="zone-card" style="background:var('+z.ck+')22;border-left-color:var('+z.ck+');">'+
-      '<div class="zn">'+zn[i]+'</div>'+
-      '<div class="zv">'+pw2(z.pwr[0],z.pwr[1])+'</div>'+
-      '<div class="zh">'+hs(z.hp[0],z.hp[1])+'</div></div>';
-  }).join('');
-}
+  // Build periodized weekly schedule based on weeks count
+  // Phase structure based on Friel periodization model:
+  // 1-week: intro. 4-week: base+unload. 8-week: 2x(build)+peak+unload. 16+: full cycles.
+  var phases=buildPhases(weeks);
 
-function buildSched(n){
-  var days=tr('days'),rest=tr('rest'),long=tr('long'),wts=tr('wt');
-  var types=['rest','rest','rest','rest','rest','rest','rest'];
-  if(n===1){types[5]='ss';}
-  else if(n===2){types[1]='ss';types[4]='th';}
-  else if(n===3){types[1]='ss';types[3]='th';types[5]='z2';}
-  else if(n===4){types[1]='ss';types[3]='th';types[5]='z2';types[6]='z2';}
-  else if(n===5){types[0]='z2';types[1]='ss';types[3]='th';types[5]='z2';types[6]='long';}
-  else if(n===6){types[0]='z2';types[1]='ss';types[3]='th';types[4]='z2';types[5]='long';types[6]='vo';}
-  else{types[0]='z2';types[1]='ss';types[2]='z2';types[3]='th';types[4]='z2';types[5]='long';types[6]='vo';}
-  var lm={ss:wts[0],th:wts[1],vo:wts[2],z2:wts[3],long:long,rest:rest};
-  var bm={ss:'z3',th:'z4',vo:'z5',z2:'z2',long:'z2',rest:'rest'};
-  var cm={ss:'--z3c',th:'--z4c',vo:'--z5c',z2:'--z2c',long:'--z1c',rest:null};
-  return types.map(function(tp,i){
-    var k=tp==='rest'?'':tp==='long'?Math.round(kmS*1.5)+' km':kmS+' km';
-    return{day:days[i],label:lm[tp],badge:bm[tp],km:k,tp:tp,cc:cm[tp]};
+  plan={age,gender,weight,ftp,hrmax,hrrest,hrZones,pwZones,cadence,wpkg,sessW,kmS,weeks,phases};
+
+  // Show sections
+  ['sec-zones','sec-sched','sec-wout','sec-prog'].forEach(function(id){
+    document.getElementById(id).style.display='';
   });
+  document.getElementById('empty-state').style.display='none';
+
+  renderZones();
+  renderSchedule();
+  renderWorkoutTabs();
+  renderProgression();
+  updateChatContext();
 }
 
-function renderSched(){
-  var s=buildSched(sessW);
-  document.getElementById('week-sched').innerHTML=s.map(function(d,i){
-    var isToday=(new Date().getDay()===((i+1)%7))?'active-day':'';
-    var dotStyle=d.cc?'background:var('+d.cc+')':'background:var(--border2)';
-    return'<div class="day-card '+isToday+'">'+
-      '<div class="dc-name">'+d.day+'</div>'+
-      '<div class="dc-type" style="'+(d.cc?'color:var('+d.cc+')':'color:var(--text3)')+'">'+d.label+'</div>'+
-      (d.km?'<div class="dc-km">'+d.km+'</div>':'')+
-      '<div class="day-dot" style="'+dotStyle+'"></div>'+
+// Periodization algorithm
+function buildPhases(totalWeeks){
+  // Each phase entry: {week, phase, type}
+  // phase: base|build|peak|unload|taper
+  // Intensity distribution:
+  //   base:  80% Z2, 15% SS, 5% rest
+  //   build: 60% Z2, 25% SS, 10% TH, 5% rest
+  //   peak:  50% Z2, 20% SS, 20% TH, 10% VO2
+  //   unload: 90% Z2, 10% rest
+  //   taper: 70% Z2, 20% SS, 10% rest
+  var phases=[];
+  if(totalWeeks===1){
+    return [{w:1,phase:'base',label:'intro'}];
+  }
+  if(totalWeeks===4){
+    return [{w:1,phase:'base'},{w:2,phase:'base'},{w:3,phase:'build'},{w:4,phase:'unload'}];
+  }
+  if(totalWeeks===8){
+    return [{w:1,phase:'base'},{w:2,phase:'base'},{w:3,phase:'build'},{w:4,phase:'build'},
+            {w:5,phase:'peak'},{w:6,phase:'peak'},{w:7,phase:'build'},{w:8,phase:'taper'}];
+  }
+  if(totalWeeks===16){
+    // 2 full 8-week cycles
+    for(var i=0;i<2;i++){
+      var base=i*8;
+      phases.push({w:base+1,phase:'base'},{w:base+2,phase:'base'},{w:base+3,phase:'build'},{w:base+4,phase:'build'},
+                  {w:base+5,phase:'peak'},{w:base+6,phase:'peak'},{w:base+7,phase:'build'},{w:base+8,phase:i===1?'taper':'unload'});
+    }
+    return phases;
+  }
+  if(totalWeeks===20){
+    // Base block (6w) → Build (6w) → Peak (4w) → Taper (4w)
+    for(var w=1;w<=20;w++){
+      var ph=w<=5?'base':w<=6?'unload':w<=11?'build':w<=12?'unload':w<=16?'peak':w<=17?'unload':'taper';
+      phases.push({w:w,phase:ph});
+    }
+    return phases;
+  }
+  return [{w:1,phase:'base'}];
+}
+
+// Workout type distribution per phase and sessions count
+function weekWorkouts(phase, sessW){
+  // Returns array of workout types for 7 days (0=rest)
+  // Types: 'rest','z2','ss','th','vo','long'
+  var slots=['rest','rest','rest','rest','rest','rest','rest'];
+  // Based on Seiler 80/20 polarized model adapted for FTP building
+  var structured={
+    base:{1:['ss'],2:['ss','z2'],3:['ss','z2','z2'],4:['ss','z2','z2','long'],
+          5:['ss','z2','z2','long','z2'],6:['ss','th','z2','z2','long','z2'],7:['ss','th','z2','z2','long','z2','z2']},
+    build:{1:['ss'],2:['ss','th'],3:['ss','th','z2'],4:['ss','th','z2','long'],
+           5:['ss','th','z2','z2','long'],6:['ss','th','vo','z2','z2','long'],7:['ss','th','vo','z2','z2','long','z2']},
+    peak:{1:['th'],2:['ss','th'],3:['ss','th','vo'],4:['ss','th','vo','long'],
+          5:['ss','th','vo','z2','long'],6:['th','vo','ss','z2','z2','long'],7:['th','vo','ss','z2','z2','z2','long']},
+    unload:{1:['z2'],2:['z2','z2'],3:['z2','z2','z2'],4:['z2','z2','z2','long'],
+            5:['z2','z2','z2','z2','long'],6:['z2','z2','z2','z2','z2','long'],7:['z2','z2','z2','z2','z2','z2','long']},
+    taper:{1:['ss'],2:['ss','z2'],3:['ss','z2','z2'],4:['ss','z2','z2','long'],
+           5:['ss','th','z2','z2','long'],6:['ss','th','z2','z2','z2','long'],7:['ss','th','z2','z2','z2','z2','long']}
+  };
+  var n=Math.max(1,Math.min(7,sessW));
+  var order=((structured[phase]||structured.base)[n]||structured.base[4]).slice();
+  // Spread across week: SS on Tue, TH on Thu, VO on Tue/Sat, Z2 fill, long on Sat/Sun
+  var dayPrefs={ss:[1,2],th:[3,4],vo:[1,5],long:[5,6],z2:[0,2,4,6]};
+  var placed={};
+  order.forEach(function(tp){
+    var prefs=dayPrefs[tp]||[0,1,2,3,4,5,6];
+    for(var i=0;i<prefs.length;i++){
+      var d=prefs[i];
+      if(!placed[d]&&slots[d]==='rest'){slots[d]=tp;placed[d]=true;break;}
+    }
+    if(!placed[order.indexOf(tp)]){
+      for(var d2=0;d2<7;d2++){
+        if(slots[d2]==='rest'&&!placed[d2]){slots[d2]=tp;placed[d2]=true;break;}
+      }
+    }
+  });
+  return slots;
+}
+
+// ─── ZONES RENDER ─────────────────────────────────────────────────────────
+function renderZones(){
+  var p=plan;
+  var znames=tr('znames');
+  var colors=[
+    {c:'var(--z1c)',bg:'var(--z1bg)'},{c:'var(--z2c)',bg:'var(--z2bg)'},
+    {c:'var(--z3c)',bg:'var(--z3bg)'},{c:'var(--z4c)',bg:'var(--z4bg)'},
+    {c:'var(--z5c)',bg:'var(--z5bg)'}
+  ];
+  var barHtml=p.pwZones.map(function(z,i){
+    return'<div class="zone-seg" style="background:'+colors[i].bg+';color:'+colors[i].c+';">Z'+(i+1)+'</div>';
+  }).join('');
+  var cardsHtml='<div class="zones-grid">'+p.pwZones.map(function(z,i){
+    var pwStr=pw(z[0],z[1],p.ftp);
+    var hrStr=hs(p.hrZones[i][0],p.hrZones[i][1],p.hrrest,p.hrmax);
+    return'<div class="zone-card" style="background:'+colors[i].bg+';border-color:'+colors[i].c+'30">'+
+      '<div class="zn" style="color:'+colors[i].c+'">Z'+(i+1)+'</div>'+
+      '<div class="zv" style="color:'+colors[i].c+'">'+pwStr+'</div>'+
+      '<div class="zh">'+hrStr+'</div>'+
+      '<div class="zh" style="margin-top:2px;font-size:9px">'+znames[i]+'</div></div>';
+  }).join('')+'</div>';
+  document.getElementById('zones-content').innerHTML='<div class="zone-bar" style="margin-bottom:10px">'+barHtml+'</div>'+cardsHtml+
+    '<div style="margin-top:8px;font-size:11px;color:var(--text3)">FTP: <b style="color:var(--text)">'+p.ftp+' W</b> &nbsp;·&nbsp; '+p.ftp/p.weight.toFixed(1)+' W/kg &nbsp;·&nbsp; Mode: <b style="color:var(--text)">'+(trMode==='power'?tr('modePw'):tr('modeHr'))+'</b></div>';
+}
+
+// ─── SCHEDULE RENDER ──────────────────────────────────────────────────────
+var currentWeekIdx=0;
+function renderSchedule(){
+  var p=plan;
+  // Show week 1 by default
+  currentWeekIdx=0;
+  renderWeek(0);
+}
+
+function renderWeek(weekIdx){
+  var p=plan;
+  var phaseInfo=p.phases[weekIdx]||p.phases[0];
+  var slots=weekWorkouts(phaseInfo.phase,p.sessW);
+  var days=tr('days')||['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  // fallback
+  if(!days||!days.length) days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+  var typeColors={ss:'var(--z3c)',th:'var(--z4c)',vo:'var(--z5c)',z2:'var(--z2c)',long:'var(--z2c)',rest:'var(--text3)'};
+  var typeBg={ss:'var(--z3bg)',th:'var(--z4bg)',vo:'var(--z5bg)',z2:'var(--z2bg)',long:'var(--z2bg)',rest:'var(--bg3)'};
+  var wts=tr('wt');
+  var typeLabels={ss:wts[0],th:wts[1],vo:wts[2],z2:wts[3],long:tr('long'),rest:tr('rest')};
+
+  var html=slots.map(function(tp,i){
+    var isStructured=tp!=='rest';
+    var target='';
+    if(tp!=='rest'){
+      if(trMode==='power'){
+        if(tp==='ss') target=wt(0.88,p.ftp)+'–'+wt(0.95,p.ftp)+' W';
+        else if(tp==='th') target=wt(0.96,p.ftp)+'–'+wt(1.03,p.ftp)+' W';
+        else if(tp==='vo') target=wt(1.10,p.ftp)+'–'+wt(1.20,p.ftp)+' W';
+        else target=wt(0.56,p.ftp)+'–'+wt(0.75,p.ftp)+' W';
+      } else {
+        if(tp==='ss') target=hk(0.70,p.hrrest,p.hrmax)+'–'+hk(0.80,p.hrrest,p.hrmax)+' bpm';
+        else if(tp==='th') target=hk(0.80,p.hrrest,p.hrmax)+'–'+hk(0.90,p.hrrest,p.hrmax)+' bpm';
+        else if(tp==='vo') target='>'+hk(0.90,p.hrrest,p.hrmax)+' bpm';
+        else target=hk(0.60,p.hrrest,p.hrmax)+'–'+hk(0.70,p.hrrest,p.hrmax)+' bpm';
+      }
+    }
+    var km=tp==='rest'?'':tp==='long'?Math.round(p.kmS*1.5)+' km':p.kmS+' km';
+    return'<div class="day-card'+(isStructured?' dc-structured':'')+'">'+
+      '<div class="dc-name">'+days[i]+'</div>'+
+      '<div class="dc-type" style="color:'+typeColors[tp]+'">'+typeLabels[tp]+'</div>'+
+      (target?'<div class="dc-target">'+target+'</div>':'')+
+      (km?'<div class="dc-km">'+km+'</div>':'')+
+      '<div class="dc-dot" style="background:'+typeColors[tp]+';opacity:'+(tp==='rest'?'.3':'1')+'"></div>'+
       '</div>';
   }).join('');
+
+  document.getElementById('week-sched').innerHTML=html;
+
+  var phaseName=(tr('phaseNames')||{})[phaseInfo.phase]||phaseInfo.phase;
+  document.getElementById('week-desc').textContent=
+    (tr('weekDesc')||'Week {w} of {total} — {type}')
+      .replace('{w}',weekIdx+1).replace('{total}',p.weeks).replace('{type}',phaseName);
+
+  // Cal buttons
+  document.getElementById('cal-row').innerHTML=
+    '<button class="cal-btn primary" onclick="downloadICS(1)">📅 '+(tr('cal_week')||'This week')+'</button>'+
+    '<button class="cal-btn" onclick="downloadICS(4)">📅 4 '+(tr('weeks')||'wk')+'</button>'+
+    '<button class="cal-btn" onclick="downloadICS(8)">📅 8 '+(tr('weeks')||'wk')+'</button>'+
+    '<button class="cal-btn" onclick="downloadICS(p.weeks)">📅 '+(tr('all')||'Full plan')+'</button>';
 }
 
-function dur(){return Math.max(20,Math.round(kmS/30*60));}
-function wu(){return Math.min(15,Math.round(dur()*0.15));}
-function cd(){return Math.min(15,Math.round(dur()*0.15));}
-
-// km validation per workout type
-function kmLimits(idx){
-  // [min, optimal_min, optimal_max, max] in km
-  if(idx===0) return [20,30,80,120];   // Sweetspot
-  if(idx===1) return [25,35,80,100];   // Threshold
-  if(idx===2) return [20,25,60,80];    // VO2max
-  return [30,40,150,250];              // Zone 2
-}
-function kmWarn(idx){
-  var lim=kmLimits(idx);
-  if(kmS<lim[0]) return{type:'short',msg:tr('km_short')+' '+lim[0]+' km'};
-  if(kmS>lim[3]) return{type:'long',msg:tr('km_long')+' '+lim[3]+' km'};
-  if(kmS<lim[1]||kmS>lim[2]) return{type:'ok',msg:''}; // still ok, no warning
-  return{type:'ok',msg:tr('km_ok')};
-}
-
-function getW(idx){
-  var d=dur(),w=wu(),c=cd(),work=d-w-c;
+// ─── WORKOUT ALGORITHM ────────────────────────────────────────────────────
+function getWorkout(idx){
+  var p=plan;
   var wts=tr('wt');
-  var warn=kmWarn(idx);
-  var warnHtml=warn.type!=='ok'&&warn.msg?
-    '<div style="font-size:11px;padding:7px 10px;background:'+(warn.type==='short'?'rgba(240,153,75,0.15)':'rgba(240,149,149,0.15)')+';border-left:3px solid '+(warn.type==='short'?'var(--z3c)':'var(--z5c)')+';border-radius:6px;margin-bottom:10px;color:var(--text2);">'+warn.msg+'</div>':'';
+  var phases=tr('cadPhases')||['Warm-up','Base','Work','Recovery'];
+  // Duration estimate: ~30 km/h = 2 min/km
+  var totalMin=Math.max(25,Math.round(p.kmS/30*60));
+  var wu=Math.min(15,Math.max(8,Math.round(totalMin*0.14)));
+  var cd=Math.min(15,Math.max(8,Math.round(totalMin*0.14)));
+  var work=totalMin-wu-cd;
 
-  if(idx===0){
-    var lo=wt(0.88),hi=wt(0.95),hr=hk(0.70)+'–'+hk(0.80);
+  // km validation
+  var kmLimits=[[20,30,80,120],[25,35,80,100],[20,25,60,80],[30,40,200,300]];
+  var lim=kmLimits[idx]||kmLimits[3];
+  var warnHtml='';
+  if(p.kmS<lim[0]) warnHtml='<div class="km-warn" style="background:var(--z3bg);border-color:var(--z3c);color:var(--z3c)">'+(tr('kmWarnShort')||'⚠ Too short. Min: {v} km').replace('{v}',lim[0])+'</div>';
+  else if(p.kmS>lim[3]) warnHtml='<div class="km-warn" style="background:var(--z4bg);border-color:var(--z4c);color:var(--z4c)">'+(tr('kmWarnLong')||'⚠ Too long. Max: {v} km').replace('{v}',lim[3])+'</div>';
+
+  // Helpers for target display
+  function pwTarget(lo,hi){return wt(lo,p.ftp)+'–'+wt(hi,p.ftp)+' W';}
+  function hrTarget(lo,hi){return hk(lo,p.hrrest,p.hrmax)+'–'+hk(hi,p.hrrest,p.hrmax)+' bpm';}
+  function target(pwLo,pwHi,hrLo,hrHi){
+    return trMode==='power'?pwTarget(pwLo,pwHi):hrTarget(hrLo,hrHi);
+  }
+  var cad=p.cadence;
+
+  if(idx===0){ // SWEETSPOT
     var blks=Math.max(1,Math.floor(work/25)),bl=Math.max(10,Math.round(work/blks/5)*5);
-    return{ti:wts[0],tp:'ss',dist:'~'+kmS+' km · ~'+d+'min',goal:blks+'×'+bl+'min @ '+lo+'–'+hi+' W · HR '+hr,warn:warnHtml,
-      segs:[{l:w+'min',cc:'--z1c',tc:'--z1t',f:w},{l:blks+'×'+bl+'min',cc:'--z3c',tc:'--z3t',f:bl*blks},
-            {l:'5min',cc:'--z2c',tc:'--z2t',f:5*(blks-1||1)},{l:c+'min',cc:'--z1c',tc:'--z1t',f:c}],
-      steps:[{t:'0–'+w+'min',cc:'--z1c',d:tr('s_warmup')},
-             {t:tr('blk')+' 1',cc:'--z3c',d:lo+'–'+hi+' '+tr('s_ss1').replace('{hr}',hr)},
-             {t:tr('rec'),cc:'--z2c',d:tr('s_ssrec').replace('{hr}',hk(0.58))},
-             {t:tr('blk')+' '+blks,cc:'--z3c',d:tr('s_sslast')},
-             {t:tr('cd2'),cc:'--z1c',d:c+' '+tr('s_cd')}],
-      note:tr('nb_ss'),
-      zwo:bZwo(w,bl,blks,5,c,hi/ftp)};
+    var tgt=target(0.88,0.95,0.70,0.80);
+    return{ti:wts[0],tp:'ss',dist:'~'+p.kmS+' km · ~'+totalMin+' min',goal:blks+'×'+bl+' min @ '+tgt,warn:warnHtml,
+      segs:[{l:wu+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:wu},{l:blks+'×'+bl+' min',c:'var(--z3bg)',tc:'var(--z3c)',f:bl*blks},
+            {l:'5 min',c:'var(--z2bg)',tc:'var(--z2c)',f:5*(blks-1||1)},{l:cd+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:cd}],
+      steps:[
+        {dot:'var(--z1c)',t:'0–'+wu+' min',main:phases[0],sub:pwTarget(0.50,0.60)+' · '+hrTarget(0.50,0.62)+' · '+cad.ss[0]+'–'+cad.ss[1]+' rpm'},
+        {dot:'var(--z3c)',t:'Blocks 1–'+blks,main:wts[0]+' × '+bl+' min',sub:tgt+' · '+cad.ss[2]+' rpm'},
+        {dot:'var(--z2c)',t:'Recovery (5 min)',main:phases[3],sub:pwTarget(0.50,0.58)+' · '+hrTarget(0.50,0.60)+' · '+cad.ss[3]+' rpm'},
+        {dot:'var(--z1c)',t:'Last '+cd+' min',main:phases[0],sub:'Easy Z1 · '+cad.ss[3]+' rpm'}
+      ],
+      note:tr('nb').ss,cad:cad.ss,
+      zwo:buildZwo(wu,bl,blks,5,cd,0.92,p.ftp,cad.ss)};
   }
-  if(idx===1){
-    var lo=wt(0.96),hi=wt(1.03),hr=hk(0.80)+'–'+hk(0.90);
+  if(idx===1){ // THRESHOLD
     var reps=Math.max(2,Math.floor(work/11)),rl=Math.max(6,Math.round(work/(reps*1.35)/2)*2);
-    return{ti:wts[1],tp:'th',dist:'~'+kmS+' km · ~'+d+'min',goal:reps+'×'+rl+'min @ '+lo+'–'+hi+' W · HR '+hr,warn:warnHtml,
-      segs:[{l:w+'min',cc:'--z1c',tc:'--z1t',f:w},{l:reps+'×'+rl+'min',cc:'--z4c',tc:'--z4t',f:rl*reps},
-            {l:'3min',cc:'--z2c',tc:'--z2t',f:3*reps},{l:c+'min',cc:'--z1c',tc:'--z1t',f:c}],
-      steps:[{t:'0–'+w+'min',cc:'--z1c',d:tr('s_thwu')},
-             {t:tr('intv')+' 1',cc:'--z4c',d:lo+'–'+hi+' '+tr('s_th1').replace('{hr}',hr)},
-             {t:'3min '+tr('rest2'),cc:'--z2c',d:tr('s_threc')},
-             {t:tr('intv')+' 2–'+reps,cc:'--z4c',d:tr('s_threst')},
-             {t:tr('cd2'),cc:'--z1c',d:c+' '+tr('s_cd')}],
-      note:tr('nb_th'),
-      zwo:bZwo(w,rl,reps,3,c,hi/ftp)};
+    var tgt=target(0.96,1.03,0.80,0.90);
+    return{ti:wts[1],tp:'th',dist:'~'+p.kmS+' km · ~'+totalMin+' min',goal:reps+'×'+rl+' min @ '+tgt,warn:warnHtml,
+      segs:[{l:wu+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:wu},{l:reps+'×'+rl+' min',c:'var(--z4bg)',tc:'var(--z4c)',f:rl*reps},
+            {l:'3 min',c:'var(--z2bg)',tc:'var(--z2c)',f:3*reps},{l:cd+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:cd}],
+      steps:[
+        {dot:'var(--z1c)',t:'0–'+wu+' min',main:phases[0]+' (+Z3 last 2min)',sub:pwTarget(0.50,0.65)+' · '+hrTarget(0.50,0.68)+' · '+cad.th[0]+'–'+cad.th[1]+' rpm'},
+        {dot:'var(--z4c)',t:'Intervals 1–'+reps+' ('+rl+' min)',main:wts[1],sub:tgt+' · '+cad.th[2]+' rpm'},
+        {dot:'var(--z2c)',t:'Recovery (3 min)',main:phases[3],sub:pwTarget(0.50,0.58)+' · '+cad.th[3]+' rpm'},
+        {dot:'var(--z1c)',t:'Last '+cd+' min',main:phases[0],sub:'Easy Z1 · '+cad.th[3]+' rpm'}
+      ],
+      note:tr('nb').th,cad:cad.th,
+      zwo:buildZwo(wu,rl,reps,3,cd,1.00,p.ftp,cad.th)};
   }
-  if(idx===2){
-    var lo=wt(1.10),hi=wt(1.20),hrm=hk(0.90);
+  if(idx===2){ // VO2MAX
     var reps=Math.max(3,Math.floor(work/8));
-    return{ti:wts[2],tp:'vo',dist:'~'+kmS+' km · ~'+d+'min',goal:reps+'×4min @ '+lo+'–'+hi+' W · HR >'+hrm,warn:warnHtml,
-      segs:[{l:w+'min',cc:'--z1c',tc:'--z1t',f:w},{l:reps+'×4min',cc:'--z5c',tc:'--z5t',f:4*reps},
-            {l:'4min',cc:'--z2c',tc:'--z2t',f:4*reps},{l:c+'min',cc:'--z1c',tc:'--z1t',f:c}],
-      steps:[{t:'0–'+w+'min',cc:'--z1c',d:tr('s_vwu')},
-             {t:tr('intv')+' 1',cc:'--z5c',d:lo+'–'+hi+' '+tr('s_v1')},
-             {t:'4min '+tr('rec'),cc:'--z2c',d:tr('s_vrec').replace('{hr}',hk(0.60))},
-             {t:tr('intv')+' 2–'+reps,cc:'--z5c',d:tr('s_vrest')},
-             {t:tr('cd2'),cc:'--z1c',d:c+' '+tr('s_vcd')}],
-      note:tr('nb_vo'),
-      zwo:bZwo(w,4,reps,4,c,hi/ftp)};
+    var tgt=target(1.10,1.20,0.90,1.00);
+    return{ti:wts[2],tp:'vo',dist:'~'+p.kmS+' km · ~'+totalMin+' min',goal:reps+'×4 min @ '+tgt,warn:warnHtml,
+      segs:[{l:wu+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:wu},{l:reps+'×4 min',c:'var(--z5bg)',tc:'var(--z5c)',f:4*reps},
+            {l:'4 min',c:'var(--z2bg)',tc:'var(--z2c)',f:4*reps},{l:cd+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:cd}],
+      steps:[
+        {dot:'var(--z1c)',t:'0–'+wu+' min',main:phases[0]+' + 2×30s accelerations',sub:pwTarget(0.50,0.65)+' · '+cad.vo[0]+'–'+cad.vo[1]+' rpm'},
+        {dot:'var(--z5c)',t:'Intervals 1–'+reps+' (4 min)',main:wts[2],sub:tgt+' · '+cad.vo[2]+' rpm'},
+        {dot:'var(--z2c)',t:'Recovery (4 min)',main:phases[3]+' (HR → '+hk(0.60,p.hrrest,p.hrmax)+' bpm)',sub:pwTarget(0.45,0.55)+' · '+cad.vo[3]+' rpm'},
+        {dot:'var(--z1c)',t:'Last '+cd+' min',main:phases[0]+' — mandatory',sub:'Easy Z1 · '+cad.vo[3]+' rpm'}
+      ],
+      note:tr('nb').vo,cad:cad.vo,
+      zwo:buildZwo(wu,4,reps,4,cd,1.15,p.ftp,cad.vo)};
   }
-  return{ti:wts[3],tp:'z2',dist:'~'+kmS+' km · ~'+d+'min',goal:d+'min @ '+pw2(0.56,0.75)+' · HR '+hk(0.60)+'–'+hk(0.70)+' bpm',warn:warnHtml,
-    segs:[{l:'10min',cc:'--z1c',tc:'--z1t',f:10},{l:(d-20)+'min Z2',cc:'--z2c',tc:'--z2t',f:Math.max(1,d-20)},{l:'10min',cc:'--z1c',tc:'--z1t',f:10}],
-    steps:[{t:'0–10min',cc:'--z1c',d:tr('s_z2start')},
-           {t:'10–'+(d-10)+'min',cc:'--z2c',d:pw2(0.56,0.75)+tr('s_z2mid').replace('{hr}',hk(0.60)+'–'+hk(0.70))},
-           {t:tr('cd2'),cc:'--z1c',d:tr('s_z2cd')}],
-    note:tr('nb_z2'),
-    zwo:[{n:'WarmUp',d:600,p:0.60},{n:'Z2',d:Math.max(60,(d-20)*60),p:0.65},{n:'CoolDown',d:600,p:0.48}]};
+  // ZONE 2
+  var tgt=target(0.56,0.75,0.60,0.70);
+  return{ti:wts[3],tp:'z2',dist:'~'+p.kmS+' km · ~'+totalMin+' min',goal:totalMin+' min @ '+tgt,warn:warnHtml,
+    segs:[{l:'10 min',c:'var(--z1bg)',tc:'var(--z1c)',f:10},{l:(totalMin-20)+' min Z2',c:'var(--z2bg)',tc:'var(--z2c)',f:Math.max(5,totalMin-20)},{l:'10 min',c:'var(--z1bg)',tc:'var(--z1c)',f:10}],
+    steps:[
+      {dot:'var(--z1c)',t:'0–10 min',main:phases[0],sub:pwTarget(0.45,0.58)+' · '+cad.z2[0]+'–'+cad.z2[1]+' rpm'},
+      {dot:'var(--z2c)',t:'10–'+(totalMin-10)+' min',main:wts[3]+' — steady',sub:tgt+' · '+cad.z2[2]+' rpm'},
+      {dot:'var(--z1c)',t:'Last 10 min',main:phases[0],sub:'Easy Z1 · '+cad.z2[3]+' rpm'}
+    ],
+    note:tr('nb').z2,cad:cad.z2,
+    zwo:[{n:'WarmUp',d:600,p:0.60,cad:cad.z2[0]},{n:'Z2',d:Math.max(60,(totalMin-20)*60),p:0.65,cad:cad.z2[1]},{n:'CoolDown',d:600,p:0.48,cad:cad.z2[2]}]};
 }
 
-function bZwo(w,rlen,reps,rest,c,pFrac){
-  var p=[{n:'WarmUp',d:w*60,p:0.60}];
-  for(var i=0;i<reps;i++){p.push({n:'Work-'+(i+1),d:rlen*60,p:pFrac});if(i<reps-1)p.push({n:'Rest',d:rest*60,p:0.50});}
-  p.push({n:'CoolDown',d:c*60,p:0.48});return p;
+function buildZwo(wu,repLen,reps,rest,cd,pFrac,ftp,cad){
+  var parts=[{n:'WarmUp',d:wu*60,p:0.60,cad:cad[0]}];
+  for(var i=0;i<reps;i++){
+    parts.push({n:'Work-'+(i+1),d:repLen*60,p:pFrac,cad:cad[2]});
+    if(i<reps-1) parts.push({n:'Rest',d:rest*60,p:0.50,cad:cad[3]});
+  }
+  parts.push({n:'CoolDown',d:cd*60,p:0.48,cad:cad[3]});
+  return parts;
 }
 
-function dlIco(){return'<svg viewBox="0 0 16 16"><line x1="8" y1="2" x2="8" y2="10"/><polyline points="5,7 8,10 11,7"/><line x1="3" y1="13" x2="13" y2="13"/></svg>';}
-
-function renderW(idx){
-  var w=getW(idx);
-  var tf=w.segs.reduce(function(s,x){return s+x.f;},0);
-  var sh=w.segs.map(function(s){
-    var p=Math.round(s.f/tf*100);
-    return'<div class="seg" style="flex:'+s.f+';background:var('+s.cc+');color:var('+s.tc+');">'+(p>12?s.l:'')+'</div>';
-  }).join('');
-  var sth=w.steps.map(function(s){
-    return'<li><div class="zdot" style="background:var('+s.cc+');"></div><span class="t">'+s.t+'</span><span>'+s.d+'</span></li>';
-  }).join('');
-  var dlHtml='<div class="dl-row">'+
-    '<button class="dl-btn" onclick="dlZWO('+idx+')">'+dlIco()+' .ZWO</button>'+
-    '<button class="dl-btn" onclick="dlFIT('+idx+')">'+dlIco()+' .FIT</button>'+
-    '<button class="dl-btn" onclick="dlMRC('+idx+')">'+dlIco()+' .MRC</button>'+
-    '<button class="dl-btn" onclick="dlERG('+idx+')">'+dlIco()+' .ERG</button>'+
-    '<button class="dl-btn" onclick="dlTCX('+idx+')">'+dlIco()+' .TCX</button>'+
-    '</div>'+
-    '<div style="font-size:10px;color:var(--text3);margin-top:6px;">ZWO: Zwift · FIT: Garmin/Wahoo · MRC: TrainerRoad/Wahoo · ERG: Wahoo SYSTM/Tacx · TCX: Garmin/Amazfit/Strava</div>';
-  document.getElementById('wout-area').innerHTML='<div class="wcard">'+
-    (w.warn||'')+
-    '<div class="wheader"><p class="wtitle">'+w.ti+'</p><span class="badge '+w.tp+'">'+w.ti+'</span></div>'+
-    '<p class="wmeta">'+w.dist+' &nbsp;·&nbsp; '+w.goal+'</p>'+
-    '<div class="seg-bar">'+sh+'</div><ul class="step-list">'+sth+'</ul>'+
-    '<div class="note">'+w.note+'</div>'+
-    dlHtml+'</div>';
-}
-
-function renderWTabs(){
+// ─── WORKOUT RENDER ───────────────────────────────────────────────────────
+function renderWorkoutTabs(){
   var wts=tr('wt');
   document.getElementById('wtabs').innerHTML=wts.map(function(n,i){
     return'<button class="tab'+(i===curW?' active':'')+'" data-i="'+i+'">'+n+'</button>';
@@ -703,200 +895,127 @@ function renderWTabs(){
   document.getElementById('wtabs').querySelectorAll('.tab').forEach(function(b){
     b.addEventListener('click',function(){
       document.getElementById('wtabs').querySelectorAll('.tab').forEach(function(x){x.classList.remove('active');});
-      b.classList.add('active');curW=parseInt(b.getAttribute('data-i'));renderW(curW);
+      b.classList.add('active'); curW=parseInt(b.getAttribute('data-i')); renderWorkout(curW);
     });
   });
-  renderW(curW);
+  renderWorkout(curW);
 }
 
-// PROGRESSION DATA — 2,4,8,12,16,18,20 weeks
-function makeWeek(l,ss,th,vo,z2,n){return{l:l,ss:ss,th:th,vo:vo,z2:z2,n:n};}
-var progD=[
-  {w:[makeWeek('W1',55,0,0,25,'SS+Z2'),makeWeek('W2',55,0,0,25,'SS+Z2')]},
-  {w:[makeWeek('W1',55,0,0,25,'SS+Z2'),makeWeek('W2',55,0,0,25,'SS+Z2'),makeWeek('W3',25,45,0,20,'SS+TH+Z2'),makeWeek('W4',35,0,0,15,'Unload+test')]},
-  {w:[makeWeek('W1',55,0,0,25,'SS+Z2'),makeWeek('W2',55,0,0,25,'SS+Z2'),makeWeek('W3',25,45,0,20,'SS+TH+Z2'),makeWeek('W4',25,45,0,20,'SS+TH+Z2'),
-      makeWeek('W5',0,55,0,25,'TH+Z2'),makeWeek('W6',25,30,15,10,'SS+TH+VO2'),makeWeek('W7',0,65,0,15,'TH peak'),makeWeek('W8',35,0,0,15,'Unload+test')]},
-  {w:[makeWeek('W1',55,0,0,25,'SS+Z2'),makeWeek('W2',55,0,0,25,'SS+Z2'),makeWeek('W3',25,45,0,20,'SS+TH+Z2'),makeWeek('W4',25,45,0,20,'SS+TH+Z2'),
-      makeWeek('W5',0,55,0,25,'TH+Z2'),makeWeek('W6',25,30,15,10,'SS+TH+VO2'),makeWeek('W7',0,65,0,15,'TH peak'),makeWeek('W8',35,0,0,15,'Unload'),
-      makeWeek('W9',25,45,0,20,'SS+TH+Z2'),makeWeek('W10',0,45,25,10,'TH+VO2'),makeWeek('W11',0,75,0,10,'TH max'),makeWeek('W12',35,0,0,15,'Taper+test')]},
-  {w:[makeWeek('W1',55,0,0,25,'SS+Z2'),makeWeek('W2',55,0,0,25,'SS+Z2'),makeWeek('W3',25,45,0,20,'SS+TH+Z2'),makeWeek('W4',25,45,0,20,'SS+TH+Z2'),
-      makeWeek('W5',0,55,0,25,'TH+Z2'),makeWeek('W6',25,30,15,10,'SS+TH+VO2'),makeWeek('W7',0,65,0,15,'TH peak'),makeWeek('W8',35,0,0,15,'Unload'),
-      makeWeek('W9',25,45,0,20,'SS+TH+Z2'),makeWeek('W10',0,45,25,10,'TH+VO2'),makeWeek('W11',0,75,0,10,'TH max'),makeWeek('W12',35,0,0,15,'Unload'),
-      makeWeek('W13',0,65,0,15,'TH block'),makeWeek('W14',25,30,15,10,'SS+TH+VO2'),makeWeek('W15',0,65,0,15,'TH peak'),makeWeek('W16',35,0,0,15,'Taper+test')]},
-  {w:[makeWeek('W1',55,0,0,25,'SS+Z2'),makeWeek('W2',55,0,0,25,'SS+Z2'),makeWeek('W3',25,45,0,20,'SS+TH+Z2'),makeWeek('W4',25,45,0,20,'SS+TH+Z2'),
-      makeWeek('W5',0,55,0,25,'TH+Z2'),makeWeek('W6',25,30,15,10,'SS+TH+VO2'),makeWeek('W7',0,65,0,15,'TH peak'),makeWeek('W8',35,0,0,15,'Unload'),
-      makeWeek('W9',25,45,0,20,'SS+TH+Z2'),makeWeek('W10',0,45,25,10,'TH+VO2'),makeWeek('W11',0,75,0,10,'TH max'),makeWeek('W12',35,0,0,15,'Unload'),
-      makeWeek('W13',0,65,0,15,'TH block'),makeWeek('W14',25,30,15,10,'SS+TH+VO2'),makeWeek('W15',0,75,0,10,'TH peak'),makeWeek('W16',35,0,0,15,'Unload'),
-      makeWeek('W17',0,75,0,10,'TH max'),makeWeek('W18',35,0,0,15,'Taper+test')]},
-  {w:[makeWeek('W1',55,0,0,25,'SS+Z2'),makeWeek('W2',55,0,0,25,'SS+Z2'),makeWeek('W3',25,45,0,20,'SS+TH+Z2'),makeWeek('W4',25,45,0,20,'SS+TH+Z2'),
-      makeWeek('W5',0,55,0,25,'TH+Z2'),makeWeek('W6',25,30,15,10,'SS+TH+VO2'),makeWeek('W7',0,65,0,15,'TH peak'),makeWeek('W8',35,0,0,15,'Unload'),
-      makeWeek('W9',25,45,0,20,'SS+TH+Z2'),makeWeek('W10',0,45,25,10,'TH+VO2'),makeWeek('W11',0,75,0,10,'TH max'),makeWeek('W12',35,0,0,15,'Unload'),
-      makeWeek('W13',0,65,0,15,'TH block'),makeWeek('W14',25,30,15,10,'SS+TH+VO2'),makeWeek('W15',0,75,0,10,'TH peak'),makeWeek('W16',35,0,0,15,'Unload'),
-      makeWeek('W17',0,75,0,10,'TH max'),makeWeek('W18',0,45,25,10,'TH+VO2'),makeWeek('W19',0,75,0,10,'TH max'),makeWeek('W20',35,0,0,15,'Taper+test')]}
-];
-
-function showProg(idx,btn){
-  document.getElementById('ptabs').querySelectorAll('.tab').forEach(function(t){t.classList.remove('active');});
-  btn.classList.add('active');curProg=idx;renderProg(idx);
-}
-function renderProg(idx){
-  var lg=tr('wt');
-  var legend='<div class="prog-legend">'+
-    '<span><i style="background:var(--z3c)"></i>'+lg[0]+'</span>'+
-    '<span><i style="background:var(--z4c)"></i>'+lg[1]+'</span>'+
-    '<span><i style="background:var(--z5c)"></i>'+lg[2]+'</span>'+
-    '<span><i style="background:var(--z2c)"></i>'+lg[3]+'</span></div>';
-  var rows=progD[idx].w.map(function(w){
-    var total=w.ss+w.th+w.vo+(w.z2||0);
-    var rest=Math.max(0,100-total);
-    return'<div class="prog-row"><span class="prog-label">'+w.l+'</span>'+
-      '<div class="prog-bar-wrap">'+
-      (w.ss?'<div style="flex:'+w.ss+';background:var(--z3c);border-radius:3px;"></div>':'')+
-      (w.th?'<div style="flex:'+w.th+';background:var(--z4c);border-radius:3px;"></div>':'')+
-      (w.vo?'<div style="flex:'+w.vo+';background:var(--z5c);border-radius:3px;"></div>':'')+
-      (w.z2?'<div style="flex:'+w.z2+';background:var(--z2c);border-radius:3px;"></div>':'')+
-      (rest?'<div style="flex:'+rest+';background:var(--bg4);border-radius:3px;"></div>':'')+
-      '</div><span class="prog-note">'+w.n+'</span></div>';
+function renderWorkout(idx){
+  if(!plan) return;
+  var w=getWorkout(idx);
+  var tf=w.segs.reduce(function(s,x){return s+x.f;},0);
+  var segHtml=w.segs.map(function(s){
+    var pct=Math.round(s.f/tf*100);
+    return'<div class="seg" style="flex:'+s.f+';background:'+s.c+';color:'+s.tc+';">'+(pct>14?s.l:'')+'</div>';
   }).join('');
-  var note='<div class="prog-note-card">'+tr('pnote')[idx]+'</div>';
-  document.getElementById('prog-area').innerHTML=legend+rows+note;
+  var stHtml=w.steps.map(function(s){
+    return'<li><div class="st-dot" style="background:'+s.dot+'"></div>'+
+      '<span class="st-time">'+s.t+'</span>'+
+      '<span><span class="st-target">'+s.main+'</span><br><span style="font-size:10px;color:var(--text3)">'+s.sub+'</span></span></li>';
+  }).join('');
+
+  // Cadence block
+  var phases=tr('cadPhases')||['Warm-up','Base','Work','Recovery'];
+  var cadHtml='<div class="cad-block">'+
+    '<div class="cad-title">🎯 '+tr('cadTitle')+'</div>'+
+    '<div class="cad-segs">'+
+    [0,1,2,3].map(function(i){
+      return'<div class="cad-seg">'+
+        '<div class="cs-ph">'+phases[i]+'</div>'+
+        '<div class="cs-val">'+w.cad[i]+'</div>'+
+        '<div class="cs-unit">rpm</div></div>';
+    }).join('')+
+    '</div><div class="cad-note">'+tr('cadNote')+'</div></div>';
+
+  // Badge colors
+  var bc={ss:'background:var(--z3bg);color:var(--z3c)',th:'background:var(--z4bg);color:var(--z4c)',vo:'background:var(--z5bg);color:var(--z5c)',z2:'background:var(--z2bg);color:var(--z2c)'};
+
+  document.getElementById('wout-area').innerHTML='<div class="wcard">'+
+    (w.warn||'')+
+    '<div class="wcard-hdr"><span class="wcard-title">'+w.ti+'</span><span class="wbadge" style="'+bc[w.tp]+'">'+w.tp.toUpperCase()+'</span></div>'+
+    '<div class="wmeta">'+w.dist+' &nbsp;·&nbsp; '+w.goal+'</div>'+
+    '<div class="seg-bar">'+segHtml+'</div>'+
+    '<ul class="steps">'+stHtml+'</ul>'+
+    cadHtml+
+    '<div class="wnote">'+w.note+'</div>'+
+    renderDLSection(idx,w)+
+    '</div>';
 }
 
-// CALENDAR
-function icsDate(d){var y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return y+m+dd;}
-function icsEsc(s){return s.replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');}
-function uid(){return Date.now()+'-'+Math.random().toString(36).substr(2,9)+'@cyc';}
-function evTitle(tp){var wts=tr('wt'),m={ss:wts[0],th:wts[1],vo:wts[2],z2:wts[3],long:tr('long'),rest:tr('rest')};return'[🚴] '+(m[tp]||tp);}
-function evDesc(tp,goal,km){return tr('cal_desc_'+tp).replace('{goal}',goal).replace('{ftp}',ftp).replace('{km}',km||kmS);}
-function evGoal(tp){if(tp==='ss')return getW(0).goal;if(tp==='th')return getW(1).goal;if(tp==='vo')return getW(2).goal;return getW(3).goal;}
-function buildICS(wks){
-  var today=new Date(),dow=today.getDay(),skip=dow===0?1:(8-dow);
-  var start=new Date(today);start.setDate(today.getDate()+skip);start.setHours(0,0,0,0);
-  var sched=buildSched(sessW);
-  var tm={ss:'ss',th:'th',vo:'vo',z2b:'z2',long:'long',rest:'rest'};
-  var evts=[];
-  for(var w=0;w<wks;w++){
-    sched.forEach(function(di,di2){
-      var tp=tm[di.badge]||'rest';
-      if(di.badge==='z2b')tp='z2';
-      if(di.badge==='long')tp='long';
-      var d=new Date(start);d.setDate(start.getDate()+w*7+di2);
-      var goal=tp!=='rest'?evGoal(tp):'';
-      evts.push({d:d,title:evTitle(tp),desc:evDesc(tp,goal,di.km),tp:tp});
-    });
-  }
-  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Cycling Training Plan//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Cycling Training Plan'];
-  evts.forEach(function(ev){
-    var ds=icsDate(ev.d),ed=new Date(ev.d);ed.setDate(ed.getDate()+1);
-    L.push('BEGIN:VEVENT','UID:'+uid(),'DTSTART;VALUE=DATE:'+ds,'DTEND;VALUE=DATE:'+icsDate(ed),
-      'SUMMARY:'+icsEsc(ev.title),'DESCRIPTION:'+icsEsc(ev.desc),
-      'CATEGORIES:'+(ev.tp==='rest'?'REST':'CYCLING'),'STATUS:CONFIRMED','END:VEVENT');
-  });
-  L.push('END:VCALENDAR');return L.join('\r\n');
+function renderDLSection(idx,w){
+  return'<div class="dl-section">'+
+    '<div class="dl-section-title">📥 '+tr('dlTitle')+'</div>'+
+    '<div class="dl-btns">'+
+    ['ZWO','FIT','MRC','ERG','TCX'].map(function(fmt){
+      return'<button class="dl-btn" onclick="dlFormat('+idx+',\''+fmt+'\')">'+dlSvg()+' .'+fmt+'</button>';
+    }).join('')+
+    '</div>'+
+    '<div class="dl-compat">'+tr('dlCompat')+'</div></div>';
 }
-function downloadICS(wks){save(new Blob([buildICS(wks)],{type:'text/calendar;charset=utf-8'}),'cycling-plan-'+wks+'w.ics');}
+function dlSvg(){return'<svg viewBox="0 0 14 14"><line x1="7" y1="1" x2="7" y2="9"/><polyline points="4,6 7,9 10,6"/><line x1="2" y1="12" x2="12" y2="12"/></svg>';}
 
-function calIco(){return'<svg viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="11" rx="2"/><line x1="2" y1="7" x2="14" y2="7"/><line x1="5" y1="1" x2="5" y2="4"/><line x1="11" y1="1" x2="11" y2="4"/></svg>';}
-
-function renderCalBar(){
-  document.getElementById('cal-bar').innerHTML=
-    '<button class="cal-btn primary" onclick="downloadICS(1)">'+calIco()+' '+tr('cal_week')+'</button>'+
-    '<button class="cal-btn" onclick="downloadICS(4)">'+calIco()+' '+tr('cal_4')+'</button>'+
-    '<button class="cal-btn" onclick="downloadICS(8)">'+calIco()+' '+tr('cal_8')+'</button>'+
-    '<button class="cal-btn" onclick="downloadICS(12)">'+calIco()+' '+tr('cal_12')+'</button>';
+// ─── DOWNLOAD FORMATS ─────────────────────────────────────────────────────
+function dlFormat(idx,fmt){
+  if(!plan) return;
+  var w=getWorkout(idx);
+  var nm=w.ti.replace(/[^a-zA-Z0-9]/g,'_');
+  if(fmt==='ZWO') return dlZWO(w,nm);
+  if(fmt==='FIT') return dlFIT(w,nm);
+  if(fmt==='MRC') return dlMRC(w,nm);
+  if(fmt==='ERG') return dlERG(w,nm);
+  if(fmt==='TCX') return dlTCX(w,nm);
 }
+function fileSave(blob,fn){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);}
 
-// FILE SAVE
-function save(blob,fn){var a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=fn;document.body.appendChild(a);a.click();document.body.removeChild(a);}
-
-// DOWNLOAD ZWO / FIT
-function dlZWO(idx){
-  var w=getW(idx),nm=w.ti.replace(/[^a-zA-Z0-9]/g,'_');
-  var x='<?xml version="1.0" encoding="UTF-8"?>\n<workout_file>\n  <n>'+w.ti+'</n>\n  <description>FTP '+ftp+' W</description>\n  <sportType>bike</sportType>\n  <workout>\n';
+function dlZWO(w,nm){
+  var x='<?xml version="1.0" encoding="UTF-8"?>\n<workout_file>\n  <n>'+w.ti+'</n>\n  <description>FTP '+plan.ftp+' W | Mode: '+(trMode==='power'?'Power':'HR')+'</description>\n  <sportType>bike</sportType>\n  <tags><tag name="FTP_'+plan.ftp+'W"/><tag name="Cadence"/></tags>\n  <workout>\n';
   w.zwo.forEach(function(p){
-    if(p.n==='WarmUp')x+='    <Warmup Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(2)+'"/>\n';
-    else if(p.n==='CoolDown')x+='    <Cooldown Duration="'+p.d+'" PowerLow="'+p.p.toFixed(2)+'" PowerHigh="0.40"/>\n';
-    else x+='    <SteadyState Duration="'+p.d+'" Power="'+p.p.toFixed(2)+'"/>\n';
+    var cad=' cadence="'+(p.cad||85)+'"';
+    if(p.n==='WarmUp') x+='    <Warmup Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(2)+'"'+cad+'/>\n';
+    else if(p.n==='CoolDown') x+='    <Cooldown Duration="'+p.d+'" PowerLow="'+p.p.toFixed(2)+'" PowerHigh="0.40"'+cad+'/>\n';
+    else x+='    <SteadyState Duration="'+p.d+'" Power="'+p.p.toFixed(2)+'"'+cad+'/>\n';
   });
   x+='  </workout>\n</workout_file>';
-  save(new Blob([x],{type:'application/xml'}),nm+'_FTP'+ftp+'.zwo');
+  fileSave(new Blob([x],{type:'application/xml'}),nm+'_FTP'+plan.ftp+'.zwo');
 }
-
-function dlMRC(idx){
-  // MRC format: TrainerRoad, Wahoo SYSTM — percentage of FTP over time
-  var w=getW(idx),nm=w.ti.replace(/[^a-zA-Z0-9]/g,'_');
-  var lines=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC',
-    'DESCRIPTION = '+w.ti,'FILE NAME = '+nm,'MINUTES PERCENT','[END COURSE HEADER]','[COURSE DATA]'];
+function dlMRC(w,nm){
+  var lines=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC','DESCRIPTION = '+w.ti+' (FTP '+plan.ftp+'W)','FILE NAME = '+nm,'MINUTES PERCENT','[END COURSE HEADER]','[COURSE DATA]'];
   var t=0;
-  w.zwo.forEach(function(p){
-    var pct=Math.round(p.p*100);
-    var mins=(p.d/60).toFixed(2);
-    lines.push(t.toFixed(2)+'\t'+pct);
-    t+=p.d/60;
-    lines.push(t.toFixed(2)+'\t'+pct);
-  });
+  w.zwo.forEach(function(p){var pct=Math.round(p.p*100),mins=(p.d/60);lines.push(t.toFixed(2)+'\t'+pct+'\t; cadence: '+(p.cad||85));t+=mins;lines.push(t.toFixed(2)+'\t'+pct);});
   lines.push('[END COURSE DATA]');
-  save(new Blob([lines.join('\n')],{type:'text/plain'}),nm+'_FTP'+ftp+'.mrc');
+  fileSave(new Blob([lines.join('\n')],{type:'text/plain'}),nm+'_FTP'+plan.ftp+'.mrc');
 }
-
-function dlERG(idx){
-  // ERG format: Wahoo SYSTM, Tacx — absolute watts over time
-  var w=getW(idx),nm=w.ti.replace(/[^a-zA-Z0-9]/g,'_');
-  var lines=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC',
-    'DESCRIPTION = '+w.ti,'FILE NAME = '+nm,'MINUTES WATTS','[END COURSE HEADER]','[COURSE DATA]'];
+function dlERG(w,nm){
+  var lines=['[COURSE HEADER]','VERSION = 2','UNITS = METRIC','DESCRIPTION = '+w.ti+' (FTP '+plan.ftp+'W)','FILE NAME = '+nm,'MINUTES WATTS','[END COURSE HEADER]','[COURSE DATA]'];
   var t=0;
-  w.zwo.forEach(function(p){
-    var watts=Math.round(p.p*ftp);
-    var mins=(p.d/60).toFixed(2);
-    lines.push(t.toFixed(2)+'\t'+watts);
-    t+=p.d/60;
-    lines.push(t.toFixed(2)+'\t'+watts);
-  });
+  w.zwo.forEach(function(p){var watts=Math.round(p.p*plan.ftp),mins=(p.d/60);lines.push(t.toFixed(2)+'\t'+watts+'\t; cadence: '+(p.cad||85));t+=mins;lines.push(t.toFixed(2)+'\t'+watts);});
   lines.push('[END COURSE DATA]');
-  save(new Blob([lines.join('\n')],{type:'text/plain'}),nm+'_FTP'+ftp+'.erg');
+  fileSave(new Blob([lines.join('\n')],{type:'text/plain'}),nm+'_FTP'+plan.ftp+'.erg');
 }
-
-function dlTCX(idx){
-  // TCX workout format — Garmin, Amazfit, Strava
-  var w=getW(idx),nm=w.ti.replace(/[^a-zA-Z0-9]/g,'_');
-  var now=new Date().toISOString();
-  var steps='';
-  var stepId=1;
+function dlTCX(w,nm){
+  var steps='',si=1;
   w.zwo.forEach(function(p){
-    var watts=Math.round(p.p*ftp);
-    var isWu=p.n==='WarmUp',isCd=p.n==='CoolDown';
-    var intensity=isWu||isCd?'Resting':(p.p>=0.91?'Active':'Resting');
-    steps+='    <Step xsi:type="Step_t"><StepId>'+stepId+'</StepId>'+
-      '<Name>'+p.n+'</Name>'+
+    var watts=Math.round(p.p*plan.ftp);
+    steps+='    <Step xsi:type="Step_t"><StepId>'+si+'</StepId><Name>'+p.n+'</Name>'+
       '<Duration xsi:type="Time_t"><Seconds>'+p.d+'</Seconds></Duration>'+
-      '<Intensity>'+intensity+'</Intensity>'+
-      '<Target xsi:type="Speed_t">'+
-      '<PowerZone xsi:type="CustomSpeedZone_t">'+
+      '<Intensity>'+(p.p>=0.76?'Active':'Resting')+'</Intensity>'+
+      '<Target xsi:type="Speed_t"><PowerZone xsi:type="CustomSpeedZone_t">'+
       '<LowInMetersPerSecond>'+Math.round(watts*0.95)+'</LowInMetersPerSecond>'+
       '<HighInMetersPerSecond>'+Math.round(watts*1.05)+'</HighInMetersPerSecond>'+
-      '</PowerZone></Target></Step>\n';
-    stepId++;
+      '</PowerZone></Target></Step>\n';si++;
   });
-  var x='<?xml version="1.0" encoding="UTF-8"?>\n'+
-    '<TrainingCenterDatabase xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2" '+
-    'xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n'+
-    '  <Workouts>\n    <Workout Sport="Biking">\n'+
-    '      <Name>'+w.ti+' FTP'+ftp+'W</Name>\n'+
-    steps+
-    '    </Workout>\n  </Workouts>\n</TrainingCenterDatabase>';
-  save(new Blob([x],{type:'application/xml'}),nm+'_FTP'+ftp+'.tcx');
+  var x='<?xml version="1.0" encoding="UTF-8"?>\n<TrainingCenterDatabase xmlns="http://www.garmin.com/xmlschemas/TrainingCenterDatabase/v2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n  <Workouts>\n    <Workout Sport="Biking">\n      <Name>'+w.ti+' FTP'+plan.ftp+'W</Name>\n'+steps+'    </Workout>\n  </Workouts>\n</TrainingCenterDatabase>';
+  fileSave(new Blob([x],{type:'application/xml'}),nm+'_FTP'+plan.ftp+'.tcx');
 }
-
-function dlFIT(idx){
-  var w=getW(idx),nm=w.ti.replace(/[^a-zA-Z0-9]/g,'_');
-  var steps=w.zwo.map(function(p){return{dur:p.d,pow:Math.round(p.p*ftp),name:p.n};});
-  save(new Blob([bFIT(steps,w.ti)],{type:'application/octet-stream'}),nm+'_FTP'+ftp+'.fit');
+function dlFIT(w,nm){
+  var steps=w.zwo.map(function(p){return{dur:p.d,pow:Math.round(p.p*plan.ftp),name:p.n};});
+  fileSave(new Blob([buildFIT(steps,w.ti)],{type:'application/octet-stream'}),nm+'_FTP'+plan.ftp+'.fit');
 }
-function u16(v){return[v&0xFF,(v>>8)&0xFF];}
-function u32(v){return[v&0xFF,(v>>8)&0xFF,(v>>16)&0xFF,(v>>24)&0xFF];}
+function u16(v){return[v&0xFF,(v>>8)&0xFF];}function u32(v){return[v&0xFF,(v>>8)&0xFF,(v>>16)&0xFF,(v>>24)&0xFF];}
 function fCRC(b){var t=[0x0000,0xCC01,0xD801,0x1400,0xF001,0x3C00,0x2800,0xE401,0xA001,0x6C00,0x7800,0xB401,0x5000,0x9C01,0x8801,0x4400],c=0;for(var i=0;i<b.length;i++){var x=b[i],tmp=t[c&0xF];c=(c>>4)&0x0FFF;c=c^tmp^t[x&0xF];tmp=t[c&0xF];c=(c>>4)&0x0FFF;c=c^tmp^t[(x>>4)&0xF];}return c;}
 function sB(s,n){var b=[];for(var i=0;i<n;i++)b.push(i<s.length?s.charCodeAt(i):0);return b;}
-function bFIT(steps,title){
+function buildFIT(steps,title){
   var r=[];
   r=r.concat([0x40,0x00,0x00,0x1A,0x03,0x08,0x10,0x07,0x04,0x01,0x00,0x09,0x02,0x84]);
   r=r.concat([0x00].concat(sB(title.substring(0,15),16),[0x02]).concat(u16(steps.length)));
@@ -908,27 +1027,128 @@ function bFIT(steps,title){
   return new Uint8Array(all);
 }
 
-// QUICK QUESTIONS
+// ─── PROGRESSION RENDER ───────────────────────────────────────────────────
+function renderProgression(){
+  var p=plan;
+  var colors={base:'var(--z2c)',build:'var(--z3c)',peak:'var(--z4c)',unload:'var(--z1c)',taper:'var(--z5c)'};
+  var phNames=tr('phaseNames')||{base:'Base',build:'Build',peak:'Peak',unload:'Unload',taper:'Taper'};
+  var legend='<div class="prog-legend">'+
+    Object.keys(colors).map(function(k){return'<span><i style="background:'+colors[k]+'"></i>'+phNames[k]+'</span>';}).join('')+'</div>';
+
+  var rows=p.phases.map(function(ph){
+    var col=colors[ph.phase]||'var(--text3)';
+    var intPct=ph.phase==='base'?15:ph.phase==='build'?35:ph.phase==='peak'?50:ph.phase==='unload'?5:20;
+    var z2Pct=100-intPct;
+    return'<div class="prog-row">'+
+      '<span class="prog-lbl">W'+ph.w+'</span>'+
+      '<div class="prog-bar-wrap">'+
+      '<div style="flex:'+z2Pct+';background:var(--z2c);opacity:.35;border-radius:3px"></div>'+
+      '<div style="flex:'+intPct+';background:'+col+';border-radius:3px"></div>'+
+      '</div>'+
+      '<span class="prog-note-txt">'+phNames[ph.phase]+'</span></div>';
+  }).join('');
+
+  var pnoteMap=tr('pnote')||{};
+  var pnote=pnoteMap[String(p.weeks)]||'';
+  var footer=pnote?'<div class="prog-footer">'+pnote+'</div>':'';
+  document.getElementById('prog-area').innerHTML=legend+
+    '<div class="prog-rows">'+rows+'</div>'+footer;
+}
+
+// ─── CALENDAR (ICS) ───────────────────────────────────────────────────────
+function icsDate(d){var y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return y+m+dd;}
+function icsEsc(s){return s.replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');}
+function downloadICS(wks){
+  if(!plan) return;
+  var p=plan;
+  var today=new Date(),dow=today.getDay(),skip=dow===0?1:(8-dow);
+  var start=new Date(today);start.setDate(today.getDate()+skip);start.setHours(0,0,0,0);
+  var wts=tr('wt');
+  var L=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Cycling Training Plan v3.0//EN','CALSCALE:GREGORIAN','METHOD:PUBLISH','X-WR-CALNAME:Cycling Training Plan'];
+  var days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  var typeLabels={ss:wts[0],th:wts[1],vo:wts[2],z2:wts[3],long:tr('long'),rest:tr('rest')};
+  for(var w=0;w<Math.min(wks,p.weeks);w++){
+    var phaseInfo=p.phases[w]||p.phases[p.phases.length-1];
+    var slots=weekWorkouts(phaseInfo.phase,p.sessW);
+    slots.forEach(function(tp,di){
+      var d=new Date(start);d.setDate(start.getDate()+w*7+di);
+      var ed=new Date(d);ed.setDate(d.getDate()+1);
+      var tpIdx=tp==='ss'?0:tp==='th'?1:tp==='vo'?2:3;
+      var wo=tp!=='rest'?getWorkout(tpIdx):null;
+      var title='[🚴] '+(typeLabels[tp]||tp);
+      var desc=wo?wo.goal+'\nFTP: '+p.ftp+' W | Mode: '+(trMode==='power'?'Power':'HR'):'Rest day';
+      L.push('BEGIN:VEVENT','UID:'+Date.now()+'-'+Math.random().toString(36).substr(2,6)+'@cyc',
+        'DTSTART;VALUE=DATE:'+icsDate(d),'DTEND;VALUE=DATE:'+icsDate(ed),
+        'SUMMARY:'+icsEsc(title),'DESCRIPTION:'+icsEsc(desc),
+        'CATEGORIES:'+(tp==='rest'?'REST':'CYCLING'),'STATUS:CONFIRMED','END:VEVENT');
+    });
+  }
+  L.push('END:VCALENDAR');
+  fileSave(new Blob([L.join('\r\n')],{type:'text/calendar;charset=utf-8'}),'cycling-plan-'+wks+'w.ics');
+}
+
+// ─── LANGUAGE ─────────────────────────────────────────────────────────────
+function setLang(lang){
+  curLang=lang;
+  document.querySelectorAll('.lang-btn').forEach(function(b){
+    b.classList.toggle('active',(lang==='en'&&b.textContent==='EN')||(lang==='uk'&&b.textContent==='УК')||(lang==='pl'&&b.textContent==='PL'));
+  });
+  applyTr();
+  if(plan){renderZones();renderSchedule();renderWorkoutTabs();renderProgression();}
+}
+
+function applyTr(){
+  var mp={
+    'hdr-title':'hdrTitle','hdr-sub':'hdrSub',
+    'lbl-s1':'s1','lbl-s2':'s2',
+    'lbl-age':'age','lbl-gender':'gender','lbl-weight':'weight','lbl-hrmax2':'hrmax','lbl-hrrest2':'hrrest','lbl-ftp2':'ftp',
+    'opt-m':'optM','opt-f':'optF',
+    'lbl-mode':'mode','lbl-mode-pw':'modePw','lbl-mode-pw-sub':'modePwSub','lbl-mode-hr':'modeHr','lbl-mode-hr-sub':'modeHrSub',
+    'lbl-sessions2':'sessions','lbl-km2':'km','lbl-dur':'dur',
+    'opt-w1':'w1','opt-w4':'w4','opt-w8':'w8','opt-w16':'w16','opt-w20':'w20',
+    'lbl-gen':'gen',
+    'lbl-zones':'zones','lbl-sched':'sched','lbl-wout':'wout','lbl-prog':'prog',
+    'lbl-chat':'chat','chat-hint':'hint','chat-welcome':'welcome','lbl-send':'send','lbl-quick':'quick',
+    'empty-text':'emptyText','empty-sub':'emptySub','ft-copy':'ftCopy','ft-top':'ftTop'
+  };
+  Object.keys(mp).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=tr(mp[id]);});
+  // hrmax hint
+  var age=getInput('f-age')||30;
+  var hint=document.getElementById('hrmax-hint');
+  if(hint) hint.textContent=(tr('hrmaxHint')||'').replace('{v}',220-age);
+  var fhint=document.getElementById('ftp-hint');
+  if(fhint) fhint.textContent=tr('ftpHint')||'';
+  document.getElementById('chat-input').placeholder=
+    curLang==='uk'?'Запитай тренера...':curLang==='pl'?'Zapytaj trenera...':'Ask your coach...';
+  // Quick buttons
+  renderQuickBtns();
+}
+
 function renderQuickBtns(){
-  var qs=tr('qs');
+  var qs=tr('qs')||[];
   document.getElementById('quick-list').innerHTML=qs.map(function(q){
     return'<button class="qbtn" onclick="askQuick(this.textContent)">'+q+'</button>';
   }).join('');
-  document.getElementById('lbl-quick').textContent=tr('quick');
 }
-function askQuick(q){
-  document.getElementById('chat-input').value=q;
-  sendMsg();
-}
+function askQuick(q){document.getElementById('chat-input').value=q;sendMsg();}
 
-// CHAT
-function getCtx(){
-  return tr('ctx').replace('{ftp}',ftp).replace('{hr1}',hrRest).replace('{hr2}',hrMax)
-    .replace('{sw}',sessW).replace('{km}',kmS)
-    .replace('{z1}',wt(0.55)).replace('{z2}',pw2(0.56,0.75)).replace('{z3}',pw2(0.76,0.90))
-    .replace('{z4}',pw2(0.91,1.05)).replace('{z5}',pw2(1.06,1.20))
-    .replace('{h2}',hk(0.60)+'–'+hk(0.70)).replace('{h3}',hk(0.70)+'–'+hk(0.80)).replace('{h4}',hk(0.80)+'–'+hk(0.90));
+// ─── CHAT ─────────────────────────────────────────────────────────────────
+function getChatCtx(){
+  if(!plan) return 'No plan generated yet. Ask general cycling questions.';
+  var p=plan;
+  var zstr=p.pwZones.map(function(z,i){return'Z'+(i+1)+' '+Math.round(z[0]*p.ftp)+'–'+Math.round(z[1]*p.ftp)+'W';}).join(' | ');
+  var tmpl=tr('ctx')||'';
+  return tmpl.replace('{age}',p.age).replace('{gender}',p.gender).replace('{wt}',p.weight)
+    .replace('{hrmax}',p.hrmax).replace('{hrrest}',p.hrrest).replace('{ftp}',p.ftp).replace('{wpkg}',p.wpkg)
+    .replace('{mode}',trMode==='power'?'Power Meter':'Heart Rate')
+    .replace('{z1}',wt(0.55,p.ftp)).replace('{z2}',pw(0.56,0.75,p.ftp)).replace('{z3}',pw(0.76,0.90,p.ftp))
+    .replace('{z4}',pw(0.91,1.05,p.ftp)).replace('{z5}',pw(1.06,1.20,p.ftp))
+    .replace('{h2}',hk(0.60,p.hrrest,p.hrmax)+'–'+hk(0.70,p.hrrest,p.hrmax))
+    .replace('{h3}',hk(0.70,p.hrrest,p.hrmax)+'–'+hk(0.80,p.hrrest,p.hrmax))
+    .replace('{h4}',hk(0.80,p.hrrest,p.hrmax)+'–'+hk(0.90,p.hrrest,p.hrmax));
 }
+function updateChatContext(){}// context fetched on each send
+
 async function sendMsg(){
   var inp=document.getElementById('chat-input'),btn=document.getElementById('chat-send');
   var txt=inp.value.trim();if(!txt)return;
@@ -936,7 +1156,7 @@ async function sendMsg(){
   var ld=appendM(tr('loading'),'ai loading');
   try{
     var res=await fetch('/api/gemini',{method:'POST',headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({message:getCtx()+'\n\n'+txt,history:chatHist.slice(-8)})});
+      body:JSON.stringify({message:getChatCtx()+'\n\nQuestion: '+txt,history:chatHist.slice(-8)})});
     var d=await res.json();ld.remove();
     if(!res.ok||d.error){appendM('Error: '+(d.error||'unknown'),'err');}
     else{appendM(d.reply,'ai');chatHist.push({role:'user',text:txt},{role:'model',text:d.reply});if(chatHist.length>20)chatHist=chatHist.slice(-20);}
@@ -944,50 +1164,28 @@ async function sendMsg(){
   btn.disabled=false;
 }
 function appendM(txt,cls){
-  var box=document.getElementById('chat-messages'),el=document.createElement('div');
+  var box=document.getElementById('chat-msgs'),el=document.createElement('div');
   el.className='msg '+cls;el.textContent=txt;box.appendChild(el);box.scrollTop=box.scrollHeight;return el;
 }
 function clearChat(){
   chatHist=[];
-  document.getElementById('chat-messages').innerHTML='<div class="msg ai">'+tr('welcome')+'</div>';
+  document.getElementById('chat-msgs').innerHTML='<div class="msg ai">'+tr('welcome')+'</div>';
 }
 document.getElementById('chat-input').addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
 document.getElementById('chat-input').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px';});
 
-// LANG
-function setLang(lang){
-  curLang=lang;
-  document.querySelectorAll('.lang-btn').forEach(function(b){
-    b.classList.toggle('active',(lang==='en'&&b.textContent==='EN')||(lang==='uk'&&b.textContent==='УК')||(lang==='pl'&&b.textContent==='PL'));
-  });
-  applyTr();renderAll();
-}
+// Auto-update hrmax hint on age change
+document.getElementById('f-age').addEventListener('input',function(){
+  var hint=document.getElementById('hrmax-hint');
+  if(hint){var age=parseInt(this.value)||30;hint.textContent=(tr('hrmaxHint')||'').replace('{v}',220-age);}
+});
+document.getElementById('f-ftp').addEventListener('input',function(){
+  var hint=document.getElementById('ftp-hint');
+  if(hint) hint.textContent=tr('ftpHint')||'';
+});
 
-function applyTr(){
-  var mp={'hdr-title':'hdrTitle','hdr-sub':'hdrSub','lbl-params':'params','lbl-ftp':'ftpL',
-    'lbl-hrrest':'hrrest','lbl-hrmax':'hrmax','lbl-sessions':'sessions','lbl-pw':'pw','lbl-km':'km',
-    'lbl-zones':'zones','lbl-sched':'sched','lbl-wout':'wout','lbl-prog':'prog',
-    'lbl-chat':'chat','chat-hint':'hint','chat-welcome':'welcome','lbl-send':'send',
-    'ft-made':'ftMade','ft-heart':'ftHeart','ft-by':'ftBy','ft-copy':'ftCopy','ft-top':'ftTop'};
-  Object.keys(mp).forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=tr(mp[id]);});
-  var wl=tr('weeks');
-  document.getElementById('ptabs').querySelectorAll('.pw').forEach(function(el){el.textContent=wl;});
-  var ph={en:'Ask your coach...',uk:'Запитай тренера...',pl:'Zapytaj trenera...'};
-  document.getElementById('chat-input').placeholder=ph[curLang]||ph.en;
-}
-
-function renderAll(){
-  renderZones();renderSched();renderWTabs();renderProg(curProg);renderCalBar();renderQuickBtns();
-}
-
-// EVENT LISTENERS
-document.getElementById('ftp-sl').addEventListener('input',function(e){ftp=parseInt(e.target.value);document.getElementById('ftp-out').textContent=ftp+' W';renderAll();});
-document.getElementById('hr-rest').addEventListener('change',function(e){hrRest=Math.max(30,Math.min(80,parseInt(e.target.value)||50));e.target.value=hrRest;renderAll();});
-document.getElementById('hr-max').addEventListener('change',function(e){hrMax=Math.max(140,Math.min(220,parseInt(e.target.value)||185));e.target.value=hrMax;renderAll();});
-document.getElementById('sess-w').addEventListener('change',function(e){sessW=Math.max(1,Math.min(7,parseInt(e.target.value)||3));e.target.value=sessW;renderAll();});
-document.getElementById('km-s').addEventListener('change',function(e){kmS=Math.max(10,Math.min(200,parseInt(e.target.value)||40));e.target.value=kmS;renderAll();});
-
-applyTr();renderAll();
+// ─── INIT ─────────────────────────────────────────────────────────────────
+applyTr();
 </script>
 </body>
 </html>
