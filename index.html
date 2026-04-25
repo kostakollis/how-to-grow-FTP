@@ -1112,47 +1112,132 @@ function dlTCX(w,nm){
 // FIT Protocol v2, profile 21.xx — proper file_id + workout + workout_step messages
 function dlFIT(w,nm){
   var ftp=plan.ftp;
+
+  // FIT power offset: device stores (watts + 1000), so 200W → 1200
+  // target_type enum: 0=speed, 1=heart_rate, 2=open(FREE RIDE!), 3=cadence, 4=power
+  // intensity enum: 0=active, 1=rest, 2=warmup, 3=cooldown
   var steps=w.zwo.map(function(p,i){
+    var watts=Math.round(p.p*ftp);
+    var intensity=p.n==='WarmUp'?2:p.n==='CoolDown'?3:(p.p<0.60?1:0);
     return{
       name:(p.n||('Step '+(i+1))).replace(/[^\x20-\x7E]/g,'').substring(0,15),
       durMs:p.d*1000,
-      pwrLo:Math.round(p.p*ftp*0.97)+1000,  // FIT power offset +1000
-      pwrHi:Math.round(p.p*ftp*1.03)+1000
+      // Custom power zone: low/high in watts+1000 offset
+      pwrLo:Math.max(1001,Math.round(watts*0.96)+1000),
+      pwrHi:Math.round(watts*1.04)+1000,
+      intensity:intensity,
+      cadence:p.cad||85
     };
   });
+
   var msgs=[];
-  // Def local 0 = file_id (global 0): type(0,enum,1), manufacturer(1,uint16,2), product(2,uint16,2), time_created(4,uint32,4)
-  msgs=msgs.concat([0x40,0x00,0x00,0x00,0x00,0x04,
-    0x00,0x01,0x00, 0x01,0x02,0x84, 0x02,0x02,0x84, 0x04,0x04,0x86]);
-  // Data local 0: type=5(workout), manufacturer=255, product=0, time=0
-  msgs=msgs.concat([0x00,0x05]).concat(u16le(255)).concat(u16le(0)).concat(u32le(0));
-  // Def local 1 = workout (global 26): sport(0,enum,1), num_valid_steps(2,uint16,2), wkt_name(8,string,16)
-  msgs=msgs.concat([0x41,0x00,0x00,0x1A,0x00,0x03,
-    0x00,0x01,0x00, 0x02,0x02,0x84, 0x08,0x10,0x07]);
-  // Data local 1: sport=2(cycling), num_steps, name
-  msgs=msgs.concat([0x01,0x02]).concat(u16le(steps.length))
-       .concat(fitStr((w.ti+' FTP'+ftp+'W').replace(/[^\x20-\x7E]/g,'').substring(0,15),16));
-  // Def local 2 = workout_step (global 27): msg_idx(254,uint16,2), name(0,string,16),
-  //   dur_type(1,enum,1), dur_val(2,uint32,4), tgt_type(3,enum,1), tgt_val(4,uint32,4),
-  //   tgt_lo(5,uint32,4), tgt_hi(6,uint32,4)
-  msgs=msgs.concat([0x42,0x00,0x00,0x1B,0x00,0x08,
-    0xFE,0x02,0x84, 0x00,0x10,0x07, 0x01,0x01,0x00,
-    0x02,0x04,0x86, 0x03,0x01,0x00, 0x04,0x04,0x86,
-    0x05,0x04,0x86, 0x06,0x04,0x86]);
-  // Data local 2 per step
+
+  // ── Def local 0 = file_id (global mesg 0) ────────────────────────────
+  // Fields: type(0,uint8,1), manufacturer(1,uint16,2), product(2,uint16,2),
+  //         serial_number(3,uint32z,4), time_created(4,uint32,4)
+  msgs=msgs.concat([
+    0x40,       // definition mesg, local mesg 0
+    0x00,       // reserved
+    0x00,       // little-endian arch
+    0x00,0x00,  // global mesg 0 = file_id
+    0x05,       // 5 fields
+    0x00,0x01,0x00,  // field 0: type, size 1, base uint8
+    0x01,0x02,0x84,  // field 1: manufacturer, size 2, base uint16
+    0x02,0x02,0x84,  // field 2: product, size 2, base uint16
+    0x03,0x04,0x8C,  // field 3: serial_number, size 4, base uint32z
+    0x04,0x04,0x86   // field 4: time_created, size 4, base uint32
+  ]);
+  // Data local 0: type=5(workout), manufacturer=255(development), product=0, serial=0, time=0
+  msgs=msgs.concat([0x00])
+    .concat([0x05])          // type = 5 (workout)
+    .concat(u16le(255))      // manufacturer = 255
+    .concat(u16le(0))        // product = 0
+    .concat(u32le(0))        // serial_number = 0
+    .concat(u32le(0));       // time_created = 0
+
+  // ── Def local 1 = workout (global mesg 26 = 0x001A) ──────────────────
+  // Fields: sport(0,enum,1), capabilities(1,uint32z,4),
+  //         num_valid_steps(2,uint16,2), wkt_name(8,string,16)
+  msgs=msgs.concat([
+    0x41,       // definition mesg, local mesg 1
+    0x00,0x00,
+    0x1A,0x00,  // global mesg 26
+    0x04,       // 4 fields
+    0x00,0x01,0x00,  // sport enum
+    0x01,0x04,0x8C,  // capabilities uint32z
+    0x02,0x02,0x84,  // num_valid_steps uint16
+    0x08,0x10,0x07   // wkt_name string[16]
+  ]);
+  // safe workout name: max 15 usable chars + null
+  var wktName=w.ti.replace(/[^\x20-\x7E]/g,'');
+  var shortName=(wktName.length>15?wktName.substring(0,15):wktName);
+  // Data local 1: sport=2(cycling), capabilities=32(fitness), num_steps, name
+  msgs=msgs.concat([0x01])
+    .concat([0x02])          // sport = 2 (cycling)
+    .concat(u32le(32))       // capabilities = 32 (FIT_WORKOUT_CAPABILITIES_FITNESS_EQUIPMENT)
+    .concat(u16le(steps.length))
+    .concat(fitStr(shortName,16));
+
+  // ── Def local 2 = workout_step (global mesg 27 = 0x001B) ─────────────
+  // Fields: message_index(254,uint16,2), wkt_step_name(0,string,16),
+  //         duration_type(1,enum,1), duration_value(2,uint32,4),
+  //         target_type(3,enum,1), target_value(4,uint32,4),
+  //         custom_target_value_low(5,uint32,4),
+  //         custom_target_value_high(6,uint32,4),
+  //         intensity(7,enum,1)
+  msgs=msgs.concat([
+    0x42,       // definition mesg, local mesg 2
+    0x00,0x00,
+    0x1B,0x00,  // global mesg 27
+    0x09,       // 9 fields
+    0xFE,0x02,0x84,  // message_index uint16
+    0x00,0x10,0x07,  // wkt_step_name string[16]
+    0x01,0x01,0x00,  // duration_type enum
+    0x02,0x04,0x86,  // duration_value uint32
+    0x03,0x01,0x00,  // target_type enum
+    0x04,0x04,0x86,  // target_value uint32
+    0x05,0x04,0x86,  // custom_target_value_low uint32
+    0x06,0x04,0x86,  // custom_target_value_high uint32
+    0x07,0x01,0x00   // intensity enum
+  ]);
+
+  // ── Data local 2: one message per step ───────────────────────────────
   steps.forEach(function(s,idx){
-    msgs=msgs.concat([0x02]).concat(u16le(idx)).concat(fitStr(s.name,16))
-         .concat([0x00]).concat(u32le(s.durMs))   // duration_type=0(time), duration_value=ms
-         .concat([0x02]).concat(u32le(0))           // target_type=2(power), target_value=0(custom)
-         .concat(u32le(s.pwrLo)).concat(u32le(s.pwrHi));
+    msgs=msgs.concat([0x02])                    // local mesg 2
+      .concat(u16le(idx))                       // message_index
+      .concat(fitStr(s.name,16))                // wkt_step_name
+      .concat([0x00])                           // duration_type = 0 (time in ms)
+      .concat(u32le(s.durMs))                   // duration_value = milliseconds
+      .concat([0x04])                           // target_type = 4 (POWER) ← key fix
+      .concat(u32le(0))                         // target_value = 0 → use custom range
+      .concat(u32le(s.pwrLo))                   // custom_target_value_low  (watts+1000)
+      .concat(u32le(s.pwrHi))                   // custom_target_value_high (watts+1000)
+      .concat([s.intensity]);                   // intensity: 0=active,1=rest,2=warmup,3=cooldown
   });
-  // Header 14 bytes
-  var hdr=[0x0E,0x10,0x09,0x08].concat(u32le(msgs.length))
-           .concat([0x2E,0x46,0x49,0x54,0x00,0x00]);
-  var hc=fitCRC16(hdr.slice(0,12)); hdr[12]=hc&0xFF; hdr[13]=(hc>>8)&0xFF;
+
+  // ── FIT file header (14 bytes) ────────────────────────────────────────
+  var dataSize=msgs.length;
+  var hdr=[
+    0x0E,       // header size = 14
+    0x10,       // protocol version = 1.0
+    0x09,0x08,  // profile version 2057 little-endian (FIT SDK 21.xx)
+  ].concat(u32le(dataSize))
+   .concat([0x2E,0x46,0x49,0x54])  // ".FIT" magic bytes
+   .concat([0x00,0x00]);            // header CRC placeholder
+  // Compute and write header CRC (over first 12 bytes)
+  var hCRC=fitCRC16(hdr.slice(0,12));
+  hdr[12]=hCRC&0xFF;
+  hdr[13]=(hCRC>>8)&0xFF;
+
+  // ── Assemble + file CRC ───────────────────────────────────────────────
   var all=hdr.concat(msgs);
-  var fc=fitCRC16(all); all.push(fc&0xFF,(fc>>8)&0xFF);
-  fileSave(new Blob([new Uint8Array(all)],{type:'application/octet-stream'}),nm+'_FTP'+ftp+'.fit');
+  var fCRC=fitCRC16(all);
+  all.push(fCRC&0xFF,(fCRC>>8)&0xFF);
+
+  fileSave(
+    new Blob([new Uint8Array(all)],{type:'application/octet-stream'}),
+    nm+'_FTP'+ftp+'.fit'
+  );
 }
 
 // ─── CALENDAR (ICS) — matches WEEKLY SCHEDULE exactly ─────────────────────
