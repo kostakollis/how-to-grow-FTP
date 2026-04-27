@@ -1215,6 +1215,43 @@ function dlFIT(w,nm){
       .concat([s.intensity]);                   // intensity: 0=active,1=rest,2=warmup,3=cooldown
   });
 
+  // ── Def local 3 = session (global mesg 18 = 0x0012) ──────────────────
+  // Required by Intervals.icu and some other platforms.
+  // Fields: message_index(254,uint16,2), event(0,enum,1), event_type(1,enum,1),
+  //         start_time(2,uint32,4), sport(5,enum,1), sub_sport(6,enum,1),
+  //         total_elapsed_time(7,uint32,4), total_timer_time(8,uint32,4)
+  msgs=msgs.concat([
+    0x43,       // definition mesg, local mesg 3
+    0x00,0x00,
+    0x12,0x00,  // global mesg 18 = session
+    0x08,       // 8 fields
+    0xFE,0x02,0x84,  // message_index uint16
+    0x00,0x01,0x00,  // event enum      (0=timer)
+    0x01,0x01,0x00,  // event_type enum (1=stop)
+    0x02,0x04,0x86,  // start_time uint32 (FIT epoch)
+    0x05,0x01,0x00,  // sport enum      (2=cycling)
+    0x06,0x01,0x00,  // sub_sport enum  (0=generic)
+    0x07,0x04,0x86,  // total_elapsed_time uint32 (ms, scale 1000)
+    0x08,0x04,0x86   // total_timer_time uint32 (ms, scale 1000)
+  ]);
+
+  // FIT epoch: seconds since 1989-12-31 00:00:00 UTC
+  // Unix epoch to FIT epoch offset = 631065600 seconds
+  var fitEpochNow=Math.floor(Date.now()/1000)-631065600;
+  var totalDurMs=steps.reduce(function(s,x){return s+x.durMs;},0);
+  var totalDurScaled=totalDurMs; // stored as uint32 in units of 1ms (scale=1000 means /1000 = seconds)
+
+  // Data local 3: session record
+  msgs=msgs.concat([0x03])
+    .concat(u16le(0))              // message_index = 0
+    .concat([0x00])                // event = 0 (timer)
+    .concat([0x01])                // event_type = 1 (stop)
+    .concat(u32le(fitEpochNow))    // start_time = now (FIT epoch)
+    .concat([0x02])                // sport = 2 (cycling)
+    .concat([0x00])                // sub_sport = 0 (generic)
+    .concat(u32le(totalDurScaled)) // total_elapsed_time
+    .concat(u32le(totalDurScaled));// total_timer_time
+
   // ── FIT file header (14 bytes) ────────────────────────────────────────
   var dataSize=msgs.length;
   var hdr=[
