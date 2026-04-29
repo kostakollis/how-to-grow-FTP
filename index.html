@@ -64,6 +64,14 @@ header{background:var(--bg2);border-bottom:1px solid var(--border2);position:sti
 /* PROFILE FORM */
 .profile-row-sm{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:10px}
 .profile-row-md{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+/* HR method toggle */
+.hr-method-toggle{display:flex;background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:3px;gap:3px;margin-bottom:10px}
+.hr-method-btn{flex:1;padding:6px 8px;border-radius:6px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--text2);transition:all .15s;text-align:center;line-height:1.3}
+.hr-method-btn.active{background:var(--bg2);color:var(--text);box-shadow:var(--shadow)}
+.hr-method-btn .hm-label{display:block;font-size:11px;font-weight:700}
+.hr-method-btn .hm-sub{display:block;font-size:9px;color:var(--text3);margin-top:1px}
+.hr-method-btn.active .hm-sub{color:var(--text2)}
+.lthr-row{display:none;margin-bottom:10px}
 .field{display:flex;flex-direction:column;gap:4px}
 .field-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.07em;text-transform:uppercase}
 .field-input{padding:.55rem .8rem;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:14px;font-weight:500;background:var(--bg);color:var(--text);outline:none;transition:border-color .15s;width:100%}
@@ -263,13 +271,51 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
         </select>
       </div>
     </div>
-    <!-- Row 2: HR rest + HR max -->
-    <div class="profile-row-md">
-      <div class="field"><label class="field-label" id="lbl-hrrest">RESTING HR</label>
-        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-hrrest" value="55" min="30" max="90"><span class="field-unit">bpm</span></div>
+    <!-- HR ZONE METHOD GROUP -->
+    <div style="background:var(--bg3);border:1.5px solid var(--border2);border-radius:var(--radius-sm);padding:.85rem 1rem;margin-bottom:10px">
+      <div class="field-label" id="lbl-hrmethod" style="margin-bottom:8px">HR ZONE CALCULATION METHOD</div>
+      <!-- 3 method buttons -->
+      <div style="display:flex;gap:4px;margin-bottom:10px">
+        <button class="hr-method-btn active" id="btn-karvonen" onclick="setHrMethod('karvonen')" style="flex:1;padding:8px 6px;border-radius:7px;border:1.5px solid var(--border2);cursor:pointer;background:var(--bg2);text-align:center;transition:all .15s">
+          <span class="hm-label" id="lbl-karvonen" style="display:block;font-size:11px;font-weight:700;color:var(--text)">Karvonen</span>
+          <span class="hm-sub" id="lbl-karvonen-sub" style="display:block;font-size:9px;color:var(--text3);margin-top:1px">HRrest + HRmax</span>
+        </button>
+        <button class="hr-method-btn" id="btn-lthr" onclick="setHrMethod('lthr')" style="flex:1;padding:8px 6px;border-radius:7px;border:1.5px solid var(--border2);cursor:pointer;background:transparent;text-align:center;transition:all .15s">
+          <span class="hm-label" id="lbl-lthr" style="display:block;font-size:11px;font-weight:700;color:var(--text)">LTHR</span>
+          <span class="hm-sub" id="lbl-lthr-sub" style="display:block;font-size:9px;color:var(--text3);margin-top:1px">Friel method</span>
+        </button>
+        <button class="hr-method-btn" id="btn-pctmax" onclick="setHrMethod('pctmax')" style="flex:1;padding:8px 6px;border-radius:7px;border:1.5px solid var(--border2);cursor:pointer;background:transparent;text-align:center;transition:all .15s">
+          <span class="hm-label" id="lbl-pctmax" style="display:block;font-size:11px;font-weight:700;color:var(--text)">% Max HR</span>
+          <span class="hm-sub" id="lbl-pctmax-sub" style="display:block;font-size:9px;color:var(--text3);margin-top:1px">Simple %</span>
+        </button>
       </div>
-      <div class="field"><label class="field-label" id="lbl-hrmax">MAX HR</label>
-        <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-hrmax" value="190" min="140" max="220"><span class="field-unit">bpm</span></div>
+      <!-- Dynamic fields per method -->
+      <!-- Karvonen: rest + max -->
+      <div id="fields-karvonen" style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        <div class="field"><label class="field-label" id="lbl-hrrest">RESTING HR</label>
+          <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-hrrest" value="55" min="30" max="90"><span class="field-unit">bpm</span></div>
+        </div>
+        <div class="field"><label class="field-label" id="lbl-hrmax">MAX HR</label>
+          <div class="field-wrap"><input class="field-input has-unit" type="number" id="f-hrmax" value="190" min="140" max="220"><span class="field-unit">bpm</span></div>
+        </div>
+      </div>
+      <!-- LTHR: single field -->
+      <div id="fields-lthr" style="display:none">
+        <div class="field"><label class="field-label" id="lbl-lthr-field">LTHR — LACTATE THRESHOLD HR</label>
+          <div style="display:flex;gap:10px;align-items:center">
+            <div class="field-wrap" style="flex:1"><input class="field-input has-unit" type="number" id="f-lthr" value="162" min="100" max="210"><span class="field-unit">bpm</span></div>
+            <div style="font-size:10px;color:var(--text3);max-width:200px;line-height:1.4" id="lbl-lthr-hint">HR at lactate threshold (30min TT avg, or ramp test peak × 0.92)</div>
+          </div>
+        </div>
+      </div>
+      <!-- % Max HR: max only -->
+      <div id="fields-pctmax" style="display:none">
+        <div class="field"><label class="field-label" id="lbl-hrmax2">MAX HR</label>
+          <div style="display:flex;gap:10px;align-items:center">
+            <div class="field-wrap" style="flex:1"><input class="field-input has-unit" type="number" id="f-hrmax2" value="190" min="140" max="220"><span class="field-unit">bpm</span></div>
+            <div style="font-size:10px;color:var(--text3);max-width:200px;line-height:1.4" id="lbl-pctmax-hint">Zones calculated as direct % of max HR (Robergs &amp; Landwehr)</div>
+          </div>
+        </div>
       </div>
     </div>
     <!-- Row 3: FTP slider -->
@@ -392,7 +438,7 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
 </footer>
 
 <script>
-var plan=null, curW=0, curWeekIdx=0, curLang='en', trMode='power', chatHist=[];
+var plan=null, curW=0, curWeekIdx=0, curLang='en', trMode='power', chatHist=[], hrZoneMethod='karvonen';
 
 // ─── TRANSLATIONS ─────────────────────────────────────────────────────────
 var T={
@@ -400,6 +446,13 @@ en:{
   hdrTitle:'Cycling Training Plan',hdrSub:'Science-based FTP training',
   s1:'Athlete Profile',s3:'Plan Parameters',
   age:'AGE',gender:'GENDER',weight:'WEIGHT',hrmax:'MAX HR',hrrest:'RESTING HR',ftp:'FTP (Functional Threshold Power)',
+  hrmethod:'HR ZONE CALCULATION METHOD',
+  karvonen:'Karvonen',karvonenSub:'HRrest + HRmax',
+  lthrBtn:'LTHR',lthrSub:'Friel method',
+  pctmax:'% Max HR',pctmaxSub:'Simple %',
+  lthrField:'LTHR — LACTATE THRESHOLD HR',
+  lthrHint:'Avg HR from 30min TT, or ramp peak × 0.92',
+  hrmax2:'MAX HR',pctmaxHint:'Zones as direct % of max HR (Robergs & Landwehr)',
   optM:'Male',optF:'Female',
   ftpHint:'Drag to set your FTP. Retest every 6–8 weeks with a ramp test.',
   sessions:'SESSIONS/WEEK',km:'AVG KM / SESSION',dur:'PLAN LENGTH',
@@ -442,6 +495,13 @@ uk:{
   hdrTitle:'План велотренувань',hdrSub:'Науково обґрунтовані тренування',
   s1:'Профіль атлета',s3:'Параметри плану',
   age:'ВІК',gender:'СТАТЬ',weight:'ВАГА',hrmax:'ЧСС МАКС',hrrest:'ЧСС СПОКОЮ',ftp:'FTP (функціональна порогова потужність)',
+  hrmethod:'МЕТОД РОЗРАХУНКУ ЗОН ЧСС',
+  karvonen:'Карвонен',karvonenSub:'ЧСС сп + макс',
+  lthrBtn:'LTHR',lthrSub:'Метод Friel',
+  pctmax:'% від ЧСС макс',pctmaxSub:'Простий %',
+  lthrField:'LTHR — ПОРОГОВА ЧСС',
+  lthrHint:'Сер. ЧСС на 30-хв TT, або пік ramp × 0.92',
+  hrmax2:'ЧСС МАКС',pctmaxHint:'Зони як прямий % від макс ЧСС (Робергс)',
   optM:'Чоловік',optF:'Жінка',
   ftpHint:'Потягни повзунок щоб задати FTP. Тестуй кожні 6–8 тижнів ramp-тестом.',
   sessions:'ТРЕНУВАНЬ/ТИЖ',km:'КМ / ТРЕНУВАННЯ',dur:'ТРИВАЛІСТЬ ПЛАНУ',
@@ -484,6 +544,13 @@ pl:{
   hdrTitle:'Plan treningowy kolarstwa',hdrSub:'Trening oparty na nauce',
   s1:'Profil zawodnika',s3:'Parametry planu',
   age:'WIEK',gender:'PŁEĆ',weight:'WAGA',hrmax:'HR MAKS',hrrest:'HR SPOCZYNKOWE',ftp:'FTP (funkcjonalna moc progowa)',
+  hrmethod:'METODA STREF TĘTNA',
+  karvonen:'Karvonen',karvonenSub:'HR spocz. + maks.',
+  lthrBtn:'LTHR',lthrSub:'Metoda Friel',
+  pctmax:'% Max HR',pctmaxSub:'Prosty %',
+  lthrField:'LTHR — PROGOWE TĘTNO',
+  lthrHint:'Średnio HR z 30-min TT, lub szczyt ramp × 0.92',
+  hrmax2:'HR MAKS',pctmaxHint:'Strefy jako bezpośredni % maks. HR (Robergs)',
   optM:'Mężczyzna',optF:'Kobieta',
   ftpHint:'Przeciągnij suwak by ustawić FTP. Testuj co 6–8 tygodni.',
   sessions:'TRENINGÓW/TYDZ',km:'KM / TRENING',dur:'DŁUGOŚĆ PLANU',
@@ -525,13 +592,116 @@ pl:{
 };
 function tr(k){return(T[curLang]&&T[curLang][k]!==undefined)?T[curLang][k]:(T.en[k]||k);}
 
-// ─── HELPERS — KARVONEN + COGGAN ──────────────────────────────────────────
-// Karvonen: HR_target = HR_rest + % × (HR_max − HR_rest)
-function hrKarvonen(pct,hrrest,hrmax){return Math.round(hrrest+pct*(hrmax-hrrest));}
-function hrStr(lo,hi,hrrest,hrmax){
-  if(lo===0) return '< '+hrKarvonen(hi,hrrest,hrmax)+' bpm';
-  if(hi>=1) return '> '+hrKarvonen(lo,hrrest,hrmax)+' bpm';
-  return hrKarvonen(lo,hrrest,hrmax)+'–'+hrKarvonen(hi,hrrest,hrmax)+' bpm';
+// ─── HR ZONE METHOD TOGGLE ────────────────────────────────────────────────
+function setHrMethod(method){
+  hrZoneMethod=method;
+  // Update buttons
+  ['karvonen','lthr','pctmax'].forEach(function(m){
+    var btn=document.getElementById('btn-'+m);
+    if(!btn) return;
+    var isActive=m===method;
+    btn.style.background=isActive?'var(--bg2)':'transparent';
+    btn.style.borderColor=isActive?'var(--accent)':'var(--border2)';
+    btn.style.boxShadow=isActive?'var(--shadow)':'none';
+  });
+  // Show/hide field groups
+  var groups={karvonen:'fields-karvonen',lthr:'fields-lthr',pctmax:'fields-pctmax'};
+  Object.keys(groups).forEach(function(m){
+    var el=document.getElementById(groups[m]);
+    if(el) el.style.display=m===method?'':('grid'===el.style.display?'none':'none');
+  });
+  // Fix grid display for karvonen
+  var kEl=document.getElementById('fields-karvonen');
+  if(kEl) kEl.style.display=method==='karvonen'?'grid':'none';
+  var lEl=document.getElementById('fields-lthr');
+  if(lEl) lEl.style.display=method==='lthr'?'block':'none';
+  var pEl=document.getElementById('fields-pctmax');
+  if(pEl) pEl.style.display=method==='pctmax'?'block':'none';
+
+  recalcZones();
+  if(plan){ plan.hrZoneMethod=method; renderWeek(); renderWorkout(curW); }
+}
+
+// ─── HR ZONE CALCULATIONS ─────────────────────────────────────────────────
+// Method 1: Karvonen (Heart Rate Reserve)
+//   HR_target = HR_rest + pct × (HR_max − HR_rest)
+function hrKarvonen(pct,hrrest,hrmax){
+  return Math.round(hrrest+pct*(hrmax-hrrest));
+}
+
+// Method 2: LTHR — Friel (Joe Friel, "The Cyclist's Training Bible")
+//   Z1: < 81% LTHR
+//   Z2: 81–89% LTHR  (aerobic endurance)
+//   Z3: 90–93% LTHR  (tempo / sweetspot)
+//   Z4: 94–99% LTHR  (sub-threshold / threshold)
+//   Z5: > 102% LTHR  (VO2max / Anaerobic)
+var LTHR_ZONES=[
+  [0,    0.81],
+  [0.81, 0.89],
+  [0.90, 0.93],
+  [0.94, 1.02],
+  [1.03, 1.15]
+];
+
+// Method 3: % Max HR (Robergs & Landwehr)
+//   Z1: 50–60%   Recovery
+//   Z2: 60–70%   Aerobic endurance
+//   Z3: 70–80%   Tempo/Sweetspot
+//   Z4: 80–90%   Threshold
+//   Z5: 90–100%  VO2max
+var PCTMAX_ZONES=[
+  [0.50, 0.60],
+  [0.60, 0.70],
+  [0.70, 0.80],
+  [0.80, 0.90],
+  [0.90, 1.00]
+];
+
+function hrLTHR(pct,lthr){ return Math.round(pct*lthr); }
+function hrPctMax(pct,hrmax){ return Math.round(pct*hrmax); }
+
+// Get HR value for current method and percent
+function hrForMethod(pct, hrrest, hrmax, lthr){
+  if(hrZoneMethod==='lthr')   return hrLTHR(pct, lthr);
+  if(hrZoneMethod==='pctmax') return hrPctMax(pct, hrmax);
+  return hrKarvonen(pct, hrrest, hrmax); // karvonen default
+}
+
+// Universal HR string — uses current method
+function hrStr(lo,hi,hrrest,hrmax,lthr){
+  var hmax2=Math.round(getInput('f-hrmax2')||hrmax);
+  var hLo,hHi;
+  if(hrZoneMethod==='lthr'){
+    hLo=hrLTHR(lo,lthr); hHi=hrLTHR(hi,lthr);
+  } else if(hrZoneMethod==='pctmax'){
+    hLo=hrPctMax(lo,hmax2); hHi=hrPctMax(hi,hmax2);
+  } else {
+    hLo=hrKarvonen(lo,hrrest,hrmax); hHi=hrKarvonen(hi,hrrest,hrmax);
+  }
+  if(lo===0) return '< '+hHi+' bpm';
+  if(hi>=1)  return '> '+hLo+' bpm';
+  return hLo+'–'+hHi+' bpm';
+}
+
+// Returns [lo_bpm, hi_bpm] for workout type
+function hrTarget(wtype, hrrest, hrmax, lthr){
+  var hmax2=Math.round(getInput('f-hrmax2')||hrmax);
+  // Zone index per workout type: ss→Z3(idx2), th→Z4(idx3), vo→Z5(idx4), z2/long→Z2(idx1)
+  var zIdx={ss:2,th:3,vo:4,z2:1,long:1};
+  var zi=zIdx[wtype]||1;
+  var zones=hrZoneMethod==='lthr'?LTHR_ZONES:hrZoneMethod==='pctmax'?PCTMAX_ZONES:null;
+  var lo,hi;
+  if(zones){
+    var z=zones[zi]||zones[1];
+    lo=hrZoneMethod==='lthr'?hrLTHR(z[0],lthr):hrPctMax(z[0],hmax2);
+    hi=hrZoneMethod==='lthr'?hrLTHR(z[1],lthr):hrPctMax(z[1],hmax2);
+  } else {
+    var karv=[[0,0.60],[0.60,0.70],[0.70,0.80],[0.80,0.90],[0.90,1.00]];
+    var z=karv[zi]||karv[1];
+    lo=hrKarvonen(z[0],hrrest,hrmax); hi=hrKarvonen(z[1],hrrest,hrmax);
+  }
+  if(wtype==='vo') return '> '+lo+' bpm';
+  return lo+'–'+hi+' bpm';
 }
 // Coggan power zones — % of FTP
 function wt(p,ftp){return Math.round(p*ftp);}
@@ -548,11 +718,32 @@ function recalcZones(){
   var ftp=Math.round(getInput('f-ftp')||200);
   var hrrest=Math.round(getInput('f-hrrest')||55);
   var hrmax=Math.round(getInput('f-hrmax')||190);
+  var lthr=Math.round(getInput('f-lthr')||162);
   var weight=getInput('f-weight')||75;
-  // Coggan zones
   var pwZones=[[0,0.55],[0.56,0.75],[0.76,0.90],[0.91,1.05],[1.06,1.20]];
-  // Karvonen HR zones (matched to Coggan intensity levels)
-  var hrZones=[[0,0.60],[0.60,0.70],[0.70,0.80],[0.80,0.90],[0.90,1.00]];
+  var hmax2=Math.round(getInput('f-hrmax2')||hrmax);
+  // HR zone strings — depend on method
+  var hrZS;
+  if(hrZoneMethod==='lthr'){
+    hrZS=LTHR_ZONES.map(function(z,i){
+      if(i===0) return '< '+hrLTHR(z[1],lthr)+' bpm';
+      if(i===4) return '> '+hrLTHR(z[0],lthr)+' bpm';
+      return hrLTHR(z[0],lthr)+'–'+hrLTHR(z[1],lthr)+' bpm';
+    });
+  } else if(hrZoneMethod==='pctmax'){
+    hrZS=PCTMAX_ZONES.map(function(z,i){
+      if(i===0) return '< '+hrPctMax(z[1],hmax2)+' bpm';
+      if(i===4) return '> '+hrPctMax(z[0],hmax2)+' bpm';
+      return hrPctMax(z[0],hmax2)+'–'+hrPctMax(z[1],hmax2)+' bpm';
+    });
+  } else {
+    var karv=[[0,0.60],[0.60,0.70],[0.70,0.80],[0.80,0.90],[0.90,1.00]];
+    hrZS=karv.map(function(z,i){
+      if(i===0) return '< '+hrKarvonen(z[1],hrrest,hrmax)+' bpm';
+      if(i===4) return '> '+hrKarvonen(z[0],hrrest,hrmax)+' bpm';
+      return hrKarvonen(z[0],hrrest,hrmax)+'–'+hrKarvonen(z[1],hrrest,hrmax)+' bpm';
+    });
+  }
   var znames=tr('znames');
   var colors=[
     {c:'var(--z1c)',bg:'var(--z1bg)'},{c:'var(--z2c)',bg:'var(--z2bg)'},
@@ -566,16 +757,21 @@ function recalcZones(){
     return'<div class="zone-card" style="background:'+colors[i].bg+';border-color:'+colors[i].c+'40">'+
       '<div class="zn" style="color:'+colors[i].c+'">Z'+(i+1)+' '+znames[i]+'</div>'+
       '<div class="zv" style="color:'+colors[i].c+'">'+pwStr(z[0],z[1],ftp)+'</div>'+
-      '<div class="zh">'+hrStr(hrZones[i][0],hrZones[i][1],hrrest,hrmax)+'</div></div>';
+      '<div class="zh">'+hrZS[i]+'</div></div>';
   }).join('');
   var wpkg=round3(ftp/weight);
+  var methodLabel=hrZoneMethod==='lthr'
+    ?'LTHR: <b>'+lthr+' bpm</b> (Friel)'
+    :hrZoneMethod==='pctmax'
+    ?'% Max HR: <b>'+hmax2+' bpm</b>'
+    :'HRR: <b>'+(hrmax-hrrest)+' bpm</b> (Karvonen)';
   document.getElementById('zones-content').innerHTML=
     '<div class="zone-bar">'+barHtml+'</div>'+
     '<div class="zones-grid">'+cardsHtml+'</div>'+
     '<div class="ftp-display">'+
     '<div>FTP: <b>'+ftp+' W</b></div>'+
     '<div>W/kg: <b>'+wpkg+'</b></div>'+
-    '<div>HRR: <b>'+(hrmax-hrrest)+' bpm</b></div>'+
+    '<div>'+methodLabel+'</div>'+
     '</div>';
 }
 
@@ -681,7 +877,9 @@ function generatePlan(){
   // Cadence per workout type [warmup, base, work, recovery]
   var cadence={ss:[85,88,90,80],th:[83,87,90,80],vo:[85,88,94,82],z2:[80,85,88,78],long:[78,83,85,78]};
 
-  plan={age,gender,weight,ftp,hrmax,hrrest,sessW,kmS,weeks,cadence,
+  var lthr=Math.round(getInput('f-lthr')||162);
+  plan={age,gender,weight,ftp,hrmax,hrrest,lthr,sessW,kmS,weeks,cadence,
+    hrZoneMethod:hrZoneMethod,
     wpkg:round3(ftp/weight),
     pwZones:[[0,0.55],[0.56,0.75],[0.76,0.90],[0.91,1.05],[1.06,1.20]],
     hrZones:[[0,0.60],[0.60,0.70],[0.70,0.80],[0.80,0.90],[0.90,1.00]]};
@@ -728,10 +926,7 @@ function renderWeek(){
         else if(t==='vo') target=pwStr(1.10,1.20,p.ftp);
         else target=pwStr(0.56,0.75,p.ftp);
       } else {
-        if(t==='ss') target=hrStr(0.70,0.80,p.hrrest,p.hrmax);
-        else if(t==='th') target=hrStr(0.80,0.90,p.hrrest,p.hrmax);
-        else if(t==='vo') target='> '+hrKarvonen(0.90,p.hrrest,p.hrmax)+' bpm';
-        else target=hrStr(0.60,0.70,p.hrrest,p.hrmax);
+        target=hrTarget(t,p.hrrest,p.hrmax,p.lthr);
       }
     }
     return'<div class="day-card'+(isStr?' dc-structured':'')+'">'+
@@ -784,14 +979,14 @@ function getWorkout(idx){
   if(p.kmS<lim[0]) warnHtml='<div class="km-warn" style="background:var(--z3bg);border-color:var(--z3c);color:var(--z3c)">'+tr('kmWarnShort').replace('{v}',lim[0])+'</div>';
   else if(p.kmS>lim[3]) warnHtml='<div class="km-warn" style="background:var(--z4bg);border-color:var(--z4c);color:var(--z4c)">'+tr('kmWarnLong').replace('{v}',lim[3])+'</div>';
 
-  function target(pLo,pHi,hLo,hHi){
-    return trMode==='power'?pwStr(pLo,pHi,p.ftp):hrStr(hLo,hHi,p.hrrest,p.hrmax);
+  function target(pLo,pHi,wtype){
+    return trMode==='power'?pwStr(pLo,pHi,p.ftp):hrTarget(wtype,p.hrrest,p.hrmax,p.lthr);
   }
   var cad=p.cadence;
 
   if(idx===0){ // SWEETSPOT
     var blks=Math.max(1,Math.floor(work/25)), bl=Math.max(10,Math.round(work/blks/5)*5);
-    var tgt=target(0.88,0.95,0.70,0.80);
+    var tgt=target(0.88,0.95,'ss');
     return{ti:wts[0],tp:'ss',dist:'~'+p.kmS+' km · ~'+totalMin+' min',goal:blks+'×'+bl+' min @ '+tgt,warn:warnHtml,
       segs:[{l:wu+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:wu},{l:blks+'×'+bl+' min',c:'var(--z3bg)',tc:'var(--z3c)',f:bl*blks},
             {l:'5 min',c:'var(--z2bg)',tc:'var(--z2c)',f:5*(blks-1||1)},{l:cd+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:cd}],
@@ -806,7 +1001,7 @@ function getWorkout(idx){
   }
   if(idx===1){ // THRESHOLD
     var reps=Math.max(2,Math.floor(work/11)), rl=Math.max(6,Math.round(work/(reps*1.35)/2)*2);
-    var tgt=target(0.96,1.03,0.80,0.90);
+    var tgt=target(0.96,1.03,'th');
     return{ti:wts[1],tp:'th',dist:'~'+p.kmS+' km · ~'+totalMin+' min',goal:reps+'×'+rl+' min @ '+tgt,warn:warnHtml,
       segs:[{l:wu+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:wu},{l:reps+'×'+rl+' min',c:'var(--z4bg)',tc:'var(--z4c)',f:rl*reps},
             {l:'3 min',c:'var(--z2bg)',tc:'var(--z2c)',f:3*reps},{l:cd+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:cd}],
@@ -821,7 +1016,7 @@ function getWorkout(idx){
   }
   if(idx===2){ // VO2MAX
     var reps=Math.max(3,Math.floor(work/8));
-    var tgt=target(1.10,1.20,0.90,1.00);
+    var tgt=target(1.10,1.20,'vo');
     return{ti:wts[2],tp:'vo',dist:'~'+p.kmS+' km · ~'+totalMin+' min',goal:reps+'×4 min @ '+tgt,warn:warnHtml,
       segs:[{l:wu+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:wu},{l:reps+'×4 min',c:'var(--z5bg)',tc:'var(--z5c)',f:4*reps},
             {l:'4 min',c:'var(--z2bg)',tc:'var(--z2c)',f:4*reps},{l:cd+' min',c:'var(--z1bg)',tc:'var(--z1c)',f:cd}],
@@ -835,7 +1030,7 @@ function getWorkout(idx){
       zwo:buildZwo(wu,4,reps,4,cd,1.15,p.ftp,cad.vo)};
   }
   // ZONE 2
-  var tgt=target(0.56,0.75,0.60,0.70);
+  var tgt=target(0.56,0.75,'z2');
   return{ti:wts[3],tp:'z2',dist:'~'+p.kmS+' km · ~'+totalMin+' min',goal:totalMin+' min @ '+tgt,warn:warnHtml,
     segs:[{l:'10 min',c:'var(--z1bg)',tc:'var(--z1c)',f:10},{l:(totalMin-20)+' min Z2',c:'var(--z2bg)',tc:'var(--z2c)',f:Math.max(5,totalMin-20)},{l:'10 min',c:'var(--z1bg)',tc:'var(--z1c)',f:10}],
     steps:[
@@ -1309,10 +1504,7 @@ function downloadICS(wks){
         else if(s.type==='vo') target=pwStr(1.10,1.20,p.ftp);
         else target=pwStr(0.56,0.75,p.ftp);
       } else {
-        if(s.type==='ss') target=hrStr(0.70,0.80,p.hrrest,p.hrmax);
-        else if(s.type==='th') target=hrStr(0.80,0.90,p.hrrest,p.hrmax);
-        else if(s.type==='vo') target='>'+hrKarvonen(0.90,p.hrrest,p.hrmax)+' bpm';
-        else target=hrStr(0.60,0.70,p.hrrest,p.hrmax);
+        target=hrTarget(s.type,p.hrrest,p.hrmax,p.lthr);
       }
       var title='🚴 '+(typeLabels[s.type]||s.type);
       var desc='Target: '+target+'\\nDuration: '+durMin+' min\\nDistance: '+km+' km\\nTSS: '+tss+'\\nFTP: '+p.ftp+' W\\nPhase: '+(tr('phaseNames')[phase]||phase);
@@ -1344,6 +1536,12 @@ function applyTr(){
     'lbl-age':'age','lbl-gender':'gender','lbl-weight':'weight','lbl-hrmax':'hrmax','lbl-hrrest':'hrrest','lbl-ftp':'ftp',
     'opt-m':'optM','opt-f':'optF',
     'ftp-hint':'ftpHint',
+    'lbl-hrmethod':'hrmethod',
+    'lbl-karvonen':'karvonen','lbl-karvonen-sub':'karvonenSub',
+    'lbl-lthr':'lthrBtn','lbl-lthr-sub':'lthrSub',
+    'lbl-pctmax':'pctmax','lbl-pctmax-sub':'pctmaxSub',
+    'lbl-lthr-field':'lthrField','lbl-lthr-hint':'lthrHint',
+    'lbl-hrmax2':'hrmax2','lbl-pctmax-hint':'pctmaxHint',
     'lbl-sessions':'sessions','lbl-km':'km','lbl-dur':'dur',
     'opt-w1':'w1','opt-w4':'w4','opt-w8':'w8','opt-w16':'w16','opt-w20':'w20',
     'lbl-gen':'gen',
@@ -1395,8 +1593,9 @@ document.getElementById('chat-input').addEventListener('keydown',function(e){if(
 document.getElementById('chat-input').addEventListener('input',function(){this.style.height='auto';this.style.height=Math.min(this.scrollHeight,100)+'px';});
 
 // ─── LIVE LISTENERS for zone recalc ───────────────────────────────────────
-['f-ftp','f-hrrest','f-hrmax','f-weight'].forEach(function(id){
+['f-ftp','f-hrrest','f-hrmax','f-weight','f-lthr','f-hrmax2'].forEach(function(id){
   var el=document.getElementById(id);
+  if(!el) return;
   if(id==='f-ftp'){
     el.addEventListener('input',function(){document.getElementById('ftp-out').textContent=this.value;recalcZones();});
   } else {
