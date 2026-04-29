@@ -886,6 +886,14 @@ function generatePlan(){
 
   document.getElementById('empty-state').style.display='none';
   ['sec-sched','sec-wout','sec-prog'].forEach(function(id){document.getElementById(id).style.display='';});
+  // Save athlete profile to dashboard (if user is logged in)
+  try{
+    if(window.parent && window.parent.saveAthleteData){
+      window.parent.saveAthleteData({ftp:ftp,age:age,weight:weight,gender:gender,
+        hrmax:hrmax,hrrest:hrrest,lthr:lthr,hrmax2:Math.round(getInput('f-hrmax2')||hrmax),
+        hr_method:hrZoneMethod,sessions_week:sessW,km_session:kmS,plan_weeks:weeks,tr_mode:trMode});
+    }
+  }catch(e){}
   curWeekIdx=0;
   renderWeek();
   renderWorkoutTabs();
@@ -1583,7 +1591,13 @@ async function sendMsg(){
       body:JSON.stringify({message:getChatCtx()+'\n\nQuestion: '+txt,history:chatHist.slice(-8)})});
     var d=await res.json();ld.remove();
     if(!res.ok||d.error){appendM('Error: '+(d.error||'unknown'),'err');}
-    else{appendM(d.reply,'ai');chatHist.push({role:'user',text:txt},{role:'model',text:d.reply});if(chatHist.length>20)chatHist=chatHist.slice(-20);}
+    else{appendM(d.reply,'ai');chatHist.push({role:'user',text:txt},{role:'model',text:d.reply});if(chatHist.length>20)chatHist=chatHist.slice(-20);
+      // Persist to dashboard
+      try{
+        var cFTP=plan?plan.ftp:null;
+        var pName=plan?plan.ti||('Plan '+cFTP+'W'):null;
+        if(window.parent && window.parent.saveChatMsg) window.parent.saveChatMsg(txt,d.reply,cFTP,pName);
+      }catch(e){}}
   }catch(e){ld.remove();appendM(tr('errC'),'err');}
   btn.disabled=false;
 }
@@ -1606,6 +1620,40 @@ document.getElementById('chat-input').addEventListener('input',function(){this.s
 // ─── INIT ─────────────────────────────────────────────────────────────────
 applyTr();
 recalcZones();
+
+// ── PARENT INTEGRATION ────────────────────────────────────────────────────
+// Called by dashboard when user is logged in to restore saved data
+window.loadAthleteData = function(data){
+  if(!data) return;
+  if(data.ftp)    { document.getElementById('f-ftp').value=data.ftp; document.getElementById('ftp-out').textContent=data.ftp; ftp_global=data.ftp; }
+  if(data.age)    document.getElementById('f-age').value=data.age;
+  if(data.weight) document.getElementById('f-weight').value=data.weight;
+  if(data.gender) document.getElementById('f-gender').value=data.gender;
+  if(data.hrmax)  document.getElementById('f-hrmax').value=data.hrmax;
+  if(data.hrrest) document.getElementById('f-hrrest').value=data.hrrest;
+  if(data.lthr)   document.getElementById('f-lthr').value=data.lthr;
+  if(data.hrmax2) { var el=document.getElementById('f-hrmax2'); if(el) el.value=data.hrmax2; }
+  if(data.hr_method && typeof setHrMethod==='function') setHrMethod(data.hr_method);
+  if(data.tr_mode && typeof setMode==='function') setMode(data.tr_mode);
+  if(data.sessions_week) document.getElementById('f-sess').value=data.sessions_week;
+  if(data.km_session)    document.getElementById('f-km').value=data.km_session;
+  if(data.plan_weeks) document.getElementById('f-weeks').value=data.plan_weeks;
+  recalcZones();
+};
+
+window.loadPlanData = function(planData){
+  if(!planData) return;
+  if(window.loadAthleteData) window.loadAthleteData(planData);
+  if(typeof generatePlan==='function') setTimeout(generatePlan, 100);
+};
+
+window.clearAppChat = function(){
+  chatHist=[];
+  var box=document.getElementById('chat-msgs');
+  if(box) box.innerHTML='<div class="msg ai">'+tr('welcome')+'</div>';
+};
+
+window.setAppLang = function(lang){ if(typeof setLang==='function') setLang(lang); };
 </script>
 </body>
 </html>
