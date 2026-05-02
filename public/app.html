@@ -378,6 +378,11 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
     <div class="sched-wrap" id="week-sched"></div>
     <div style="font-size:11px;color:var(--text3);margin-top:10px"><span id="week-tss"></span></div>
     <div class="cal-row" id="cal-row"></div>
+    <div id="save-plan-row" style="display:none">
+      <button class="save-plan-btn" id="save-plan-btn" onclick="savePlanToDashboard()">
+        💾 <span id="lbl-save-plan">Save plan to dashboard</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -464,6 +469,7 @@ en:{
   welcome:'Hello! I am your AI cycling coach. Generate a plan, then ask me anything.',
   send:'Send',quick:'Quick questions',
   emptyText:'Set plan parameters and generate your plan',emptySub:'Zones update live as you adjust profile above',
+  savePlan:'Save plan to dashboard',saved:'✓ Saved!',
   rest:'Rest',longr:'Long Z2',endurance:'Endurance',recovery:'Recovery',
   znames:['Recovery','Endurance','Tempo/Sweetspot','Threshold','VO2max'],
   wt:['Sweetspot','Threshold','VO2max','Zone 2'],
@@ -513,6 +519,7 @@ uk:{
   welcome:'Привіт! Я твій AI тренер. Згенеруй план, потім запитуй про все.',
   send:'Надіслати',quick:'Типові запитання',
   emptyText:'Заповни параметри і згенеруй план',emptySub:'Зони оновлюються автоматично при зміні профілю',
+  savePlan:'Зберегти план у кабінет',saved:'✓ Збережено!',
   rest:'Відпочинок',longr:'Довга Z2',endurance:'Витривалість',recovery:'Відновлення',
   znames:['Відновлення','Витривалість','Tempo/SS','Threshold','VO2max'],
   wt:['Sweetspot','Threshold','VO2max','Zone 2'],
@@ -887,6 +894,8 @@ function generatePlan(){
 
   document.getElementById('empty-state').style.display='none';
   ['sec-sched','sec-wout','sec-prog'].forEach(function(id){document.getElementById(id).style.display='';});
+  document.getElementById('save-plan-row').style.display='';
+  resetSavePlanBtn();
   // Save athlete profile to parent dashboard via postMessage
   try{
     parent.postMessage({type:'saveAthlete',data:{ftp:ftp,age:age,weight:weight,gender:gender,
@@ -1528,9 +1537,12 @@ function downloadICS(wks){
 // ─── LANG ─────────────────────────────────────────────────────────────────
 function setLang(lang){
   curLang=lang;
-  document.querySelectorAll('.lang-btn').forEach(function(b){
-    b.classList.toggle('active',(lang==='en'&&b.textContent==='EN')||(lang==='uk'&&b.textContent==='УК')||(lang==='pl'&&b.textContent==='PL'));
-  });
+  // Update lang buttons only when NOT in iframe (standalone mode)
+  if(window.self===window.top){
+    document.querySelectorAll('.lang-btn').forEach(function(b){
+      b.classList.toggle('active',(lang==='en'&&b.textContent==='EN')||(lang==='uk'&&b.textContent==='УК')||(lang==='pl'&&b.textContent==='PL'));
+    });
+  }
   applyTr();
   recalcZones();
   if(plan){renderWeek();renderWorkoutTabs();renderProgression();}
@@ -1650,8 +1662,30 @@ window.loadAthleteData = function(data){
 
 window.loadPlanData = function(planData){
   if(!planData) return;
+  // Restore form fields
   if(window.loadAthleteData) window.loadAthleteData(planData);
-  if(typeof generatePlan==='function') setTimeout(generatePlan, 100);
+  // Also restore plan-specific params that loadAthleteData may miss
+  if(planData.sessW||planData.sessions_week){
+    var s=planData.sessW||planData.sessions_week;
+    document.getElementById('f-sess').value=s;
+  }
+  if(planData.kmS||planData.km_session){
+    var k=planData.kmS||planData.km_session;
+    document.getElementById('f-km').value=k;
+  }
+  if(planData.weeks||planData.plan_weeks){
+    var w=planData.weeks||planData.plan_weeks;
+    document.getElementById('f-weeks').value=w;
+  }
+  // Regenerate plan with restored values
+  if(typeof generatePlan==='function') setTimeout(function(){
+    generatePlan();
+    // Mark as already saved
+    var btn=document.getElementById('save-plan-btn');
+    var lbl=document.getElementById('lbl-save-plan');
+    if(btn){ btn.classList.add('saved'); }
+    if(lbl) lbl.textContent=curLang==='uk'?'✓ Збережено':curLang==='pl'?'✓ Zapisano':'✓ Saved';
+  }, 150);
 };
 
 window.clearAppChat = function(){
@@ -1660,7 +1694,6 @@ window.clearAppChat = function(){
   if(box) box.innerHTML='<div class="msg ai">'+tr('welcome')+'</div>';
 };
 
-window.setAppLang = function(lang){ if(typeof setLang==='function') setLang(lang); };
 </script>
 </body>
 </html>
