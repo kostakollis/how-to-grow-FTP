@@ -378,26 +378,44 @@ function hideWelcome(){
   w.classList.add('out');
   setTimeout(()=>w.style.display='none',420);
 }
-function getAppFrame(){
-  return document.getElementById('app-content');
-}
+// ── IFRAME BRIDGE ─────────────────────────────────────────────────────────
+var _appReady = false;
+var _appQueue = [];   // queued calls before iframe is ready
+
+function getAppFrame(){ return document.getElementById('app-content'); }
+
 function callApp(fn, arg){
+  if(!_appReady){ _appQueue.push([fn,arg]); return; }
   var fr=getAppFrame();
   if(!fr||!fr.contentWindow) return;
-  try{ fr.contentWindow[fn] && fr.contentWindow[fn](arg); }catch(e){ console.warn('callApp',fn,e); }
+  try{ if(typeof fr.contentWindow[fn]==='function') fr.contentWindow[fn](arg); }
+  catch(e){ console.warn('callApp',fn,e); }
 }
+
+function _flushQueue(){
+  _appReady=true;
+  _appQueue.forEach(function(item){ callApp(item[0],item[1]); });
+  _appQueue=[];
+  // Also deliver language and athlete data in case loadUserData finished first
+  callApp('setAppLang', curLang);
+  if(uData.athlete) callApp('loadAthleteData', uData.athlete);
+}
+
+// app.html sends this message when it finishes initialising
+window.addEventListener('message', function(ev){
+  if(!ev.data||!ev.data.type) return;
+  if(ev.data.type==='appReady'){ _flushQueue(); return; }
+  if(ev.data.type==='saveAthlete') window.saveAthleteData(ev.data.data);
+  if(ev.data.type==='saveChat')    window.saveChatMsg(ev.data.userMsg,ev.data.assistantMsg,ev.data.ftp,ev.data.plan);
+  if(ev.data.type==='savePlan')    window.saveTrainingPlan(ev.data.data);
+});
 
 function showApp(user){
   curUser=user;
   document.getElementById('main-app').classList.add('on');
-  // App loads via iframe — wire up load event for data restore
-  var fr=getAppFrame();
-  fr.addEventListener('load', function(){
-    // Pass language
-    callApp('setAppLang', curLang);
-    // Restore saved athlete data if logged in
-    if(user && uData.athlete) setTimeout(()=>callApp('loadAthleteData', uData.athlete), 300);
-  }, {once:true});
+  // callApp queues calls until iframe fires appReady message
+  // Queue language + athlete data — delivered once iframe is ready
+  callApp('setAppLang', curLang);
 
   if(user){
     var init=user.user_metadata?.full_name||user.email||'?';
@@ -438,7 +456,7 @@ async function loadUserData(){
     if(r1.ok) uData=await r1.json();
     if(r2.ok){ var cr=await r2.json(); uData.chat=cr.messages||[]; }
     renderFTPHistory(); renderPlans(); renderChatHistory();
-    if(uData.athlete) setTimeout(()=>callApp('loadAthleteData', uData.athlete), 600);
+    if(uData.athlete) callApp('loadAthleteData', uData.athlete);
   }catch(e){console.warn(e);}
 }
 
@@ -450,14 +468,7 @@ window.saveAthleteData=async function(data){
     await fetch('/api/user/athlete',{method:'POST',headers:h,body:JSON.stringify(data)});
   }catch(e){}
 };
-// Bridge: app inside iframe calls parent.saveAthleteData, parent.saveChatMsg etc.
-// This works because same-origin (both served from same Railway domain).
-window.addEventListener('message', async function(ev){
-  if(!ev.data||!ev.data.type) return;
-  if(ev.data.type==='saveAthlete') window.saveAthleteData(ev.data.data);
-  if(ev.data.type==='saveChat')    window.saveChatMsg(ev.data.userMsg,ev.data.assistantMsg,ev.data.ftp,ev.data.plan);
-  if(ev.data.type==='savePlan')    window.saveTrainingPlan(ev.data.data);
-});
+
 
 // Save training plan
 window.saveTrainingPlan=async function(planData){
