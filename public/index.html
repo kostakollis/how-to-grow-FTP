@@ -404,10 +404,10 @@ function _flushQueue(){
 // app.html sends this message when it finishes initialising
 window.addEventListener('message', function(ev){
   if(!ev.data||!ev.data.type) return;
-  if(ev.data.type==='appReady'){ _flushQueue(); return; }
   if(ev.data.type==='saveAthlete') window.saveAthleteData(ev.data.data);
   if(ev.data.type==='saveChat')    window.saveChatMsg(ev.data.userMsg,ev.data.assistantMsg,ev.data.ftp,ev.data.plan);
   if(ev.data.type==='savePlan')    window.saveTrainingPlan(ev.data.data);
+  if(ev.data.type==='appReady')    _flushQueue();
 });
 
 function showApp(user){
@@ -472,16 +472,27 @@ window.saveAthleteData=async function(data){
 
 // Save training plan
 window.saveTrainingPlan=async function(planData){
-  if(!curUser){alert('Sign in to save plans');return;}
-  var name=planData.ti||('Plan FTP'+planData.ftp+'W '+planData.weeks+'wk');
+  if(!curUser){
+    // Notify iframe that save failed (not logged in)
+    callApp('onSavePlanResult', false);
+    return false;
+  }
+  var name=planData.name||planData.ti||('Plan FTP'+planData.ftp+'W '+planData.weeks+'wk');
   try{
     var h=await authHdr();
     var r=await fetch('/api/user/plans',{method:'POST',headers:h,body:JSON.stringify({
-      name,ftp:planData.ftp,weeks:planData.weeks,sessions_week:planData.sessW,
-      km_session:planData.kmS,plan_data:planData
+      name:name,ftp:planData.ftp,weeks:planData.weeks,
+      sessions_week:planData.sessions_week||planData.sessW,
+      km_session:planData.km_session||planData.kmS,
+      plan_data:planData.plan_data||planData
     })});
-    if(r.ok){await loadUserData(); return true;}
-  }catch(e){}
+    if(r.ok){
+      await loadUserData();
+      // Auto-open dashboard to show saved plan
+      openDash();
+      return true;
+    }
+  }catch(e){ console.warn('saveTrainingPlan:', e); }
   return false;
 };
 
@@ -635,20 +646,38 @@ window.loadChatHistory = function(){ renderChatHistory(); };
 function renderPlans(){
   var list=document.getElementById('plans-list');
   var plans=uData.plans||[];
-  if(!plans.length){list.innerHTML='<div style="font-size:12px;color:var(--text3);text-align:center;padding:.75rem">'+wt('noPlans')+'</div>';return;}
-  list.innerHTML=plans.map(p=>{
+  if(!plans.length){
+    list.innerHTML='<div style="font-size:12px;color:var(--text3);text-align:center;padding:.85rem;line-height:1.6">'+
+      wt('noPlans')+'<br><span style="font-size:10px;opacity:.7">Generate a plan → click Save plan to dashboard</span></div>';
+    return;
+  }
+  list.innerHTML=plans.map(function(p){
     var d=p.created_at?new Date(p.created_at).toLocaleDateString():'';
-    return'<div class="plan-row">'+
-      '<div onclick="loadPlan(\''+p.id+'\')"><div class="plan-name">'+p.name+'</div>'+
-      '<div class="plan-meta">'+p.ftp+'W · '+p.weeks+'wk · '+p.sessions_week+'×/wk · '+p.km_session+'km · '+d+'</div></div>'+
-      '<button onclick="delPlan(\''+p.id+'\')" style="border:none;background:none;color:var(--text3);cursor:pointer;padding:4px 6px;font-size:12px">✕</button>'+
-      '</div>';
+    var meta=[p.ftp&&(p.ftp+'W'),p.weeks&&(p.weeks+'wk'),p.sessions_week&&(p.sessions_week+'×/wk'),p.km_session&&(p.km_session+'km'),d].filter(Boolean).join(' · ');
+    return'<div class="plan-row" onclick="loadPlan(\''+p.id+'\')">'+
+      '<div style="flex:1;min-width:0">'+
+      '<div class="plan-name">'+(p.name||'Plan')+'</div>'+
+      '<div class="plan-meta">'+meta+'</div></div>'+
+      '<div style="display:flex;align-items:center;gap:5px;flex-shrink:0">'+
+      '<span style="font-size:10px;color:var(--z2c);font-weight:700;padding:2px 7px;background:rgba(39,174,122,.12);border-radius:5px;white-space:nowrap">▶ Load</span>'+
+      '<button onclick="event.stopPropagation();delPlan(\''+p.id+'\')" style="border:none;background:none;color:var(--text3);cursor:pointer;padding:3px 6px;font-size:12px" title="Delete">✕</button>'+
+      '</div></div>';
   }).join('');
 }
 function loadPlan(id){
-  var p=uData.plans.find(x=>x.id===id);
-  if(p&&p.plan_data){ callApp('loadPlanData', p.plan_data); }
+  var p=uData.plans.find(function(x){return x.id===id;});
+  if(!p) return;
+  // Merge top-level fields into plan_data for full restoration
+  var pd=Object.assign({}, p.plan_data||{}, {
+    ftp:p.ftp, weeks:p.weeks,
+    sessions_week:p.sessions_week, sessW:p.sessions_week,
+    km_session:p.km_session, kmS:p.km_session
+  });
+  callApp('loadPlanData', pd);
   closeDash();
+  // Scroll to top of app
+  var fr=getAppFrame();
+  if(fr) fr.scrollIntoView({behavior:'smooth',block:'start'});
 }
 async function delPlan(id){
   if(!confirm('Delete plan?')) return;
