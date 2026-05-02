@@ -361,6 +361,11 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
       </div>
     </div>
     <button class="gen-btn" id="gen-btn" onclick="generatePlan()"><span id="lbl-gen">Generate Training Plan →</span></button>
+    <div id="save-plan-row" style="display:none;margin-top:10px">
+      <button class="save-plan-btn" id="save-plan-btn" onclick="savePlanToDashboard()" style="width:100%">
+        💾 <span id="lbl-save-plan">Save plan to dashboard</span>
+      </button>
+    </div>
   </div>
 </div>
 
@@ -378,11 +383,6 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
     <div class="sched-wrap" id="week-sched"></div>
     <div style="font-size:11px;color:var(--text3);margin-top:10px"><span id="week-tss"></span></div>
     <div class="cal-row" id="cal-row"></div>
-    <div id="save-plan-row" style="display:none">
-      <button class="save-plan-btn" id="save-plan-btn" onclick="savePlanToDashboard()">
-        💾 <span id="lbl-save-plan">Save plan to dashboard</span>
-      </button>
-    </div>
   </div>
 </div>
 
@@ -1152,9 +1152,10 @@ function renderProgression(){
     var kmFactor=phase==='recovery'?0.7:1.0;
     var sessionKm={ss:p.kmS*kmFactor,th:p.kmS*kmFactor,vo:p.kmS*0.9*kmFactor,z2:p.kmS*kmFactor,long:p.kmS*1.5*kmFactor};
     slots.forEach(function(s){
-      if(s.type!=='rest'){
-        var d=Math.round(sessionKm[s.type]*2);
-        wTSS+=computeTSS(s.type,d,p.ftp,sessionKm[s.type]);
+      var tp=s&&s.type?s.type:(typeof s==='string'?s:'rest');
+      if(tp!=='rest' && sessionKm[tp]!==undefined){
+        var d=Math.round(sessionKm[tp]*2);
+        wTSS+=computeTSS(tp,d,p.ftp,sessionKm[tp]);
       }
     });
     // Volume bar proportions by phase
@@ -1546,6 +1547,7 @@ function setLang(lang){
   applyTr();
   recalcZones();
   if(plan){renderWeek();renderWorkoutTabs();renderProgression();}
+  resetSavePlanBtn();
 }
 
 function applyTr(){
@@ -1637,9 +1639,52 @@ if(window.self !== window.top){ document.body.classList.add('in-iframe');
 applyTr();
 recalcZones();
 
-// ── PARENT INTEGRATION ────────────────────────────────────────────────────
-// Called by dashboard when user is logged in to restore saved data
-// ── Expose functions for parent iframe bridge ────────────────────────────
+// ── SAVE PLAN ─────────────────────────────────────────────────────────────
+function resetSavePlanBtn(){
+  var btn=document.getElementById('save-plan-btn');
+  var lbl=document.getElementById('lbl-save-plan');
+  if(!btn||!lbl) return;
+  btn.classList.remove('saved','saving');
+  btn.disabled=false;
+  lbl.textContent=curLang==='uk'?'💾 Зберегти план у кабінет':
+                  curLang==='pl'?'💾 Zapisz plan w panelu':
+                  '💾 Save plan to dashboard';
+}
+
+function savePlanToDashboard(){
+  if(!plan) return;
+  var btn=document.getElementById('save-plan-btn');
+  var lbl=document.getElementById('lbl-save-plan');
+  if(btn) btn.classList.add('saving');
+  if(lbl) lbl.textContent=curLang==='uk'?'Зберігаємо...':curLang==='pl'?'Zapisuję...':'Saving...';
+  var snapshot={
+    name:'Plan FTP'+plan.ftp+'W '+plan.weeks+'wk',
+    ftp:plan.ftp, weeks:plan.weeks,
+    sessions_week:plan.sessW, km_session:plan.kmS,
+    plan_data:{
+      ftp:plan.ftp, age:plan.age, weight:plan.weight, gender:plan.gender,
+      hrmax:plan.hrmax, hrrest:plan.hrrest, lthr:plan.lthr||162,
+      hrmax2:Math.round(getInput('f-hrmax2')||plan.hrmax),
+      hr_method:plan.hrZoneMethod||'karvonen',
+      tr_mode:trMode,
+      sessW:plan.sessW, sessions_week:plan.sessW,
+      kmS:plan.kmS,   km_session:plan.kmS,
+      weeks:plan.weeks, plan_weeks:plan.weeks
+    }
+  };
+  try{
+    parent.postMessage({type:'savePlan', data:snapshot},'*');
+    setTimeout(function(){
+      if(btn){ btn.classList.remove('saving'); btn.classList.add('saved'); }
+      if(lbl) lbl.textContent=curLang==='uk'?'✓ Збережено!':curLang==='pl'?'✓ Zapisano!':'✓ Saved!';
+    }, 500);
+  }catch(e){
+    if(btn) btn.classList.remove('saving');
+    if(lbl) lbl.textContent='Error — sign in to save';
+  }
+}
+
+// ── PARENT INTEGRATION ─────────────────────────────────────────────────────
 window.setAppLang = function(lang){ if(typeof setLang==='function') setLang(lang); };
 
 window.loadAthleteData = function(data){
