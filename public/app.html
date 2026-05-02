@@ -1618,13 +1618,18 @@ document.getElementById('chat-input').addEventListener('input',function(){this.s
 
 // ─── INIT ─────────────────────────────────────────────────────────────────
 // Hide duplicate nav when running inside parent dashboard
-if(window.self !== window.top){ document.body.classList.add('in-iframe'); }
+if(window.self !== window.top){ document.body.classList.add('in-iframe');
+  setTimeout(function(){try{parent.postMessage({type:'appReady'},'*');}catch(e){}},250);
+}
 
 applyTr();
 recalcZones();
 
 // ── PARENT INTEGRATION ────────────────────────────────────────────────────
 // Called by dashboard when user is logged in to restore saved data
+// ── Expose functions for parent iframe bridge ────────────────────────────
+window.setAppLang = function(lang){ if(typeof setLang==='function') setLang(lang); };
+
 window.loadAthleteData = function(data){
   if(!data) return;
   if(data.ftp)    { document.getElementById('f-ftp').value=data.ftp; document.getElementById('ftp-out').textContent=data.ftp; }
