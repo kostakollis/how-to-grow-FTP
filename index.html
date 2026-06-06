@@ -1115,8 +1115,8 @@ function renderWorkout(idx){
     '<div class="dl-section">'+
     '<div class="dl-section-title">📥 '+tr('dlTitle')+'</div>'+
     '<div class="dl-btns">'+
-    ['ZWO','FIT','MRC','ERG','TCX'].map(function(f){return'<button class="dl-btn" onclick="dlFormat('+idx+',\''+f+'\')">.'+f+'</button>';}).join('')+
-    '</div><div class="dl-compat">'+tr('dlCompat')+'</div></div>'+
+    '<button class="dl-btn" onclick="dlFormat('+idx+',\'ZWO\')">.ZWO — Hammerhead Karoo</button>'+
+    '</div></div>'+
     '</div>';
 }
 
