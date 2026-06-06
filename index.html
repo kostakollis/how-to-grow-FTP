@@ -957,12 +957,13 @@ function renderWeek(){
   document.getElementById('week-tss').textContent=
     (tr('tssWeek')||'Weekly TSS: {tss} · km: {km}').replace('{tss}',weekTSS).replace('{km}',weekKm);
 
-  // Calendar buttons
+  // Calendar + download all buttons
   document.getElementById('cal-row').innerHTML=
     '<button class="cal-btn primary" onclick="downloadICS(1)">📅 '+tr('calWeek')+'</button>'+
     (p.weeks>=4?'<button class="cal-btn" onclick="downloadICS(4)">📅 4 wk</button>':'')+
     (p.weeks>=8?'<button class="cal-btn" onclick="downloadICS(8)">📅 8 wk</button>':'')+
-    '<button class="cal-btn" onclick="downloadICS('+p.weeks+')">📅 '+tr('calFull')+'</button>';
+    '<button class="cal-btn" onclick="downloadICS('+p.weeks+')">📅 '+tr('calFull')+'</button>'+
+    '<button class="cal-btn" style="margin-left:8px;background:var(--z4bg);color:var(--z4c);border-color:var(--z4c)" onclick="dlAllWorkouts()">📥 All workouts .ZWO</button>';
 }
 
 function navWeek(dir){
@@ -1034,7 +1035,12 @@ function getWorkout(idx){
         {dot:'var(--z1c)',t:'Last '+cd+' min',main:phases[0]+' — mandatory',sub:'Easy Z1 · '+cad.vo[3]+' rpm'}
       ],
       note:tr('nb').vo,cad:cad.vo,
-      zwo:buildZwo(wu,4,reps,4,cd,1.15,p.ftp,cad.vo)};
+      zwo:buildZwo(wu,4,reps,4,cd,1.15,p.ftp,cad.vo,
+        [hrKarvonen(0.55,p.hrrest,p.hrmax), hrKarvonen(0.72,p.hrrest,p.hrmax)],  // warmup Z1-Z2
+        [hrKarvonen(0.90,p.hrrest,p.hrmax), hrKarvonen(0.98,p.hrrest,p.hrmax)],  // work Z5 VO2max
+        [hrKarvonen(0.50,p.hrrest,p.hrmax), hrKarvonen(0.65,p.hrrest,p.hrmax)],  // rest Z1
+        [hrKarvonen(0.50,p.hrrest,p.hrmax), hrKarvonen(0.65,p.hrrest,p.hrmax)]   // cooldown Z1
+      )};
   }
   // ZONE 2
   var tgt=target(0.56,0.75,'z2');
@@ -1049,13 +1055,13 @@ function getWorkout(idx){
     zwo:[{n:'WarmUp',d:600,p:0.60,cad:cad.z2[0]},{n:'Z2',d:Math.max(60,(totalMin-20)*60),p:0.65,cad:cad.z2[1]},{n:'CoolDown',d:600,p:0.48,cad:cad.z2[2]}]};
 }
 
-function buildZwo(wu,repLen,reps,rest,cd,pFrac,ftp,cad){
-  var parts=[{n:'WarmUp',d:wu*60,p:0.60,cad:cad[0]}];
+function buildZwo(wu,repLen,reps,rest,cd,pFrac,ftp,cad,hrWu,hrWork,hrRest,hrCd){
+  var parts=[{n:'WarmUp',d:wu*60,p:0.60,cad:cad[0],hrLo:hrWu?hrWu[0]:null,hrHi:hrWu?hrWu[1]:null}];
   for(var i=0;i<reps;i++){
-    parts.push({n:'Work-'+(i+1),d:repLen*60,p:pFrac,cad:cad[2]});
-    if(i<reps-1) parts.push({n:'Rest',d:rest*60,p:0.50,cad:cad[3]});
+    parts.push({n:'Work-'+(i+1),d:repLen*60,p:pFrac,cad:cad[2],hrLo:hrWork?hrWork[0]:null,hrHi:hrWork?hrWork[1]:null});
+    if(i<reps-1) parts.push({n:'Rest',d:rest*60,p:0.50,cad:cad[3],hrLo:hrRest?hrRest[0]:null,hrHi:hrRest?hrRest[1]:null});
   }
-  parts.push({n:'CoolDown',d:cd*60,p:0.48,cad:cad[3]});
+  parts.push({n:'CoolDown',d:cd*60,p:0.48,cad:cad[3],hrLo:hrCd?hrCd[0]:null,hrHi:hrCd?hrCd[1]:null});
   return parts;
 }
 
@@ -1185,8 +1191,16 @@ function fileSave(blob,fn){
   setTimeout(function(){document.body.removeChild(a);URL.revokeObjectURL(url);},500);
 }
 
+function dlAllWorkouts(){
+  if(!plan) return;
+  // stagger downloads 400ms apart so browser doesn't block them
+  [0,1,2,3].forEach(function(idx,i){
+    setTimeout(function(){dlFormat(idx,'ZWO');},i*400);
+  });
+}
+
 // helpers shared
-function xmlEsc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/[^\x09\x0A\x0D\x20-\x7E]/g,'');}
+function xmlEsc(s){return String(s).replace(/[–—]/g,'-').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/[^\x09\x0A\x0D\x20-\x7E]/g,'');}
 function u16le(v){return[v&0xFF,(v>>8)&0xFF];}
 function u32le(v){return[v&0xFF,(v>>8)&0xFF,(v>>16)&0xFF,(v>>24)&0xFF];}
 function fitStr(s,len){var b=[];for(var i=0;i<len;i++)b.push(i<s.length?s.charCodeAt(i)&0x7F:0x00);b[len-1]=0x00;return b;}
@@ -1197,19 +1211,13 @@ function fitCRC16(bytes){
 }
 
 // ZWO - Hammerhead Karoo (Dashboard import)
-// Rules per Hammerhead docs:
-//   - Warmup / Cooldown: PowerLow + PowerHigh (ramp range)
-//   - IntervalsT: OnPowerLow/OnPowerHigh + OffPowerLow/OffPowerHigh (range, not single point)
-//   - SteadyState: PowerLow + PowerHigh (range ±4% of target)
-//   - CadenceLow/CadenceHigh on every step
-//   - No zone-based targets, no Ramp, no MaxEffort
+// IntervalsT supports only OnPower/OffPower (single value) per ZWO spec.
+// For power ranges, expand repeats into individual SteadyState steps with PowerLow/PowerHigh.
+// Warmup/Cooldown use PowerLow/PowerHigh ramp. SteadyState uses PowerLow/PowerHigh range.
 function dlZWO(w,nm){
   var ftp=plan.ftp;
-  // helper: fraction → ±4% range string pair
-  function pRange(mid,spread){
-    spread=spread||0.04;
-    return{lo:(mid-spread).toFixed(4), hi:(mid+spread).toFixed(4)};
-  }
+  function pLo(mid){return(mid-0.04).toFixed(4);}
+  function pHi(mid){return(mid+0.04).toFixed(4);}
   var lines=[
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<workout_file>',
@@ -1227,40 +1235,38 @@ function dlZWO(w,nm){
     var cAttr=' CadenceLow="'+cLo+'" CadenceHigh="'+cHi+'"';
 
     if(p.n==='WarmUp'){
-      // Ramp from 0.40 up to target
-      lines.push('    <Warmup Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(4)+'"'+cAttr+'/>');
+      var hrAttr=p.hrLo?' HeartRateLow="'+p.hrLo+'" HeartRateHigh="'+p.hrHi+'"':'';
+      lines.push('    <Warmup Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(4)+'"'+cAttr+hrAttr+'/>');
       i++;
 
     } else if(p.n==='CoolDown'){
-      // Ramp from target down to 0.40
-      lines.push('    <Cooldown Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(4)+'"'+cAttr+'/>');
+      var hrAttr=p.hrLo?' HeartRateLow="'+p.hrLo+'" HeartRateHigh="'+p.hrHi+'"':'';
+      lines.push('    <Cooldown Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(4)+'"'+cAttr+hrAttr+'/>');
       i++;
 
     } else if(p.n&&p.n.indexOf('Work')===0 && segs[i+1]&&segs[i+1].n==='Rest'){
-      // Repeating interval block → IntervalsT with power ranges
-      var rep=0, j=i;
+      // Expand repeating Work+Rest into individual SteadyState pairs (supports PowerLow/PowerHigh)
+      var j=i;
       while(j<segs.length && segs[j].n&&segs[j].n.indexOf('Work')===0){
-        if(segs[j+1]&&segs[j+1].n==='Rest'){rep++;j+=2;} else {rep++;j++;break;}
+        var wSeg=segs[j];
+        var rSeg=segs[j+1]&&segs[j+1].n==='Rest'?segs[j+1]:null;
+        var wCLo=wSeg.cad||88, wCHi=Math.min(105,wCLo+8);
+        var wHr=wSeg.hrLo?' HeartRateLow="'+wSeg.hrLo+'" HeartRateHigh="'+wSeg.hrHi+'"':'';
+        lines.push('    <SteadyState Duration="'+wSeg.d+'" PowerLow="'+pLo(wSeg.p)+'" PowerHigh="'+pHi(wSeg.p)+'" CadenceLow="'+wCLo+'" CadenceHigh="'+wCHi+'"'+wHr+'/>');
+        if(rSeg){
+          var rCLo=rSeg.cad||80, rCHi=Math.min(100,rCLo+8);
+          var rHr=rSeg.hrLo?' HeartRateLow="'+rSeg.hrLo+'" HeartRateHigh="'+rSeg.hrHi+'"':'';
+          lines.push('    <SteadyState Duration="'+rSeg.d+'" PowerLow="'+pLo(rSeg.p)+'" PowerHigh="'+pHi(rSeg.p)+'" CadenceLow="'+rCLo+'" CadenceHigh="'+rCHi+'"'+rHr+'/>');
+          j+=2;
+        } else {
+          j++;
+        }
       }
-      var rSeg=segs[i+1];
-      var onR=pRange(p.p, 0.04);
-      var offR=pRange(rSeg.p, 0.04);
-      var wCLo=p.cad||88, wCHi=Math.min(105,wCLo+8);
-      var rCLo=rSeg.cad||80, rCHi=Math.min(100,rCLo+8);
-      lines.push('    <IntervalsT Repeat="'+rep+'"'+
-        ' OnDuration="'+p.d+'" OffDuration="'+rSeg.d+'"'+
-        ' OnPowerLow="'+onR.lo+'" OnPowerHigh="'+onR.hi+'"'+
-        ' OffPowerLow="'+offR.lo+'" OffPowerHigh="'+offR.hi+'"'+
-        ' CadenceLow="'+wCLo+'" CadenceHigh="'+wCHi+'"'+
-        ' CadenceRestingLow="'+rCLo+'" CadenceRestingHigh="'+rCHi+'"'+
-        '/>');
       i=j;
 
     } else {
-      // SteadyState — use PowerLow/PowerHigh range (±4%)
-      var r=pRange(p.p, 0.04);
-      lines.push('    <SteadyState Duration="'+p.d+'"'+
-        ' PowerLow="'+r.lo+'" PowerHigh="'+r.hi+'"'+cAttr+'/>');
+      var hrAttr=p.hrLo?' HeartRateLow="'+p.hrLo+'" HeartRateHigh="'+p.hrHi+'"':'';
+      lines.push('    <SteadyState Duration="'+p.d+'" PowerLow="'+pLo(p.p)+'" PowerHigh="'+pHi(p.p)+'"'+cAttr+hrAttr+'/>');
       i++;
     }
   }
