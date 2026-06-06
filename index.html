@@ -205,6 +205,57 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
 
 @media(max-width:880px){.main-grid{grid-template-columns:1fr}.zones-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:500px){.profile-row-sm,.plan-params{grid-template-columns:1fr 1fr}.sched-wrap{grid-template-columns:repeat(4,1fr)}.hdr{padding:.6rem 1rem}.page{padding:1.25rem 1rem}}
+
+/* ── ACCOUNT ── */
+.acct-btn{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:7px;border:1.5px solid var(--border2);font-size:12px;font-weight:600;cursor:pointer;background:var(--bg2);color:var(--text);transition:background .15s}
+.acct-btn:hover{background:var(--bg3)}
+.acct-btn .acct-avatar{width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
+
+/* overlay */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:500;display:flex;align-items:center;justify-content:center;padding:1rem}
+.overlay.hidden{display:none}
+.modal{background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--radius-lg);padding:1.5rem;width:100%;max-width:420px;box-shadow:var(--shadow-md);position:relative;max-height:90vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:.25rem}
+.modal-sub{font-size:12px;color:var(--text3);margin-bottom:1.25rem}
+.modal-close{position:absolute;top:1rem;right:1rem;background:none;border:none;font-size:18px;cursor:pointer;color:var(--text3);line-height:1}
+.modal-close:hover{color:var(--text)}
+
+/* pin dots */
+.pin-row{display:flex;gap:10px;justify-content:center;margin-bottom:1.25rem}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border2);background:transparent;transition:background .15s}
+.pin-dot.filled{background:var(--accent);border-color:var(--accent)}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.pin-key{padding:13px 8px;border-radius:var(--radius-sm);border:1.5px solid var(--border2);font-size:18px;font-weight:700;cursor:pointer;background:var(--bg3);color:var(--text);text-align:center;transition:background .15s}
+.pin-key:hover{background:var(--bg4)}
+.pin-key.wide{grid-column:span 1}
+.pin-err{font-size:12px;color:var(--z5c);text-align:center;min-height:18px;margin-bottom:.5rem}
+
+/* saved profiles list */
+.snap-list{display:flex;flex-direction:column;gap:8px;margin-bottom:1rem}
+.snap-item{background:var(--bg3);border:1.5px solid var(--border);border-radius:var(--radius-sm);padding:.75rem 1rem;cursor:pointer;transition:border-color .15s;position:relative}
+.snap-item:hover{border-color:var(--border2)}
+.snap-item.active-snap{border-color:var(--accent)}
+.snap-name{font-size:13px;font-weight:700}
+.snap-meta{font-size:10px;color:var(--text3);margin-top:3px;line-height:1.5}
+.snap-del{position:absolute;top:.6rem;right:.7rem;background:none;border:none;font-size:13px;cursor:pointer;color:var(--text3);padding:2px 5px;border-radius:4px}
+.snap-del:hover{color:var(--z5c);background:var(--z5bg)}
+.snap-empty{text-align:center;padding:2rem 1rem;color:var(--text3);font-size:12px}
+
+.modal-actions{display:flex;gap:8px;flex-wrap:wrap}
+.btn-primary{flex:1;padding:.75rem;border-radius:var(--radius-sm);border:none;background:var(--accent);color:var(--accent-fg);font-size:13px;font-weight:700;cursor:pointer}
+.btn-primary:hover{opacity:.88}
+.btn-secondary{flex:1;padding:.75rem;border-radius:var(--radius-sm);border:1.5px solid var(--border2);background:transparent;color:var(--text);font-size:13px;font-weight:600;cursor:pointer}
+.btn-secondary:hover{background:var(--bg3)}
+.btn-danger{padding:.75rem 1rem;border-radius:var(--radius-sm);border:1.5px solid var(--z5c);background:transparent;color:var(--z5c);font-size:13px;font-weight:600;cursor:pointer}
+.btn-danger:hover{background:var(--z5bg)}
+.save-name-row{display:flex;gap:8px;margin-bottom:1rem}
+.save-name-row input{flex:1;padding:.6rem .8rem;border:1.5px solid var(--border2);border-radius:var(--radius-sm);font-size:13px;font-weight:500;background:var(--bg);color:var(--text);outline:none}
+.save-name-row input:focus{border-color:var(--accent)}
+.acct-section-title{font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--text3);margin-bottom:.6rem}
+.tab-pills{display:flex;gap:4px;background:var(--bg3);border:1.5px solid var(--border2);padding:3px;border-radius:var(--radius-sm);margin-bottom:1.1rem}
+.tab-pill{flex:1;padding:5px 8px;border-radius:5px;border:none;font-size:11px;font-weight:600;cursor:pointer;background:transparent;color:var(--text2)}
+.tab-pill.active{background:var(--bg2);color:var(--text);box-shadow:var(--shadow)}
+.divider{border:none;border-top:1.5px solid var(--border);margin:.9rem 0}
 </style>
 </head>
 <body>
@@ -218,10 +269,16 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
         <div class="logo-sub" id="hdr-sub">Science-based FTP training</div>
       </div>
     </div>
-    <div class="lang-row">
-      <button class="lang-btn active" onclick="setLang('en')">EN</button>
-      <button class="lang-btn" onclick="setLang('uk')">УК</button>
-      <button class="lang-btn" onclick="setLang('pl')">PL</button>
+    <div style="display:flex;align-items:center;gap:8px">
+      <div class="lang-row">
+        <button class="lang-btn active" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" onclick="setLang('uk')">УК</button>
+        <button class="lang-btn" onclick="setLang('pl')">PL</button>
+      </div>
+      <button class="acct-btn" id="acct-hdr-btn" onclick="openAcctModal()">
+        <div class="acct-avatar" id="acct-avatar">?</div>
+        <span id="acct-hdr-label">Account</span>
+      </button>
     </div>
   </div>
 </header>
@@ -385,6 +442,14 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
 </div>
 
 </div>
+</div>
+
+<!-- ── ACCOUNT MODAL ── -->
+<div class="overlay hidden" id="overlay-acct">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAcctModal()">✕</button>
+    <div id="acct-modal-body"></div>
+  </div>
 </div>
 
 <footer>
@@ -1494,7 +1559,255 @@ function applyTr(){
 }
 
 
-// ─── LIVE LISTENERS for zone recalc ───────────────────────────────────────
+
+// ─── ACCOUNT SYSTEM (localStorage, PIN-protected) ─────────────────────────
+var ACCT_KEY='ctp_account', SNAPS_KEY='ctp_snapshots';
+var acctState={unlocked:false,pin:null};
+
+function acctLoad(){
+  try{return JSON.parse(localStorage.getItem(ACCT_KEY))||null;}catch(e){return null;}
+}
+function acctSave(obj){localStorage.setItem(ACCT_KEY,JSON.stringify(obj));}
+function snapsLoad(){
+  try{return JSON.parse(localStorage.getItem(SNAPS_KEY))||[];}catch(e){return[];}
+}
+function snapsSave(arr){localStorage.setItem(SNAPS_KEY,JSON.stringify(arr));}
+
+// collect current form values
+function collectProfile(){
+  return{
+    age:document.getElementById('f-age').value,
+    weight:document.getElementById('f-weight').value,
+    gender:document.getElementById('f-gender').value,
+    hrrest:document.getElementById('f-hrrest').value,
+    hrmax:document.getElementById('f-hrmax').value,
+    ftp:document.getElementById('f-ftp').value,
+    lthr:document.getElementById('f-lthr').value,
+    hrmax2:document.getElementById('f-hrmax2').value,
+    sess:document.getElementById('f-sess').value,
+    km:document.getElementById('f-km').value,
+    weeks:document.getElementById('f-weeks').value,
+    hrZoneMethod:hrZoneMethod,
+    trMode:trMode
+  };
+}
+function applyProfile(p){
+  var set=function(id,v){var el=document.getElementById(id);if(el)el.value=v;};
+  set('f-age',p.age);set('f-weight',p.weight);set('f-sess',p.sess);set('f-km',p.km);
+  set('f-hrrest',p.hrrest);set('f-hrmax',p.hrmax);set('f-ftp',p.ftp);
+  set('f-lthr',p.lthr);set('f-hrmax2',p.hrmax2);set('f-weeks',p.weeks);
+  document.getElementById('f-gender').value=p.gender;
+  document.getElementById('ftp-out').textContent=p.ftp;
+  if(p.hrZoneMethod) setHrMethod(p.hrZoneMethod);
+  if(p.trMode){trMode=p.trMode;}
+  recalcZones();
+}
+
+// ── PIN helpers ──
+var _pinBuffer='', _pinTarget=null, _pinCallback=null;
+function renderPinDots(len,filled){
+  var h='';for(var i=0;i<len;i++)h+='<div class="pin-dot'+(i<filled?' filled':'')+'"></div>';
+  return h;
+}
+function renderPinPad(){
+  var keys=['1','2','3','4','5','6','7','8','9','','0','⌫'];
+  return keys.map(function(k){
+    if(k==='')return'<div></div>';
+    return'<button class="pin-key" onclick="pinKey(\''+k+'\')">'+k+'</button>';
+  }).join('');
+}
+function pinKey(k){
+  var lenTarget=_pinTarget==='set'?4:_pinTarget;
+  if(k==='⌫'){_pinBuffer=_pinBuffer.slice(0,-1);}
+  else if(_pinBuffer.length<6){_pinBuffer+=k;}
+  document.getElementById('pin-dots').innerHTML=renderPinDots(6,_pinBuffer.length);
+  document.getElementById('pin-err').textContent='';
+  if(k!=='⌫'&&_pinCallback&&_pinBuffer.length>=4){
+    var buf=_pinBuffer;
+    _pinBuffer='';
+    _pinCallback(buf);
+  }
+}
+
+// ── Modal screens ──
+function openAcctModal(){
+  var acct=acctLoad();
+  if(!acct){renderSetupPin();}
+  else if(!acctState.unlocked){renderUnlockPin();}
+  else{renderDashboard();}
+  document.getElementById('overlay-acct').classList.remove('hidden');
+}
+function closeAcctModal(){
+  document.getElementById('overlay-acct').classList.add('hidden');
+  _pinBuffer='';
+}
+
+function renderSetupPin(){
+  _pinBuffer='';
+  var body=document.getElementById('acct-modal-body');
+  body.innerHTML=
+    '<div class="modal-title">Create account</div>'+
+    '<div class="modal-sub">Set a PIN to protect your saved profiles. 4–6 digits.</div>'+
+    '<div class="pin-row" id="pin-dots">'+renderPinDots(6,0)+'</div>'+
+    '<div class="pin-err" id="pin-err"></div>'+
+    '<div class="pin-pad">'+renderPinPad()+'</div>';
+  _pinTarget='set';
+  var step=1, firstPin='';
+  _pinCallback=function(pin){
+    if(step===1){
+      firstPin=pin;step=2;
+      document.getElementById('acct-modal-body').querySelector('.modal-sub').textContent='Confirm your PIN.';
+      document.getElementById('pin-dots').innerHTML=renderPinDots(6,0);
+    } else {
+      if(pin!==firstPin){
+        document.getElementById('pin-err').textContent='PINs do not match. Try again.';
+        step=1;firstPin='';
+        document.getElementById('pin-dots').innerHTML=renderPinDots(6,0);
+      } else {
+        acctSave({pin:btoa(pin),created:Date.now()});
+        acctState.unlocked=true;acctState.pin=pin;
+        updateAcctBtn();renderDashboard();
+      }
+    }
+  };
+}
+
+function renderUnlockPin(){
+  _pinBuffer='';
+  var body=document.getElementById('acct-modal-body');
+  body.innerHTML=
+    '<div class="modal-title">Unlock account</div>'+
+    '<div class="modal-sub">Enter your PIN to access saved profiles.</div>'+
+    '<div class="pin-row" id="pin-dots">'+renderPinDots(6,0)+'</div>'+
+    '<div class="pin-err" id="pin-err"></div>'+
+    '<div class="pin-pad">'+renderPinPad()+'</div>'+
+    '<hr class="divider">'+
+    '<button class="btn-danger" style="width:100%;font-size:11px;padding:.5rem" onclick="renderResetConfirm()">Reset account (delete all data)</button>';
+  _pinTarget='unlock';
+  _pinCallback=function(pin){
+    var acct=acctLoad();
+    if(btoa(pin)===acct.pin){
+      acctState.unlocked=true;acctState.pin=pin;
+      updateAcctBtn();renderDashboard();
+    } else {
+      document.getElementById('pin-err').textContent='Wrong PIN. Try again.';
+      document.getElementById('pin-dots').innerHTML=renderPinDots(6,0);
+    }
+  };
+}
+
+function renderResetConfirm(){
+  var body=document.getElementById('acct-modal-body');
+  body.innerHTML=
+    '<div class="modal-title">Reset account?</div>'+
+    '<div class="modal-sub">This will permanently delete your PIN and all saved profiles. Cannot be undone.</div>'+
+    '<div class="modal-actions">'+
+    '<button class="btn-danger" onclick="doReset()">Delete everything</button>'+
+    '<button class="btn-secondary" onclick="renderUnlockPin()">Cancel</button>'+
+    '</div>';
+}
+function doReset(){
+  localStorage.removeItem(ACCT_KEY);localStorage.removeItem(SNAPS_KEY);
+  acctState.unlocked=false;acctState.pin=null;
+  updateAcctBtn();closeAcctModal();
+}
+
+function renderDashboard(){
+  var snaps=snapsLoad();
+  var body=document.getElementById('acct-modal-body');
+
+  // build snapshot list HTML
+  var listHtml='';
+  if(snaps.length===0){
+    listHtml='<div class="snap-empty">No saved profiles yet.<br>Save current parameters below.</div>';
+  } else {
+    listHtml='<div class="snap-list">';
+    snaps.slice().reverse().forEach(function(s,ri){
+      var i=snaps.length-1-ri;
+      var d=new Date(s.ts);
+      var dateStr=d.toLocaleDateString()+' '+d.toLocaleTimeString(undefined,{hour:'2-digit',minute:'2-digit'});
+      var meta='FTP '+s.profile.ftp+'W · '+s.profile.weight+'kg · '+s.profile.sess+'×/wk · '+s.profile.km+'km · '+s.profile.weeks+'wk plan';
+      listHtml+=
+        '<div class="snap-item" onclick="loadSnap('+i+')">'+
+        '<button class="snap-del" onclick="event.stopPropagation();deleteSnap('+i+')">🗑</button>'+
+        '<div class="snap-name">'+escHtml(s.name)+'</div>'+
+        '<div class="snap-meta">'+dateStr+'<br>'+meta+'</div>'+
+        '</div>';
+    });
+    listHtml+='</div>';
+  }
+
+  body.innerHTML=
+    '<div class="modal-title">My Account</div>'+
+    '<div class="modal-sub" style="display:flex;justify-content:space-between;align-items:center">'+
+    '<span>Saved profiles · '+snaps.length+' saved</span>'+
+    '<button class="btn-danger" style="font-size:10px;padding:3px 8px" onclick="lockAcct()">Lock</button>'+
+    '</div>'+
+
+    '<div class="acct-section-title">Saved profiles</div>'+
+    listHtml+
+
+    '<hr class="divider">'+
+    '<div class="acct-section-title">Save current parameters</div>'+
+    '<div class="save-name-row">'+
+    '<input type="text" id="snap-name-inp" placeholder="e.g. Pre-Swede Loop, Week 4 test..." maxlength="40">'+
+    '</div>'+
+    '<div class="modal-actions">'+
+    '<button class="btn-primary" onclick="saveSnap()">💾 Save snapshot</button>'+
+    '<button class="btn-secondary" onclick="closeAcctModal()">Close</button>'+
+    '</div>';
+}
+
+function saveSnap(){
+  var nameEl=document.getElementById('snap-name-inp');
+  var name=(nameEl&&nameEl.value.trim())||('Snapshot '+new Date().toLocaleDateString());
+  var snaps=snapsLoad();
+  snaps.push({name:name,ts:Date.now(),profile:collectProfile()});
+  snapsSave(snaps);
+  renderDashboard();
+}
+function loadSnap(idx){
+  var snaps=snapsLoad();
+  if(!snaps[idx])return;
+  applyProfile(snaps[idx].profile);
+  closeAcctModal();
+}
+function deleteSnap(idx){
+  var snaps=snapsLoad();
+  snaps.splice(idx,1);
+  snapsSave(snaps);
+  renderDashboard();
+}
+function lockAcct(){
+  acctState.unlocked=false;acctState.pin=null;
+  updateAcctBtn();closeAcctModal();
+}
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function updateAcctBtn(){
+  var acct=acctLoad();
+  var label=document.getElementById('acct-hdr-label');
+  var avatar=document.getElementById('acct-avatar');
+  if(!acct){
+    if(label)label.textContent='Account';
+    if(avatar)avatar.textContent='?';
+  } else if(acctState.unlocked){
+    var snaps=snapsLoad();
+    if(label)label.textContent=snaps.length+' saved';
+    if(avatar)avatar.textContent='✓';
+  } else {
+    var snaps=snapsLoad();
+    if(label)label.textContent='Locked';
+    if(avatar)avatar.textContent='🔒';
+  }
+}
+
+// close on overlay click
+document.getElementById('overlay-acct').addEventListener('click',function(e){
+  if(e.target===this)closeAcctModal();
+});
+
+ ───────────────────────────────────────
 ['f-ftp','f-hrrest','f-hrmax','f-weight','f-lthr','f-hrmax2'].forEach(function(id){
   var el=document.getElementById(id);
   if(!el) return;
@@ -1508,6 +1821,7 @@ function applyTr(){
 // ─── INIT ─────────────────────────────────────────────────────────────────
 applyTr();
 recalcZones();
+updateAcctBtn();
 </script>
 </body>
 </html>
