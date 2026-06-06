@@ -206,7 +206,7 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
 @media(max-width:880px){.main-grid{grid-template-columns:1fr}.zones-grid{grid-template-columns:repeat(3,1fr)}}
 @media(max-width:500px){.profile-row-sm,.plan-params{grid-template-columns:1fr 1fr}.sched-wrap{grid-template-columns:repeat(4,1fr)}.hdr{padding:.6rem 1rem}.page{padding:1.25rem 1rem}}
 
-/* ── ACCOUNT ── */
+/* - ACCOUNT - */
 .acct-btn{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:7px;border:1.5px solid var(--border2);font-size:12px;font-weight:600;cursor:pointer;background:var(--bg2);color:var(--text);transition:background .15s}
 .acct-btn:hover{background:var(--bg3)}
 .acct-btn .acct-avatar{width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--accent-fg);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;flex-shrink:0}
@@ -444,7 +444,7 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
 </div>
 </div>
 
-<!-- ── ACCOUNT MODAL ── -->
+<!-- - ACCOUNT MODAL - -->
 <div class="overlay hidden" id="overlay-acct">
   <div class="modal">
     <button class="modal-close" onclick="closeAcctModal()">✕</button>
@@ -465,7 +465,7 @@ footer{background:var(--bg2);border-top:1.5px solid var(--border2);margin-top:au
 <script>
 var plan=null, curW=0, curWeekIdx=0, curLang='en', trMode='power', hrZoneMethod='karvonen';
 
-// ─── TRANSLATIONS ─────────────────────────────────────────────────────────
+// - TRANSLATIONS -
 var T={
 en:{
   hdrTitle:'Cycling Training Plan',hdrSub:'Science-based FTP training',
@@ -599,7 +599,7 @@ pl:{
 };
 function tr(k){return(T[curLang]&&T[curLang][k]!==undefined)?T[curLang][k]:(T.en[k]||k);}
 
-// ─── HR ZONE METHOD TOGGLE ────────────────────────────────────────────────
+// - HR ZONE METHOD TOGGLE -
 function setHrMethod(method){
   hrZoneMethod=method;
   // Update buttons
@@ -629,7 +629,7 @@ function setHrMethod(method){
   if(plan){ plan.hrZoneMethod=method; renderWeek(); renderWorkout(curW); }
 }
 
-// ─── HR ZONE CALCULATIONS ─────────────────────────────────────────────────
+// - HR ZONE CALCULATIONS -
 // Method 1: Karvonen (Heart Rate Reserve)
 //   HR_target = HR_rest + pct × (HR_max − HR_rest)
 function hrKarvonen(pct,hrrest,hrmax){
@@ -720,7 +720,7 @@ function pwStr(lo,hi,ftp){
 function round3(n){return Number(n).toFixed(2);}  // 3 significant digits for W/kg
 function getInput(id){return parseFloat(document.getElementById(id).value)||0;}
 
-// ─── LIVE ZONES RECALC (no button needed) ────────────────────────────────
+// - LIVE ZONES RECALC (no button needed) -
 function recalcZones(){
   var ftp=Math.round(getInput('f-ftp')||200);
   var hrrest=Math.round(getInput('f-hrrest')||55);
@@ -782,7 +782,7 @@ function recalcZones(){
     '</div>';
 }
 
-// ─── WEEKLY PLAN ALGORITHM (80/20 + 3+1 periodization) ───────────────────
+// - WEEKLY PLAN ALGORITHM (80/20 + 3+1 periodization) -
 // Phase types: base, build, peak, recovery (Friel 3+1)
 // For N weeks:
 //   1 week:  base
@@ -869,7 +869,7 @@ function computeTSS(type, durMin, ftp, kmS){
   return Math.round((durMin/60)*f*f*100);
 }
 
-// ─── GENERATE PLAN ────────────────────────────────────────────────────────
+// - GENERATE PLAN -
 function generatePlan(){
   var age=Math.round(getInput('f-age')||30);
   var gender=document.getElementById('f-gender').value;
@@ -899,7 +899,7 @@ function generatePlan(){
   renderProgression();
 }
 
-// ─── RENDER WEEK ──────────────────────────────────────────────────────────
+// - RENDER WEEK -
 function renderWeek(){
   if(!plan) return;
   var p=plan;
@@ -971,7 +971,7 @@ function navWeek(dir){
   renderWeek();
 }
 
-// ─── WORKOUT DETAIL ───────────────────────────────────────────────────────
+// - WORKOUT DETAIL -
 function getWorkout(idx){
   if(!plan) return null;
   var p=plan, wts=tr('wt'), phases=tr('cadPhases');
@@ -1125,7 +1125,7 @@ function setMode(m){
   if(plan){renderWorkout(curW);renderWeek();}
 }
 
-// ─── PROGRESSION ──────────────────────────────────────────────────────────
+// - PROGRESSION -
 function renderProgression(){
   if(!plan) return;
   var p=plan;
@@ -1167,7 +1167,7 @@ function renderProgression(){
     (pnote?'<div class="prog-footer">'+pnote+'</div>':'');
 }
 
-// ─── DOWNLOAD FORMATS ─────────────────────────────────────────────────────
+// - DOWNLOAD FORMATS -
 function dlFormat(idx,fmt){
   var w=getWorkout(idx);
   var nm=w.ti.replace(/[^a-zA-Z0-9_-]/g,'_').replace(/__+/g,'_');
@@ -1196,7 +1196,7 @@ function fitCRC16(bytes){
   return c;
 }
 
-// ZWO ─ Zwift/MyWhoosh
+// ZWO - Zwift/MyWhoosh
 // Spec: fraction-of-FTP Power, IntervalsT for repeats, CadenceLow/CadenceHigh
 function dlZWO(w,nm){
   var ftp=plan.ftp;
@@ -1240,7 +1240,7 @@ function dlZWO(w,nm){
   fileSave(new Blob([lines.join('\n')],{type:'application/xml;charset=utf-8'}),nm+'_FTP'+ftp+'.zwo');
 }
 
-// MRC ─ TrainerRoad / Wahoo SYSTM (% FTP, no inline comments in data)
+// MRC - TrainerRoad / Wahoo SYSTM (% FTP, no inline comments in data)
 function dlMRC(w,nm){
   var ftp=plan.ftp;
   var avgCad=0; w.zwo.forEach(function(p){avgCad+=(p.cad||85);}); avgCad=Math.round(avgCad/w.zwo.length);
@@ -1258,7 +1258,7 @@ function dlMRC(w,nm){
   fileSave(new Blob([L.join('\r\n')],{type:'text/plain;charset=utf-8'}),nm+'_FTP'+ftp+'.mrc');
 }
 
-// ERG ─ Wahoo SYSTM / Tacx (absolute watts, no inline comments in data)
+// ERG - Wahoo SYSTM / Tacx (absolute watts, no inline comments in data)
 function dlERG(w,nm){
   var ftp=plan.ftp;
   var avgCad=0; w.zwo.forEach(function(p){avgCad+=(p.cad||85);}); avgCad=Math.round(avgCad/w.zwo.length);
@@ -1276,7 +1276,7 @@ function dlERG(w,nm){
   fileSave(new Blob([L.join('\r\n')],{type:'text/plain;charset=utf-8'}),nm+'_FTP'+ftp+'.erg');
 }
 
-// TCX ─ Garmin Connect / Amazfit / Garmin Edge (proper TCX workout schema)
+// TCX - Garmin Connect / Amazfit / Garmin Edge (proper TCX workout schema)
 function dlTCX(w,nm){
   var ftp=plan.ftp;
   var steps='';
@@ -1310,7 +1310,7 @@ function dlTCX(w,nm){
   fileSave(new Blob([xml],{type:'application/xml;charset=utf-8'}),nm+'_FTP'+ftp+'.tcx');
 }
 
-// FIT binary ─ Garmin Edge / Wahoo Elemnt / Hammerhead
+// FIT binary - Garmin Edge / Wahoo Elemnt / Hammerhead
 // FIT Protocol v2, profile 21.xx — proper file_id + workout + workout_step messages
 function dlFIT(w,nm){
   var ftp=plan.ftp;
@@ -1334,7 +1334,7 @@ function dlFIT(w,nm){
 
   var msgs=[];
 
-  // ── Def local 0 = file_id (global mesg 0) ────────────────────────────
+  // - Def local 0 = file_id (global mesg 0) -
   // Fields: type(0,uint8,1), manufacturer(1,uint16,2), product(2,uint16,2),
   //         serial_number(3,uint32z,4), time_created(4,uint32,4)
   msgs=msgs.concat([
@@ -1357,7 +1357,7 @@ function dlFIT(w,nm){
     .concat(u32le(0))        // serial_number = 0
     .concat(u32le(0));       // time_created = 0
 
-  // ── Def local 1 = workout (global mesg 26 = 0x001A) ──────────────────
+  // - Def local 1 = workout (global mesg 26 = 0x001A) -
   // Fields: sport(0,enum,1), capabilities(1,uint32z,4),
   //         num_valid_steps(2,uint16,2), wkt_name(8,string,16)
   msgs=msgs.concat([
@@ -1380,7 +1380,7 @@ function dlFIT(w,nm){
     .concat(u16le(steps.length))
     .concat(fitStr(shortName,16));
 
-  // ── Def local 2 = workout_step (global mesg 27 = 0x001B) ─────────────
+  // - Def local 2 = workout_step (global mesg 27 = 0x001B) -
   // Fields: message_index(254,uint16,2), wkt_step_name(0,string,16),
   //         duration_type(1,enum,1), duration_value(2,uint32,4),
   //         target_type(3,enum,1), target_value(4,uint32,4),
@@ -1403,7 +1403,7 @@ function dlFIT(w,nm){
     0x07,0x01,0x00   // intensity enum
   ]);
 
-  // ── Data local 2: one message per step ───────────────────────────────
+  // - Data local 2: one message per step -
   steps.forEach(function(s,idx){
     msgs=msgs.concat([0x02])                    // local mesg 2
       .concat(u16le(idx))                       // message_index
@@ -1417,7 +1417,7 @@ function dlFIT(w,nm){
       .concat([s.intensity]);                   // intensity: 0=active,1=rest,2=warmup,3=cooldown
   });
 
-  // ── Def local 3 = session (global mesg 18 = 0x0012) ──────────────────
+  // - Def local 3 = session (global mesg 18 = 0x0012) -
   // Required by Intervals.icu and some other platforms.
   // Fields: message_index(254,uint16,2), event(0,enum,1), event_type(1,enum,1),
   //         start_time(2,uint32,4), sport(5,enum,1), sub_sport(6,enum,1),
@@ -1454,7 +1454,7 @@ function dlFIT(w,nm){
     .concat(u32le(totalDurScaled)) // total_elapsed_time
     .concat(u32le(totalDurScaled));// total_timer_time
 
-  // ── FIT file header (14 bytes) ────────────────────────────────────────
+  // - FIT file header (14 bytes) -
   var dataSize=msgs.length;
   var hdr=[
     0x0E,       // header size = 14
@@ -1468,7 +1468,7 @@ function dlFIT(w,nm){
   hdr[12]=hCRC&0xFF;
   hdr[13]=(hCRC>>8)&0xFF;
 
-  // ── Assemble + file CRC ───────────────────────────────────────────────
+  // - Assemble + file CRC -
   var all=hdr.concat(msgs);
   var fCRC=fitCRC16(all);
   all.push(fCRC&0xFF,(fCRC>>8)&0xFF);
@@ -1479,7 +1479,7 @@ function dlFIT(w,nm){
   );
 }
 
-// ─── CALENDAR (ICS) — matches WEEKLY SCHEDULE exactly ─────────────────────
+// - CALENDAR (ICS) — matches WEEKLY SCHEDULE exactly -
 function icsDate(d){var y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,'0'),dd=String(d.getDate()).padStart(2,'0');return y+m+dd;}
 function icsEsc(s){return s.replace(/\\/g,'\\\\').replace(/;/g,'\\;').replace(/,/g,'\\,').replace(/\n/g,'\\n');}
 function downloadICS(wks){
@@ -1525,7 +1525,7 @@ function downloadICS(wks){
   fileSave(new Blob([L.join('\r\n')],{type:'text/calendar;charset=utf-8'}),'cycling-plan-'+wks+'w.ics');
 }
 
-// ─── LANG ─────────────────────────────────────────────────────────────────
+// - LANG -
 function setLang(lang){
   curLang=lang;
   document.querySelectorAll('.lang-btn').forEach(function(b){
@@ -1560,7 +1560,7 @@ function applyTr(){
 
 
 
-// ─── ACCOUNT SYSTEM (localStorage, PIN-protected) ─────────────────────────
+// - ACCOUNT SYSTEM (localStorage, PIN-protected) -
 var ACCT_KEY='ctp_account', SNAPS_KEY='ctp_snapshots';
 var acctState={unlocked:false,pin:null};
 
@@ -1603,7 +1603,7 @@ function applyProfile(p){
   recalcZones();
 }
 
-// ── PIN helpers ──
+// - PIN helpers -
 var _pinBuffer='', _pinTarget=null, _pinCallback=null;
 function renderPinDots(len,filled){
   var h='';for(var i=0;i<len;i++)h+='<div class="pin-dot'+(i<filled?' filled':'')+'"></div>';
@@ -1629,7 +1629,7 @@ function pinKey(k){
   }
 }
 
-// ── Modal screens ──
+// - Modal screens -
 function openAcctModal(){
   var acct=acctLoad();
   if(!acct){renderSetupPin();}
@@ -1807,7 +1807,7 @@ document.getElementById('overlay-acct').addEventListener('click',function(e){
   if(e.target===this)closeAcctModal();
 });
 
- ───────────────────────────────────────
+ -
 ['f-ftp','f-hrrest','f-hrmax','f-weight','f-lthr','f-hrmax2'].forEach(function(id){
   var el=document.getElementById(id);
   if(!el) return;
@@ -1818,7 +1818,7 @@ document.getElementById('overlay-acct').addEventListener('click',function(e){
   }
 });
 
-// ─── INIT ─────────────────────────────────────────────────────────────────
+// - INIT -
 applyTr();
 recalcZones();
 updateAcctBtn();
