@@ -1196,43 +1196,71 @@ function fitCRC16(bytes){
   return c;
 }
 
-// ZWO - Zwift/MyWhoosh
-// Spec: fraction-of-FTP Power, IntervalsT for repeats, CadenceLow/CadenceHigh
+// ZWO - Hammerhead Karoo (Dashboard import)
+// Rules per Hammerhead docs:
+//   - Warmup / Cooldown: PowerLow + PowerHigh (ramp range)
+//   - IntervalsT: OnPowerLow/OnPowerHigh + OffPowerLow/OffPowerHigh (range, not single point)
+//   - SteadyState: PowerLow + PowerHigh (range ±4% of target)
+//   - CadenceLow/CadenceHigh on every step
+//   - No zone-based targets, no Ramp, no MaxEffort
 function dlZWO(w,nm){
   var ftp=plan.ftp;
+  // helper: fraction → ±4% range string pair
+  function pRange(mid,spread){
+    spread=spread||0.04;
+    return{lo:(mid-spread).toFixed(4), hi:(mid+spread).toFixed(4)};
+  }
   var lines=[
     '<?xml version="1.0" encoding="UTF-8"?>',
     '<workout_file>',
-    '  <n>'+xmlEsc(w.ti+' FTP'+ftp+'W')+'</n>',
+    '  <name>'+xmlEsc(w.ti+' FTP'+ftp+'W')+'</name>',
     '  <author>Cycling Training Plan v3.1</author>',
-    '  <description>'+xmlEsc('FTP: '+ftp+'W | Mode: '+(trMode==='power'?'Power':'HR'))+'</description>',
+    '  <description>'+xmlEsc('FTP: '+ftp+'W | '+w.goal)+'</description>',
     '  <sportType>bike</sportType>',
+    '  <tags><tag name="CYCLING"/></tags>',
     '  <workout>'
   ];
   var segs=w.zwo, i=0;
   while(i<segs.length){
     var p=segs[i];
-    var cLo=p.cad||85, cHi=Math.min(100,cLo+5);
+    var cLo=p.cad||85, cHi=Math.min(105,cLo+8);
     var cAttr=' CadenceLow="'+cLo+'" CadenceHigh="'+cHi+'"';
+
     if(p.n==='WarmUp'){
+      // Ramp from 0.40 up to target
       lines.push('    <Warmup Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(4)+'"'+cAttr+'/>');
       i++;
+
     } else if(p.n==='CoolDown'){
-      lines.push('    <Cooldown Duration="'+p.d+'" PowerLow="'+p.p.toFixed(4)+'" PowerHigh="0.40"'+cAttr+'/>');
+      // Ramp from target down to 0.40
+      lines.push('    <Cooldown Duration="'+p.d+'" PowerLow="0.40" PowerHigh="'+p.p.toFixed(4)+'"'+cAttr+'/>');
       i++;
+
     } else if(p.n&&p.n.indexOf('Work')===0 && segs[i+1]&&segs[i+1].n==='Rest'){
-      // Detect repeating Work+Rest → use IntervalsT
+      // Repeating interval block → IntervalsT with power ranges
       var rep=0, j=i;
       while(j<segs.length && segs[j].n&&segs[j].n.indexOf('Work')===0){
         if(segs[j+1]&&segs[j+1].n==='Rest'){rep++;j+=2;} else {rep++;j++;break;}
       }
-      var wCLo=p.cad||88, wCHi=Math.min(100,wCLo+6);
       var rSeg=segs[i+1];
-      lines.push('    <IntervalsT Repeat="'+rep+'" OnDuration="'+p.d+'" OffDuration="'+rSeg.d+'" OnPower="'+p.p.toFixed(4)+'" OffPower="'+rSeg.p.toFixed(4)+'" CadenceLow="'+wCLo+'" CadenceHigh="'+wCHi+'"/>');
+      var onR=pRange(p.p, 0.04);
+      var offR=pRange(rSeg.p, 0.04);
+      var wCLo=p.cad||88, wCHi=Math.min(105,wCLo+8);
+      var rCLo=rSeg.cad||80, rCHi=Math.min(100,rCLo+8);
+      lines.push('    <IntervalsT Repeat="'+rep+'"'+
+        ' OnDuration="'+p.d+'" OffDuration="'+rSeg.d+'"'+
+        ' OnPowerLow="'+onR.lo+'" OnPowerHigh="'+onR.hi+'"'+
+        ' OffPowerLow="'+offR.lo+'" OffPowerHigh="'+offR.hi+'"'+
+        ' CadenceLow="'+wCLo+'" CadenceHigh="'+wCHi+'"'+
+        ' CadenceRestingLow="'+rCLo+'" CadenceRestingHigh="'+rCHi+'"'+
+        '/>');
       i=j;
+
     } else {
-      var pCLo=p.cad||82, pCHi=Math.min(100,pCLo+8);
-      lines.push('    <SteadyState Duration="'+p.d+'" Power="'+p.p.toFixed(4)+'" CadenceLow="'+pCLo+'" CadenceHigh="'+pCHi+'"/>');
+      // SteadyState — use PowerLow/PowerHigh range (±4%)
+      var r=pRange(p.p, 0.04);
+      lines.push('    <SteadyState Duration="'+p.d+'"'+
+        ' PowerLow="'+r.lo+'" PowerHigh="'+r.hi+'"'+cAttr+'/>');
       i++;
     }
   }
